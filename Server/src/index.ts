@@ -1,6 +1,5 @@
 import express from 'express';
 import sequelize from "../config/db";
-import User from "./models/User";
 import userRoutes from "./routes/user";
 
 const app = express();
