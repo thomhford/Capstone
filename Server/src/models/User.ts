@@ -23,6 +23,10 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    refreshToken: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     hooks: {
