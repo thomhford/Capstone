@@ -1,0 +1,8 @@
+## JavaScript ##
+node_modules/
+dist/
+*.log
+*.swp
+
+## Intellij ##
+.idea/
