@@ -1,94 +1,45 @@
 // routes/user.js
 import express from 'express';
-const router = express.Router();
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import 'dotenv/config';
-import crypto from "crypto";
+import admin from "firebase-admin";
 
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) {
-    throw new Error('JWT_SECRET must be defined');
-}
+const router = express.Router();
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { idToken } = req.body;
 
-    // Find user by email
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-        return res.status(400).json({ message: 'Invalid email or password' });
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const uid = decodedToken.uid;
+
+        res.json({ message: 'Logged in successfully', uid });
+    } catch (error) {
+        res.status(400).json({ message: 'Invalid ID token' });
     }
-
-    // Compare passwords
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-        return res.status(400).json({ message: 'Invalid email or password' });
-    }
-
-    // Create token
-    const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: '1d' });
-
-    // Create refresh token
-    const refreshToken = crypto.randomBytes(64).toString('hex');
-    user.refreshToken = refreshToken;
-    await user.save();
-
-    // If all checks pass, return a success message
-    res.json({ message: 'Logged in successfully', token, refreshToken });
 });
 
 router.post('/register', async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
 
     try {
+        // Create a new user in Firebase Authentication
+        const userRecord = await admin.auth().createUser({
+            email,
+            password, // Firebase will handle password hashing
+            displayName: `${firstName} ${lastName}`,
+        });
+
         const user = await User.create({
             firstName,
             lastName,
             email,
-            password
+            uid: userRecord.uid, // Store the Firebase UID
         });
+
         res.json({ message: 'User created successfully', user });
-    } catch (error) {
-        res.status(400).json({ message: error });
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
     }
-});
-
-router.post('/refresh', async (req, res) => {
-    const { refreshToken } = req.body;
-
-    // Find user by refresh token
-    const user = await User.findOne({ where: { refreshToken } });
-    if (!user) {
-        return res.status(400).json({ message: 'Invalid refresh token' });
-    }
-
-    // Create new token
-    const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: '1d' });
-
-    // Create new refresh token
-    const newRefreshToken = crypto.randomBytes(64).toString('hex');
-
-    // Send new token and refresh token to client
-    res.json({ message: 'Token refreshed successfully', token, newRefreshToken });
-});
-
-router.post('/logout', async (req, res) => {
-    const { refreshToken } = req.body;
-
-    // Find user by refresh token
-    const user = await User.findOne({ where: { refreshToken } });
-    if (!user) {
-        return res.status(400).json({ message: 'Invalid refresh token' });
-    }
-
-    // Delete refresh token
-    user.refreshToken = null;
-    await user.save();
-
-    // Send success message to client
-    res.json({ message: 'Logged out successfully' });
 });
 
 export default router;

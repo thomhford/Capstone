@@ -2,13 +2,20 @@ import express from 'express';
 import sequelize from "../config/db";
 import userRoutes from "./routes/user";
 import 'dotenv/config';
-import {secretKey} from "./utils/secretKey";
+import admin from "firebase-admin";
 
 const app = express();
 const port = 3000;
+const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+if (!serviceAccountPath) {
+    throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
+}
+const serviceAccount = require(serviceAccountPath);
 
-// Set JWT secret key for signing and verifying tokens
-process.env.JWT_SECRET = secretKey;
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://msdcapstone-d9d54-default-rtdb.firebaseio.com"
+});
 
 sequelize.sync().then(() => {
     console.log('Database & tables created!');
@@ -20,8 +27,3 @@ app.use('/user', userRoutes);
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
-
-
-
-
-
