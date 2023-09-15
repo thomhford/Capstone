@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final void Function() logout;
+
+  const ProfilePage({Key? key, required this.logout}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +11,19 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile Page'),
       ),
-      body: const Center(
-        child: Text('Profile Page'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Profile Page'),
+            ElevatedButton(
+              onPressed: () {
+                logout();
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        ),
       ),
     );
   }

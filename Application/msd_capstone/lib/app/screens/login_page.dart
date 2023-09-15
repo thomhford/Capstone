@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-// Define a custom Form widget.
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final void Function() login;
+
+  const LoginPage({Key? key, required this.login}) : super(key: key);
 
   @override
   LoginPageState createState() {
@@ -10,10 +11,17 @@ class LoginPage extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +30,7 @@ class LoginPageState extends State<LoginPage> {
       child: Column(
         children: <Widget>[
           TextFormField(
+            controller: _emailController,
             decoration: const InputDecoration(
               hintText: 'Enter your email',
             ),
@@ -33,6 +42,7 @@ class LoginPageState extends State<LoginPage> {
             },
           ),
           TextFormField(
+            controller: _passwordController,
             decoration: const InputDecoration(
               hintText: 'Enter your password',
             ),
@@ -45,14 +55,8 @@ class LoginPageState extends State<LoginPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              // Validate returns true if the form is valid, or false otherwise.
               if (_formKey.currentState?.validate() ?? false) {
-                // If the form is valid, display a snackbar. In the real world,
-                // you'd often call a server or save the information in a database.
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
+                widget.login(); // Call the login method passed from MyApp
               }
             },
             child: const Text('Submit'),

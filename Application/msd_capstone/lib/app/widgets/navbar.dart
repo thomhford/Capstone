@@ -10,7 +10,10 @@ import '../screens/chats_page.dart';
 import '../screens/profile_page.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+  final void Function() logout;
+
+  const NavBar({Key? key, required this.logout}) : super(key: key);
+
   @override
   _NavBarState createState() => _NavBarState();
 }
@@ -31,7 +34,7 @@ class _NavBarState extends State<NavBar> {
       case 3:
         return const ChatsPage();
       case 4:
-        return const ProfilePage();
+        return ProfilePage(logout: widget.logout);
       default:
         return const HomePage();
     }
