@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Define a custom Form widget.
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -10,8 +9,6 @@ class LoginPage extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
@@ -45,15 +42,7 @@ class LoginPageState extends State<LoginPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              // Validate returns true if the form is valid, or false otherwise.
-              if (_formKey.currentState?.validate() ?? false) {
-                // If the form is valid, display a snackbar. In the real world,
-                // you'd often call a server or save the information in a database.
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
+              if (_formKey.currentState?.validate() ?? false) {}
             },
             child: const Text('Submit'),
           ),

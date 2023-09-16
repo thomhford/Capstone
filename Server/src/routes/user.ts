@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
             uid: userRecord.uid, // Store the Firebase UID
         });
 
-        res.json({ message: 'User created successfully', user });
+        res.status(200).json({ message: 'User created successfully', user });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }
