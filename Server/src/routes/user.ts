@@ -19,23 +19,36 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { firstName, lastName, email } = req.body;
+    // Get the ID token from the Authorization header
+    const idToken = req.headers.authorization?.split('Bearer ')[1];
+
+    if (!idToken) {
+        return res.status(401).json({ message: 'Unauthorized request' });
+    }
 
     try {
-        // Create a new user in Firebase Authentication
-        const userRecord = await admin.auth().createUser({
-            email,
-            displayName: `${firstName} ${lastName}`,
-        });
+        // Verify the ID token and get the uid of the user
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const uid = decodedToken.uid;
 
-        const user = await User.create({
-            firstName,
-            lastName,
-            email,
-            uid: userRecord.uid, // Store the Firebase UID
-        });
+        // Validate the user in Firebase Authentication
+        const userRecord = await admin.auth().getUser(uid);
 
-        res.status(200).json({ message: 'User created successfully', user });
+        // Check if the user already exists in your database
+        let user = await User.findOne({ where: { uid: userRecord.uid } });
+
+        // If the user does not exist in your database, create a new user
+        if (!user) {
+            const { firstName, lastName, email } = req.body;
+            user = await User.create({
+                firstName,
+                lastName,
+                email,
+                uid: userRecord.uid, // Store the Firebase UID
+            });
+        }
+
+        res.status(200).json({ message: 'User registered successfully' });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }

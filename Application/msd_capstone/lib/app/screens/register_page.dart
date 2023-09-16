@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 import 'login_page.dart';
 
@@ -29,11 +30,32 @@ class _RegisterPageState extends State<RegisterPage> {
         );
         _showSuccessSnackBar('${userCredential.user!.email} registered');
 
-        // Navigate to the login page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+        // Get the ID token of the signed-in user
+        final idToken = await userCredential.user!.getIdToken();
+
+        // Send the firstName, lastName, email and ID token to backend
+        final response = await http.post(
+          Uri.parse('localhost/user/register'),
+          headers: {'Authorization': 'Bearer $idToken'},
+          body: {
+            'firstName': _firstNameController.text,
+            'lastName': _lastNameController.text,
+            'email': _emailController.text,
+          },
         );
+
+        if (response.statusCode == 200) {
+          // If the server returns a 200 OK response, parse the JSON.
+          print('User created successfully');
+          // Navigate to the login page
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        } else {
+          // If the server returns an unexpected response, throw an error.
+          throw Exception('Failed to create user');
+        }
       } on FirebaseAuthException catch (e) {
         _showErrorSnackBar(e.message);
       }
