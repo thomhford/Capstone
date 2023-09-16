@@ -12,20 +12,19 @@ router.post('/login', async (req, res) => {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const uid = decodedToken.uid;
 
-        res.json({ message: 'Logged in successfully', uid });
+        res.status(200).json({ message: 'Logged in successfully', uid });
     } catch (error) {
         res.status(400).json({ message: 'Invalid ID token' });
     }
 });
 
 router.post('/register', async (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email } = req.body;
 
     try {
         // Create a new user in Firebase Authentication
         const userRecord = await admin.auth().createUser({
             email,
-            password, // Firebase will handle password hashing
             displayName: `${firstName} ${lastName}`,
         });
 
