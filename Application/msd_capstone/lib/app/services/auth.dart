@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger();
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,7 +15,7 @@ class AuthService {
       );
       return userCredential.user;
     } catch (e) {
-      print(e.toString());
+      logger.e(e.toString());
       return null;
     }
   }
@@ -26,7 +29,7 @@ class AuthService {
       );
       return userCredential.user;
     } catch (e) {
-      print(e.toString());
+      logger.e(e.toString());
       return null;
     }
   }

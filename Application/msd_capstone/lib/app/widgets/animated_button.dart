@@ -14,11 +14,11 @@ class AnimatedButton extends StatefulWidget {
   });
 
   @override
-  _AnimatedNavigationDestinationState createState() =>
-      _AnimatedNavigationDestinationState();
+  AnimatedNavigationDestinationState createState() =>
+      AnimatedNavigationDestinationState();
 }
 
-class _AnimatedNavigationDestinationState extends State<AnimatedButton>
+class AnimatedNavigationDestinationState extends State<AnimatedButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
