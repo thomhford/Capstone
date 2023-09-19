@@ -49,6 +49,9 @@ class LoginPageState extends State<LoginPage> {
       } on FirebaseAuthException catch (e) {
         logger.e(e.message);
         _showErrorSnackBar(e.message);
+      } catch (e) {
+        logger.e(e.toString());
+        _showErrorSnackBar(e.toString());
       }
     }
   }

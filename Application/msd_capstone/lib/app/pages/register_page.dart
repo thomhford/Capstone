@@ -9,7 +9,7 @@ import 'login_page.dart';
 final logger = Logger();
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   RegisterPageState createState() => RegisterPageState();
@@ -52,10 +52,12 @@ class RegisterPageState extends State<RegisterPage> {
         logger.i('${userCredential.user!.email} registered');
         _showSuccessSnackBar('${userCredential.user!.email} registered');
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        }
       } on FirebaseAuthException catch (e) {
         logger.e(e.message);
         _showErrorSnackBar(e.message);
