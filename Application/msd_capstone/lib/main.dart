@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 import 'app/widgets/navbar.dart';
-import 'app/screens/login_page.dart';
+import 'app/pages/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

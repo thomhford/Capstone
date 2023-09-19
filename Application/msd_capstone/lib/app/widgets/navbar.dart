@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'animated_button.dart';
-import '../screens/home_page.dart';
-import '../screens/search_page.dart';
-import '../screens/upload_page.dart';
-import '../screens/chats_page.dart';
-import '../screens/profile_page.dart';
+import '../pages/home_page.dart';
+import '../pages/search_page.dart';
+import '../pages/upload_page.dart';
+import '../pages/chats_page.dart';
+import '../pages/profile_page.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
