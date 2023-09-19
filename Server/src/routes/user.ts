@@ -38,7 +38,9 @@ router.post('/register', async (req, res) => {
 
         let user = await User.findOne({ where: { uid } });
 
-        if (!user) {
+        if (user) {
+            return res.status(400).json({ message: 'User already exists' });
+        } else {
             const { firstName, lastName, email } = req.body;
             await User.create({
                 firstName,
@@ -46,9 +48,9 @@ router.post('/register', async (req, res) => {
                 email,
                 uid
             });
+            return res.status(200).json({ message: 'User registered successfully' });
         }
 
-        res.status(200).json({ message: 'User registered successfully' });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }
