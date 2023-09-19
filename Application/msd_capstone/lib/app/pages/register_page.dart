@@ -53,7 +53,7 @@ class RegisterPageState extends State<RegisterPage> {
         _showSuccessSnackBar('${userCredential.user!.email} registered');
 
         if (mounted) {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const LoginPage()),
           );

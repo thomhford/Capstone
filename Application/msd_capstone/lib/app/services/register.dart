@@ -26,7 +26,7 @@ class RegistrationService {
     final idToken = await userCredential.user!.getIdToken();
 
     final response = await _client.post(
-      Uri.parse('localhost/user/register'),
+      Uri.parse('http://localhost:3000/user/register'),
       headers: {'Authorization': 'Bearer $idToken'},
       body: {
         'firstName': firstName,

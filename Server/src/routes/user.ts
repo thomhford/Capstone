@@ -25,6 +25,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
+    console.log("received request")
     const idToken = req.headers.authorization?.split('Bearer ')[1];
 
     if (!idToken) {
