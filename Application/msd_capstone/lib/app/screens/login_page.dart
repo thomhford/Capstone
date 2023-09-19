@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 
+import '../services/login.dart';
 import '../widgets/navbar.dart';
 import 'register_page.dart';
 
@@ -18,13 +19,22 @@ class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _auth = FirebaseAuth.instance;
+  late LoginService _loginService;
   bool _obscureText = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginService = LoginService(auth: FirebaseAuth.instance);
+  }
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final userCredential = await _signInWithFirebase();
+        final userCredential = await _loginService.loginUser(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
         logger.i('${userCredential.user!.email} signed in');
         _showSuccessSnackBar('${userCredential.user!.email} signed in');
 
@@ -46,7 +56,8 @@ class LoginPageState extends State<LoginPage> {
   Future<void> _forgotPassword() async {
     if (_emailController.text.isNotEmpty) {
       try {
-        await _auth.sendPasswordResetEmail(email: _emailController.text);
+        await _loginService.sendPasswordResetEmail(
+            email: _emailController.text);
         logger.i('Password reset email sent');
         _showSuccessSnackBar('Password reset email sent');
       } on FirebaseAuthException catch (e) {
@@ -56,13 +67,6 @@ class LoginPageState extends State<LoginPage> {
     } else {
       _showErrorSnackBar('Please enter your email');
     }
-  }
-
-  Future<UserCredential> _signInWithFirebase() {
-    return _auth.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
   }
 
   void _showErrorSnackBar(String? message) {
@@ -137,7 +141,7 @@ class LoginPageState extends State<LoginPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const RegisterPage(),
+                      builder: (context) => RegisterPage(),
                     ),
                   );
                 },

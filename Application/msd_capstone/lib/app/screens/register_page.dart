@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
+import '../services/register.dart';
 import 'login_page.dart';
 
-var logger = Logger();
+final logger = Logger();
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
   RegisterPageState createState() => RegisterPageState();
@@ -16,57 +17,51 @@ class RegisterPage extends StatefulWidget {
 
 class RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _auth = FirebaseAuth.instance;
-  bool _obscureText = true;
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _confirmPasswordController;
+  late RegistrationService _registrationService;
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+    _registrationService = RegistrationService(
+      auth: FirebaseAuth.instance,
+      client: http.Client(),
+    );
+    _obscureText = true;
+  }
 
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final userCredential = await _auth.createUserWithEmailAndPassword(
+        final userCredential = await _registrationService.registerUser(
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
           email: _emailController.text,
           password: _passwordController.text,
         );
         logger.i('${userCredential.user!.email} registered');
         _showSuccessSnackBar('${userCredential.user!.email} registered');
 
-        // Get the ID token of the signed-in user
-        final idToken = await userCredential.user!.getIdToken();
-
-        // Send the firstName, lastName, email and ID token to backend
-        final response = await http.post(
-          Uri.parse('localhost/user/register'),
-          headers: {'Authorization': 'Bearer $idToken'},
-          body: {
-            'firstName': _firstNameController.text,
-            'lastName': _lastNameController.text,
-            'email': _emailController.text,
-          },
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
-
-        if (response.statusCode == 200) {
-          // If the server returns a 200 OK response, parse the JSON.
-          logger.i('User created successfully');
-          // Check if the widget is still mounted before navigating
-          if (mounted) {
-            // Navigate to the login page
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
-          }
-        } else {
-          // If the server returns an unexpected response, throw an error.
-          logger.e('Failed to create user');
-          throw Exception('Failed to create user');
-        }
       } on FirebaseAuthException catch (e) {
         logger.e(e.message);
         _showErrorSnackBar(e.message);
+      } on Exception catch (e) {
+        logger.e(e.toString());
+        _showErrorSnackBar(e.toString());
       }
     }
   }
@@ -89,6 +84,24 @@ class RegisterPageState extends State<RegisterPage> {
     });
   }
 
+  Widget _buildTextFormField({
+    required String label,
+    required TextEditingController controller,
+    required String? Function(String?)? validator,
+    Widget? suffixIcon,
+    bool obscureText = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        suffixIcon: suffixIcon,
+      ),
+      obscureText: obscureText,
+      validator: validator,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,9 +115,9 @@ class RegisterPageState extends State<RegisterPage> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: <Widget>[
-              TextFormField(
+              _buildTextFormField(
+                label: 'First Name',
                 controller: _firstNameController,
-                decoration: const InputDecoration(labelText: 'First Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your first name';
@@ -112,9 +125,9 @@ class RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              TextFormField(
+              _buildTextFormField(
+                label: 'Last Name',
                 controller: _lastNameController,
-                decoration: const InputDecoration(labelText: 'Last Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your last name';
@@ -122,9 +135,9 @@ class RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              TextFormField(
+              _buildTextFormField(
+                label: 'Email',
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -136,26 +149,20 @@ class RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              TextFormField(
+              _buildTextFormField(
+                label: 'Password',
                 controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: _togglePasswordVisibility,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
                   ),
+                  onPressed: _togglePasswordVisibility,
                 ),
                 obscureText: _obscureText,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
-                  }
-                  // Firebase Authentication Password Requirements:
-                  // Password must be at least 6 characters long, include an uppercase letter, a lowercase letter and a number
-                  // Password cannot include spaces or special characters
-                  else if (value.length < 6) {
+                  } else if (value.length < 6) {
                     return 'Password must be at least 6 characters long';
                   } else if (!RegExp(r'(?=.*[A-Z])').hasMatch(value)) {
                     return 'Password must include at least one uppercase letter';
@@ -170,10 +177,9 @@ class RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              TextFormField(
+              _buildTextFormField(
+                label: 'Confirm Password',
                 controller: _confirmPasswordController,
-                decoration:
-                    const InputDecoration(labelText: 'Confirm Password'),
                 obscureText: _obscureText,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
