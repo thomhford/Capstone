@@ -1,3 +1,5 @@
+// search_page.dart
+
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatelessWidget {
