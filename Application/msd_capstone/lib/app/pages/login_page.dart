@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
+import 'package:http/http.dart' as http;
 
 import '../services/login.dart';
 import '../widgets/navbar.dart';
@@ -56,6 +57,23 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<bool> _testConnection() async {
+    try {
+      final response = await http.post(
+        Uri.http('10.0.2.2:3000', '/user/register'),
+        body: {
+          "Hello From App": "Hello From App",
+        },
+      );
+      if (response.statusCode == 401) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> _forgotPassword() async {
     if (_emailController.text.isNotEmpty) {
       try {
@@ -74,7 +92,7 @@ class LoginPageState extends State<LoginPage> {
 
   void _showErrorSnackBar(String? message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to sign in: $message')),
+      SnackBar(content: Text('Something when wrong: $message')),
     );
   }
 
@@ -153,6 +171,17 @@ class LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: _forgotPassword,
                 child: const Text('Forgot Password?'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  bool isConnectionSuccessful = await _testConnection();
+                  if (isConnectionSuccessful) {
+                    _showSuccessSnackBar("Connection Successful");
+                  } else {
+                    _showErrorSnackBar("Connection Failed");
+                  }
+                },
+                child: const Text("Test Connection"),
               ),
             ],
           ),
