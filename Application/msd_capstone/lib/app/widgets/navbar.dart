@@ -51,24 +51,24 @@ class NavBarState extends State<NavBar> {
         },
         destinations: <Widget>[
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Home.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Home.svg'),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Search.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Search.svg'),
             label: 'Search',
           ),
           AnimatedButton(
-            iconPath: 'assets/images/Upload.svg',
+            iconPath: 'assets/images/icons/Upload.svg',
             label: 'Upload',
             isSelected: currentPageIndex == 2,
           ),
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Chats.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Chats.svg'),
             label: 'Chats',
           ),
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Profile.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Profile.svg'),
             label: 'Profile',
           ),
         ],
