@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
-import 'app/widgets/navbar.dart';
+import 'app/components/navbar.dart';
 import 'app/pages/login_page.dart';
 
 Future<void> main() async {
@@ -13,7 +13,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const MyAppTest());
 }
 
 class MyApp extends StatelessWidget {
@@ -39,6 +39,21 @@ class MyApp extends StatelessWidget {
           return const CircularProgressIndicator(); // Show a loading spinner while waiting for the user data
         },
       ),
+    );
+  }
+}
+
+// For Testing Widgets
+class MyAppTest extends StatelessWidget {
+  const MyAppTest({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const LoginPage(),
     );
   }
 }
