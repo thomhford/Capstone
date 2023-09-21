@@ -8,7 +8,7 @@ class LoginService {
 
   LoginService({required FirebaseAuth auth}) : _auth = auth;
 
-  Future<UserCredential> loginUser({
+  Future<UserCredential> loginUserEmail({
     required String email,
     required String password,
   }) async {
