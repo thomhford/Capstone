@@ -28,11 +28,13 @@ class LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   late LoginService _loginService;
+  late bool _obscureText;
 
   @override
   void initState() {
     super.initState();
     _loginService = LoginService(auth: FirebaseAuth.instance);
+    _obscureText = true;
   }
 
   Future<void> _login() async {
@@ -118,6 +120,12 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
+  void togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,7 +162,7 @@ class LoginPageState extends State<LoginPage> {
                   MainTextField(
                     controller: _emailController,
                     hintText: 'Email',
-                    obscureText: false,
+                    obscurableTextField: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -172,7 +180,9 @@ class LoginPageState extends State<LoginPage> {
                   MainTextField(
                     controller: _passwordController,
                     hintText: 'Password',
-                    obscureText: true,
+                    obscurableTextField: true,
+                    obscureText: _obscureText,
+                    showVisibilityIcon: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -203,6 +213,7 @@ class LoginPageState extends State<LoginPage> {
                   // signin button
                   MainButton(
                     onTap: _login,
+                    buttomName: 'Sign In',
                   ),
                   const SizedBox(height: 50),
 

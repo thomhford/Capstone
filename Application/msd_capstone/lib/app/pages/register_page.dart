@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
+import '../components/main_button.dart';
+import '../components/main_textfield.dart';
+import '../components/square_tile_button.dart';
 import '../services/register.dart';
 import 'login_page.dart';
 
@@ -80,126 +83,305 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _togglePasswordVisibility() {
+  void togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
 
-  Widget _buildTextFormField({
-    required String label,
-    required TextEditingController controller,
-    required String? Function(String?)? validator,
-    Widget? suffixIcon,
-    bool obscureText = false,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: suffixIcon,
-      ),
-      obscureText: obscureText,
-      validator: validator,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            children: <Widget>[
-              _buildTextFormField(
-                label: 'First Name',
-                controller: _firstNameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your first name';
-                  }
-                  return null;
-                },
-              ),
-              _buildTextFormField(
-                label: 'Last Name',
-                controller: _lastNameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your last name';
-                  }
-                  return null;
-                },
-              ),
-              _buildTextFormField(
-                label: 'Email',
-                controller: _emailController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  } else if (!RegExp(
-                          r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-                      .hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              _buildTextFormField(
-                label: 'Password',
-                controller: _passwordController,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: _togglePasswordVisibility,
-                ),
-                obscureText: _obscureText,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  } else if (value.length < 6) {
-                    return 'Password must be at least 6 characters long';
-                  } else if (!RegExp(r'(?=.*[A-Z])').hasMatch(value)) {
-                    return 'Password must include at least one uppercase letter';
-                  } else if (!RegExp(r'(?=.*[a-z])').hasMatch(value)) {
-                    return 'Password must include at least one lowercase letter';
-                  } else if (!RegExp(r'(?=.*\d)').hasMatch(value)) {
-                    return 'Password must include at least one number';
-                  } else if (RegExp(r'(\s|[!@#$%^&*(),.?":{}|<>])')
-                      .hasMatch(value)) {
-                    return 'Password cannot include spaces or special characters';
-                  }
-                  return null;
-                },
-              ),
-              _buildTextFormField(
-                label: 'Confirm Password',
-                controller: _confirmPasswordController,
-                obscureText: _obscureText,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
-                  } else if (value != _passwordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
-              ),
-              ElevatedButton(
-                onPressed: _register,
-                child: const Text('Register'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+        backgroundColor: Colors.grey[300],
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Center(
+                    child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 15),
+
+                            // logo
+                            const Icon(
+                              Icons.account_circle,
+                              size: 100,
+                            ),
+                            const SizedBox(height: 10),
+
+                            // Register header
+                            Text(
+                              'Register',
+                              style: TextStyle(
+                                fontSize: 60,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                            const SizedBox(height: 25),
+
+                            // first name textfield
+                            MainTextField(
+                              controller: _firstNameController,
+                              hintText: 'First Name',
+                              obscurableTextField: false,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your first name';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 15),
+
+                            // last name textfield
+                            MainTextField(
+                              controller: _lastNameController,
+                              hintText: 'Last Name',
+                              obscurableTextField: false,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your last name';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 15),
+
+                            // username textfield
+                            MainTextField(
+                              controller: _emailController,
+                              hintText: 'Email',
+                              obscurableTextField: false,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                } else if (!RegExp(
+                                        r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                                    .hasMatch(value)) {
+                                  return 'Please enter a valid email';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 15),
+
+                            // password textfield
+                            MainTextField(
+                              controller: _passwordController,
+                              hintText: 'Password',
+                              obscurableTextField: true,
+                              obscureText: _obscureText,
+                              togglePasswordVisibility:
+                                  togglePasswordVisibility,
+                              showVisibilityIcon: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                } else if (value.length < 6) {
+                                  return 'Password must be at least 6 characters long';
+                                } else if (!RegExp(r'(?=.*[A-Z])')
+                                    .hasMatch(value)) {
+                                  return 'Password must include at least one uppercase letter';
+                                } else if (!RegExp(r'(?=.*[a-z])')
+                                    .hasMatch(value)) {
+                                  return 'Password must include at least one lowercase letter';
+                                } else if (!RegExp(r'(?=.*\d)')
+                                    .hasMatch(value)) {
+                                  return 'Password must include at least one number';
+                                } else if (RegExp(
+                                        r'(\s|[!@#$%^&*(),.?":{}|<>])')
+                                    .hasMatch(value)) {
+                                  return 'Password cannot include spaces or special characters';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 15),
+
+                            // confirm password textfield
+                            MainTextField(
+                              controller: _confirmPasswordController,
+                              hintText: 'Confirm Password',
+                              obscurableTextField: true,
+                              obscureText: _obscureText,
+                              togglePasswordVisibility:
+                                  togglePasswordVisibility,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                } else if (value != _passwordController.text) {
+                                  return 'Passwords do not match';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 25),
+
+                            // signin button
+                            MainButton(
+                              onTap: _register,
+                              buttomName: 'Sign Up',
+                            ),
+                            const SizedBox(height: 25),
+
+                            // Or Sign Up with...
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Divider(
+                                      thickness: 0.5,
+                                      color: Colors.grey[400],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Text(
+                                      'Or sign up with',
+                                      style: TextStyle(color: Colors.grey[700]),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Divider(
+                                      thickness: 0.5,
+                                      color: Colors.grey[400],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 25),
+
+                            // Google + Apple signin buttons
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Google Button
+                                SquareTileButton(
+                                  imagePath: 'assets/images/logos/Google.png',
+                                  onTap: () => {
+                                    _showSuccessSnackBar('Google Signup Button')
+                                  },
+                                ),
+
+                                const SizedBox(width: 10),
+
+                                // Apple button
+                                SquareTileButton(
+                                  imagePath: 'assets/images/logos/apple.png',
+                                  onTap: () => {
+                                    _showSuccessSnackBar("Apple Signup Button")
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 50),
+                          ],
+                        ))))));
   }
 }
+
+// @override
+// Widget build(BuildContext context) {
+//   return Scaffold(
+//     appBar: AppBar(
+//       title: const Text('Register'),
+//     ),
+//     body: Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: Form(
+//         key: _formKey,
+//         autovalidateMode: AutovalidateMode.onUserInteraction,
+//         child: Column(
+//           children: <Widget>[
+//             _buildTextFormField(
+//               label: 'First Name',
+//               controller: _firstNameController,
+//               validator: (value) {
+//                 if (value == null || value.isEmpty) {
+//                   return 'Please enter your first name';
+//                 }
+//                 return null;
+//               },
+//             ),
+//             _buildTextFormField(
+//               label: 'Last Name',
+//               controller: _lastNameController,
+//               validator: (value) {
+//                 if (value == null || value.isEmpty) {
+//                   return 'Please enter your last name';
+//                 }
+//                 return null;
+//               },
+//             ),
+//             _buildTextFormField(
+//               label: 'Email',
+//               controller: _emailController,
+//               validator: (value) {
+//                 if (value == null || value.isEmpty) {
+//                   return 'Please enter your email';
+//                 } else if (!RegExp(
+//                         r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+//                     .hasMatch(value)) {
+//                   return 'Please enter a valid email';
+//                 }
+//                 return null;
+//               },
+//             ),
+//             _buildTextFormField(
+//               label: 'Password',
+//               controller: _passwordController,
+//               suffixIcon: IconButton(
+//                 icon: Icon(
+//                   _obscureText ? Icons.visibility : Icons.visibility_off,
+//                 ),
+//                 onPressed: _togglePasswordVisibility,
+//               ),
+//               obscureText: _obscureText,
+//               validator: (value) {
+//                 if (value == null || value.isEmpty) {
+//                   return 'Please enter your password';
+//                 } else if (value.length < 6) {
+//                   return 'Password must be at least 6 characters long';
+//                 } else if (!RegExp(r'(?=.*[A-Z])').hasMatch(value)) {
+//                   return 'Password must include at least one uppercase letter';
+//                 } else if (!RegExp(r'(?=.*[a-z])').hasMatch(value)) {
+//                   return 'Password must include at least one lowercase letter';
+//                 } else if (!RegExp(r'(?=.*\d)').hasMatch(value)) {
+//                   return 'Password must include at least one number';
+//                 } else if (RegExp(r'(\s|[!@#$%^&*(),.?":{}|<>])')
+//                     .hasMatch(value)) {
+//                   return 'Password cannot include spaces or special characters';
+//                 }
+//                 return null;
+//               },
+//             ),
+//             _buildTextFormField(
+//               label: 'Confirm Password',
+//               controller: _confirmPasswordController,
+//               obscureText: _obscureText,
+//               validator: (value) {
+//                 if (value == null || value.isEmpty) {
+//                   return 'Please confirm your password';
+//                 } else if (value != _passwordController.text) {
+//                   return 'Passwords do not match';
+//                 }
+//                 return null;
+//               },
+//             ),
+//             ElevatedButton(
+//               onPressed: _register,
+//               child: const Text('Register'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
+// }
