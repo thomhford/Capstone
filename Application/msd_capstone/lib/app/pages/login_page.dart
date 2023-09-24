@@ -162,7 +162,6 @@ class LoginPageState extends State<LoginPage> {
                   MainTextField(
                     controller: _emailController,
                     hintText: 'Email',
-                    obscurableTextField: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -180,7 +179,6 @@ class LoginPageState extends State<LoginPage> {
                   MainTextField(
                     controller: _passwordController,
                     hintText: 'Password',
-                    obscurableTextField: true,
                     obscureText: _obscureText,
                     showVisibilityIcon: true,
                     validator: (value) {
