@@ -10,7 +10,7 @@ import 'dart:io';
 import '../services/login.dart';
 import '../components/navbar.dart';
 import '../components/main_button.dart';
-import '../components/main_textfield.dart';
+import '../components/user_textfield.dart';
 import '../components/square_tile_button.dart';
 import 'register_page.dart';
 
@@ -27,6 +27,8 @@ class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
   late LoginService _loginService;
   late bool _obscureText;
 
@@ -35,6 +37,13 @@ class LoginPageState extends State<LoginPage> {
     super.initState();
     _loginService = LoginService(auth: FirebaseAuth.instance);
     _obscureText = true;
+  }
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
   }
 
   Future<void> _login() async {
@@ -159,7 +168,7 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 25),
 
                   // username textfield
-                  MainTextField(
+                  UserTextField(
                     controller: _emailController,
                     hintText: 'Email',
                     validator: (value) {
@@ -172,21 +181,29 @@ class LoginPageState extends State<LoginPage> {
                       }
                       return null;
                     },
+                    textInputType: TextInputType.emailAddress,
+                    focusNode: _emailFocusNode,
+                    onSubmitted: (_) {
+                      _passwordFocusNode.requestFocus();
+                    },
                   ),
                   const SizedBox(height: 25),
 
                   // password textfield
-                  MainTextField(
+                  UserTextField(
                     controller: _passwordController,
                     hintText: 'Password',
                     obscureText: _obscureText,
                     showVisibilityIcon: true,
+                    togglePasswordVisibility: togglePasswordVisibility,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
                       }
                       return null;
                     },
+                    focusNode: _passwordFocusNode,
+                    textInputAction: TextInputAction.done,
                   ),
                   const SizedBox(height: 10),
 

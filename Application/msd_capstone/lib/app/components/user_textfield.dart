@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
-class MainTextField extends StatelessWidget {
+class UserTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool? obscureText;
   final FormFieldValidator<String>? validator;
   final VoidCallback? togglePasswordVisibility;
   final bool showVisibilityIcon;
+  final TextInputType? textInputType;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final Function(String)? onSubmitted;
 
-  const MainTextField({
+  const UserTextField({
     Key? key,
     required this.controller,
     required this.hintText,
@@ -16,6 +20,10 @@ class MainTextField extends StatelessWidget {
     this.validator,
     this.togglePasswordVisibility,
     this.showVisibilityIcon = false,
+    this.textInputType,
+    this.focusNode,
+    this.onSubmitted,
+    this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -23,8 +31,13 @@ class MainTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextFormField(
+        keyboardType: textInputType ?? TextInputType.text,
         controller: controller,
         obscureText: obscureText ?? false,
+        validator: validator,
+        onFieldSubmitted: onSubmitted,
+        focusNode: focusNode,
+        textInputAction: textInputAction ?? TextInputAction.next,
         decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
@@ -47,7 +60,6 @@ class MainTextField extends StatelessWidget {
                 )
               : null,
         ),
-        validator: validator,
       ),
     );
   }

@@ -54,7 +54,7 @@ class MyAppTest extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const RegisterPage(),
+      home: const LoginPage(),
     );
   }
 }

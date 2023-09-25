@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 import '../components/main_button.dart';
-import '../components/main_textfield.dart';
+import '../components/user_textfield.dart';
 import '../components/square_tile_button.dart';
 import '../services/register.dart';
 import 'login_page.dart';
@@ -20,6 +20,11 @@ class RegisterPage extends StatefulWidget {
 
 class RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  final _firstNameFocusNode = FocusNode();
+  final _lastNameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _emailController;
@@ -41,6 +46,16 @@ class RegisterPageState extends State<RegisterPage> {
       client: http.Client(),
     );
     _obscureText = true;
+  }
+
+  @override
+  void dispose() {
+    _firstNameFocusNode.dispose();
+    _lastNameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    super.dispose();
   }
 
   Future<void> _register() async {
@@ -123,7 +138,7 @@ class RegisterPageState extends State<RegisterPage> {
                           const SizedBox(height: 25),
 
                           // first name textfield
-                          MainTextField(
+                          UserTextField(
                             controller: _firstNameController,
                             hintText: 'First Name',
                             validator: (value) {
@@ -132,11 +147,16 @@ class RegisterPageState extends State<RegisterPage> {
                               }
                               return null;
                             },
+                            textInputType: TextInputType.name,
+                            focusNode: _firstNameFocusNode,
+                            onSubmitted: (_) {
+                              _lastNameFocusNode.requestFocus();
+                            },
                           ),
                           const SizedBox(height: 15),
 
                           // last name textfield
-                          MainTextField(
+                          UserTextField(
                             controller: _lastNameController,
                             hintText: 'Last Name',
                             validator: (value) {
@@ -145,11 +165,16 @@ class RegisterPageState extends State<RegisterPage> {
                               }
                               return null;
                             },
+                            textInputType: TextInputType.name,
+                            focusNode: _lastNameFocusNode,
+                            onSubmitted: (_) {
+                              _emailFocusNode.requestFocus();
+                            },
                           ),
                           const SizedBox(height: 15),
 
                           // username textfield
-                          MainTextField(
+                          UserTextField(
                             controller: _emailController,
                             hintText: 'Email',
                             validator: (value) {
@@ -162,11 +187,16 @@ class RegisterPageState extends State<RegisterPage> {
                               }
                               return null;
                             },
+                            textInputType: TextInputType.emailAddress,
+                            focusNode: _emailFocusNode,
+                            onSubmitted: (_) {
+                              _passwordFocusNode.requestFocus();
+                            },
                           ),
                           const SizedBox(height: 15),
 
                           // password textfield
-                          MainTextField(
+                          UserTextField(
                             controller: _passwordController,
                             hintText: 'Password',
                             obscureText: _obscureText,
@@ -191,11 +221,15 @@ class RegisterPageState extends State<RegisterPage> {
                               }
                               return null;
                             },
+                            focusNode: _passwordFocusNode,
+                            onSubmitted: (_) {
+                              _confirmPasswordFocusNode.requestFocus();
+                            },
                           ),
                           const SizedBox(height: 15),
 
                           // confirm password textfield
-                          MainTextField(
+                          UserTextField(
                             controller: _confirmPasswordController,
                             hintText: 'Confirm Password',
                             obscureText: _obscureText,
@@ -208,6 +242,8 @@ class RegisterPageState extends State<RegisterPage> {
                               }
                               return null;
                             },
+                            focusNode: _confirmPasswordFocusNode,
+                            textInputAction: TextInputAction.done,
                           ),
                           const SizedBox(height: 25),
 
