@@ -138,7 +138,7 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -150,9 +150,10 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 25),
 
                   // logo
-                  const Icon(
+                  Icon(
                     Icons.account_circle,
                     size: 100,
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
                   const SizedBox(height: 20),
 
@@ -162,7 +163,7 @@ class LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                       fontSize: 60,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey[700],
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
                   const SizedBox(height: 25),
@@ -217,7 +218,9 @@ class LoginPageState extends State<LoginPage> {
                         children: [
                           Text(
                             'Forgot Password?',
-                            style: TextStyle(color: Colors.grey[600]),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
                           ),
                         ],
                       ),
@@ -247,7 +250,9 @@ class LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             'Or continue with',
-                            style: TextStyle(color: Colors.grey[700]),
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground),
                           ),
                         ),
                         Expanded(
@@ -290,7 +295,8 @@ class LoginPageState extends State<LoginPage> {
                     children: [
                       Text(
                         'Haven\'t signed up?',
-                        style: TextStyle(color: Colors.grey[700]),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground),
                       ),
                       const SizedBox(width: 4),
                       GestureDetector(

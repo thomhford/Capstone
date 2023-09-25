@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:msd_capstone/app/pages/register_page.dart';
+import 'package:msd_capstone/app/theme/theme.dart';
 import 'firebase_options.dart';
 
 import 'app/components/navbar.dart';
@@ -51,9 +51,8 @@ class MyAppTest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: lightMode,
+      darkTheme: darkMode,
       home: const LoginPage(),
     );
   }

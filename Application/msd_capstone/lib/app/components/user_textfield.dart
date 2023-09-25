@@ -31,6 +31,7 @@ class UserTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextFormField(
+        cursorColor: Theme.of(context).colorScheme.outlineVariant,
         keyboardType: textInputType ?? TextInputType.text,
         controller: controller,
         obscureText: obscureText ?? false,
@@ -39,22 +40,25 @@ class UserTextField extends StatelessWidget {
         focusNode: focusNode,
         textInputAction: textInputAction ?? TextInputAction.next,
         decoration: InputDecoration(
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+          enabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.outline),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
           ),
-          fillColor: Colors.grey.shade200,
+          fillColor: Theme.of(context).colorScheme.primary,
           filled: true,
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey[500]),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           suffixIcon: showVisibilityIcon
               ? IconButton(
                   icon: Icon(
                     obscureText ?? true
                         ? Icons.visibility
                         : Icons.visibility_off,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   onPressed: togglePasswordVisibility,
                 )
