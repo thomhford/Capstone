@@ -78,7 +78,7 @@ class LoginPageState extends State<LoginPage> {
     final client = http.Client();
     try {
       final response = await client.post(
-        Uri.http('10.0.2.2:3000', '/user/register'),
+        Uri.http('localhost:3000', '/user/register'),
         body: {
           "Hello From App": "Hello From App",
         },

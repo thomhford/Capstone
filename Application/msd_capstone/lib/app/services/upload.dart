@@ -7,7 +7,7 @@ final logger = Logger();
 Future<void> uploadFile(File file) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.http('10.0.2.2:3000', 'upload'),
+    Uri.http('localhost:3000', 'upload'),
   );
 
   // add file to request

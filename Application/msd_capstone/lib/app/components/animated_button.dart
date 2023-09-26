@@ -71,7 +71,7 @@ class AnimatedNavigationDestinationState extends State<AnimatedButton>
         ),
         selectedIcon: Container(
           decoration: BoxDecoration(
-            color: Colors.lightBlueAccent,
+            color: Colors.redAccent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: SvgPicture.asset(widget.iconPath),
