@@ -30,3 +30,5 @@ router.post('/upload', upload.single('file'), (req, res) => {
         res.status(400).send('No file uploaded')
     }
 });
+
+export default router;

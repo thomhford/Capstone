@@ -51,7 +51,7 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   Future uploadFile() async {
-    final url = 'http://localhost:3000/upload';
+    const url = 'http://localhost:3000/upload';
     final request = http.MultipartRequest('POST', Uri.parse(url));
     final file = await http.MultipartFile.fromPath('file', _file!.path);
     request.files.add(file);
@@ -66,6 +66,9 @@ class _UploadPageState extends State<UploadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('File Upload'),
+      ),
       body: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +88,7 @@ class _UploadPageState extends State<UploadPage> {
                   child: const Text('Pick Media'),
                 ),
                 ElevatedButton(
-                  onPressed: _file != null ? () => uploadFile : null,
+                  onPressed: _file != null ? () => uploadFile() : null,
                   child: const Text('Upload File'),
                 ),
               ],

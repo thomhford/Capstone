@@ -287,7 +287,7 @@ class LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 25),
 
                   // register button
                   Row(
