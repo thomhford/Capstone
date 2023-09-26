@@ -41,6 +41,9 @@ class RegistrationService {
 
     if (response.statusCode == 200) {
       logger.i('User created successfully');
+      final displayName = '$firstName $lastName';
+      await userCredential.user!.updateDisplayName(displayName);
+      logger.i('Display name set successfully');
     } else {
       logger.e('Failed to create user');
       throw Exception('Failed to create user');
