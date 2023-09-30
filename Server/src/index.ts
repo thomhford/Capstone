@@ -9,6 +9,7 @@ import admin from "firebase-admin";
 const app = express();
 const port = 3000;
 const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const databaseURL = process.env.DATABASE_URL;
 if (!serviceAccountPath) {
     throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
 }
@@ -16,7 +17,7 @@ const serviceAccount = require(serviceAccountPath);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://msdcapstone-d9d54-default-rtdb.firebaseio.com"
+    databaseURL: databaseURL
 });
 
 sequelize.sync().then(() => {

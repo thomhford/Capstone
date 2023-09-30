@@ -2,72 +2,70 @@
 import express from 'express';
 import User from '../models/User';
 import admin from "firebase-admin";
+import path from "path";
+import * as fs from "fs";
+import { getUserId } from '../utils/authUtils';
+import appRoot from 'app-root-path';
 
 const router = express.Router();
+const rootDirectory = appRoot.path; // Get the root directory of the project for folder creation
 
 router.post('/login', async (req, res) => {
-    const idToken = req.headers.authorization?.split('Bearer ')[1];
-
-    if (!idToken) {
-        return res.status(401).json({ message: 'Unauthorized request' });
-    }
-
     try {
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
-        const uid = decodedToken.uid;
+        // Use getUserId to retrieve the user's ID
+        const userId = await getUserId(req);
 
-        let user = await User.findOne({ where: { uid } });
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized request' });
+        }
 
-        res.status(200).json({ message: 'Logged in successfully', uid });
-    } catch (error) {
-        res.status(400).json({ message: 'Invalid ID token' });
+        const user = await User.findOne({ where: { uid: userId } });
+
+        if (!user) {
+            return res.status(400).json({ message: 'User not found' });
+        }
+
+        // Handle successful login
+        res.status(200).json({ message: 'Logged in successfully' });
+    } catch (error: any) {
+        // Handle errors, including unauthorized requests and invalid tokens
+        res.status(400).json({message: error.message || 'Invalid request'});
     }
 });
 
 router.post('/register', async (req, res) => {
-    console.log("req.headers:", req.headers)
-    const idToken = req.headers.authorization?.split('Bearer ')[1];
-    console.log("idToken:", idToken)
-    console.log("req.headers:", req.headers)
-    console.log("req.body:", req.body)
-
-    if (!idToken) {
-        console.log("Unauthorized request")
-        return res.status(401).json({ message: 'Unauthorized request' });
-    }
-
     try {
-        let decodedToken;
-        try {
-            decodedToken = await admin.auth().verifyIdToken(idToken);
-        } catch (error) {
-            console.log("Cannot verify token:", error)
-            return res.status(400).json({ message: error });
-        }
-        const uid = decodedToken.uid;
-        console.log("uid:", uid)
+        // Use getUserId to retrieve the user's ID
+        const userId = await getUserId(req);
 
-        let user = await User.findOne({ where: { uid } });
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized request' });
+        }
+
+        // Check if the user already exists in your database
+        let user = await User.findOne({ where: { uid: userId } });
 
         if (user) {
-            console.log("user already exists")
             return res.status(400).json({ message: 'User already exists' });
-        } else {
-            const { firstName, lastName, email } = req.body;
-            console.log("creating user", firstName, lastName, email, uid)
-            await User.create({
-                firstName,
-                lastName,
-                email,
-                uid
-            });
-            console.log("user registered successfully")
-            return res.status(200).json({ message: 'User registered successfully' });
         }
 
+        // If the user doesn't exist, create a folder for the user's uploaded files
+        const userFolder = path.join(rootDirectory, 'uploads', userId);
+        fs.mkdirSync(userFolder, { recursive: true });
+
+        // Create a user in the database
+        const firebaseUser = await admin.auth().getUser(userId);
+        const { displayName, email } = firebaseUser;
+        await User.create({
+            firstName: displayName?.split(' ')[0],
+            lastName: displayName?.split(' ')[1],
+            email,
+            uid: userId
+        });
+
+        return res.status(200).json({ message: 'User registered successfully' });
     } catch (error: any) {
-        console.log(error)
-        return res.status(400).json({ message: error.message });
+        return res.status(400).json({ message: error.message || 'Invalid request' });
     }
 });
 
