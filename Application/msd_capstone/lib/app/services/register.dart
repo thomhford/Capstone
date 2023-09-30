@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
-import 'dart:convert';
 
 final logger = Logger();
 
@@ -25,6 +24,7 @@ class RegistrationService {
     );
 
     final idToken = await userCredential.user!.getIdToken();
+    await userCredential.user!.updateDisplayName('$firstName $lastName');
 
     final response = await _client.post(
       Uri.http('localhost:3000', '/user/register'),
@@ -32,18 +32,10 @@ class RegistrationService {
         'Authorization': 'Bearer $idToken',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-      }),
     );
 
     if (response.statusCode == 200) {
       logger.i('User created successfully');
-      final displayName = '$firstName $lastName';
-      await userCredential.user!.updateDisplayName(displayName);
-      logger.i('Display name set successfully');
     } else {
       logger.e('Failed to create user');
       throw Exception('Failed to create user');

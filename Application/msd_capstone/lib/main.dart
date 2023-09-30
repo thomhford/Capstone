@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:msd_capstone/app/pages/upload_page.dart';
 import 'package:msd_capstone/app/theme/theme.dart';
 import 'firebase_options.dart';
 
@@ -14,7 +15,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyAppTest());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -53,7 +54,7 @@ class MyAppTest extends StatelessWidget {
     return MaterialApp(
       theme: lightMode,
       darkTheme: darkMode,
-      home: const LoginPage(),
+      home: const UploadPage(),
     );
   }
 }

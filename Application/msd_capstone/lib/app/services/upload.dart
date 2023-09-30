@@ -1,37 +1,61 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final logger = Logger();
 
+User? getCurrentUser() {
+  return FirebaseAuth.instance.currentUser;
+}
+
+Future<String?> getIdToken() async {
+  final user = getCurrentUser();
+  if (user != null) {
+    final idTokenResult = await user.getIdToken();
+    return idTokenResult;
+  }
+  return null;
+}
+
 Future<void> uploadFile(File file) async {
-  var request = http.MultipartRequest(
-    'POST',
-    Uri.http('localhost:3000', 'upload'),
-  );
+  try {
+    final idToken = await getIdToken();
 
-  // add file to request
-  var fileStream = http.ByteStream(file.openRead());
-  var fileLength = await file.length();
-  var multipartFile = http.MultipartFile(
-    'file',
-    fileStream,
-    fileLength,
-    filename: file.path.split('/').last,
-  );
-  request.files.add(multipartFile);
+    if (idToken == null) {
+      throw Exception('Failed to get authentication token');
+    }
 
-  // add other fields to request
-  request.fields['title'] = 'My Title';
-  request.fields['description'] = 'My Description';
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.http('localhost:3000', 'upload'),
+    );
 
-  // send request
-  var response = await request.send();
+    // Add headers to the request (including the idToken)
+    request.headers['Authorization'] = 'Bearer $idToken';
 
-  // handle response
-  if (response.statusCode == 200) {
-    logger.i('File uploaded successfully');
-  } else {
-    logger.e('Error uploading file: ${response.reasonPhrase}');
+    // Add the file to the request
+    var fileStream = http.ByteStream(file.openRead());
+    var fileLength = await file.length();
+    var multipartFile = http.MultipartFile(
+      'file',
+      fileStream,
+      fileLength,
+      filename: file.path.split('/').last,
+    );
+    request.files.add(multipartFile);
+
+    // Send the request
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      logger.i('File uploaded successfully');
+    } else {
+      logger.e('Error uploading file: ${response.reasonPhrase}');
+      throw Exception('File upload failed: ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    logger.e('Error uploading file: $e');
+    throw Exception('File upload failed: $e');
   }
 }
