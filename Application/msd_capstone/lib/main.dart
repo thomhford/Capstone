@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:msd_capstone/app/pages/upload_page.dart';
 import 'package:msd_capstone/app/theme/theme.dart';
+import 'app/pages/profile_page.dart';
 import 'firebase_options.dart';
 
 import 'app/components/navbar.dart';
@@ -15,7 +16,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const MyAppTest());
 }
 
 class MyApp extends StatelessWidget {
@@ -24,9 +25,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: lightMode,
+      darkTheme: darkMode,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
@@ -54,7 +54,7 @@ class MyAppTest extends StatelessWidget {
     return MaterialApp(
       theme: lightMode,
       darkTheme: darkMode,
-      home: const UploadPage(),
+      home: const ProfilePage(),
     );
   }
 }
