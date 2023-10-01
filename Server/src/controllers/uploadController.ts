@@ -5,7 +5,7 @@ import { getUserId } from '../utils/authUtils';
 import appRoot from "app-root-path";
 import File from '../models/File';
 
-const rootDirectory = appRoot.path;
+const rootDirectory = appRoot.path; // Get the root directory to find the folder to store the file
 
 const storage = multer.diskStorage({
     destination: async (req: Request, file, cb) => {
@@ -31,6 +31,7 @@ export const handleFileUpload = async (req: Request, res: Response) => {
     try {
         upload.single('file')(req, res, async (err) => {
             if (err) {
+                console.log("Upload Controller:",err);
                 if (err.message === 'Unauthorized request') {
                     return res.status(401).json({ message: 'Unauthorized request' });
                 }
@@ -59,13 +60,15 @@ export const handleFileUpload = async (req: Request, res: Response) => {
                         user_uid: userId,
                     });
                 }
-
+                console.log(metadata,'File uploaded successfully');
                 return res.status(200).json({ message: 'File uploaded successfully', metadata });
             } else {
+                console.log('No file uploaded')
                 return res.status(400).json({ message: 'No file uploaded' });
             }
         });
     } catch (error) {
+        console.log("Upload Controller:",error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };

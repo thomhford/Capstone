@@ -1,8 +1,7 @@
 // models/File.js
 import {DataTypes} from 'sequelize';
 import sequelize from '../../config/db';
-
-import User from './User'; // Update the path to match your project structure
+import User from './User';
 
 const File = sequelize.define('File', {
     file_id: {
