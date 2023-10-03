@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
     destination: async (req: Request, file, cb) => {
         const userId = await getUserId(req);
         if (userId) {
-            const userFolder = path.join(rootDirectory, 'uploads', userId);
+            const userFolder = path.join(rootDirectory, 'public/uploads', userId);
             cb(null, userFolder);
         } else {
             cb(new Error('Unauthorized request'), '');

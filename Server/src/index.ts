@@ -3,6 +3,7 @@ import express from 'express';
 import sequelize from "../config/db";
 import userRoutes from "./routes/user";
 import uploadRoutes from "./routes/upload";
+import fileRoutes from "./routes/file";
 import 'dotenv/config';
 import admin from "firebase-admin";
 
@@ -25,8 +26,10 @@ sequelize.sync().then(() => {
 });
 
 app.use(express.json());
+app.use(express.static('public'));
 app.use('/user', userRoutes);
 app.use(uploadRoutes);
+app.use(fileRoutes);
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

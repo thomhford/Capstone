@@ -24,7 +24,7 @@ export const registerUser = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const userFolder = path.join(rootDirectory, 'uploads', userId);
+        const userFolder = path.join(rootDirectory, 'public/uploads', userId);
         fs.mkdirSync(userFolder, { recursive: true });
 
         const firebaseUser = await admin.auth().getUser(userId);

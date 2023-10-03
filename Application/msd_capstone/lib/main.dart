@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:msd_capstone/app/pages/upload_page.dart';
 import 'package:msd_capstone/app/theme/theme.dart';
 import 'app/pages/profile_page.dart';
+import 'app/pages/search_page.dart';
 import 'firebase_options.dart';
 
 import 'app/components/navbar.dart';
@@ -54,7 +55,7 @@ class MyAppTest extends StatelessWidget {
     return MaterialApp(
       theme: lightMode,
       darkTheme: darkMode,
-      home: const ProfilePage(),
+      home: const NavBar(),
     );
   }
 }
