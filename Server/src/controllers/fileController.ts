@@ -5,7 +5,9 @@ import File from '../models/File';
 
 export const handleFileRequest = async (req: Request, res: Response) => {
     try {
-        const files = await File.findAll();
+        const files = await File.findAll({
+            order : [['upload_date', 'DESC']]
+        });
         const formattedFiles = files.map((file) => {
             return {
                 file_name: file.file_name,
