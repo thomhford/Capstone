@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'animated_button.dart';
 import '../pages/home_page.dart';
 import '../pages/search_page.dart';
@@ -49,26 +50,28 @@ class NavBarState extends State<NavBar> {
             currentPageIndex = index;
           });
         },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        indicatorColor: Theme.of(context).colorScheme.onPrimary,
         destinations: <Widget>[
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Home.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Home.svg'),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Search.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Search.svg'),
             label: 'Search',
           ),
           AnimatedButton(
-            iconPath: 'assets/images/Upload.svg',
+            iconPath: 'assets/images/icons/Upload.svg',
             label: 'Upload',
             isSelected: currentPageIndex == 2,
           ),
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Chats.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Chats.svg'),
             label: 'Chats',
           ),
           NavigationDestination(
-            icon: SvgPicture.asset('assets/images/Profile.svg'),
+            icon: SvgPicture.asset('assets/images/icons/Profile.svg'),
             label: 'Profile',
           ),
         ],

@@ -2,12 +2,15 @@
 import express from 'express';
 import sequelize from "../config/db";
 import userRoutes from "./routes/user";
+import uploadRoutes from "./routes/upload";
+import fileRoutes from "./routes/file";
 import 'dotenv/config';
 import admin from "firebase-admin";
 
 const app = express();
 const port = 3000;
 const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const databaseURL = process.env.DATABASE_URL;
 if (!serviceAccountPath) {
     throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
 }
@@ -15,7 +18,7 @@ const serviceAccount = require(serviceAccountPath);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://msdcapstone-d9d54-default-rtdb.firebaseio.com"
+    databaseURL: databaseURL
 });
 
 sequelize.sync().then(() => {
@@ -23,7 +26,10 @@ sequelize.sync().then(() => {
 });
 
 app.use(express.json());
+app.use(express.static('public'));
 app.use('/user', userRoutes);
+app.use(uploadRoutes);
+app.use(fileRoutes);
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

@@ -3,7 +3,6 @@
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
-import 'dart:convert';
 
 final logger = Logger();
 
@@ -27,18 +26,14 @@ class RegistrationService {
     );
 
     final idToken = await userCredential.user!.getIdToken();
+    await userCredential.user!.updateDisplayName('$firstName $lastName');
 
     final response = await _client.post(
-      Uri.http('10.0.2.2:3000', '/user/register'),
+      Uri.http('localhost:3000', '/user/register'),
       headers: {
         'Authorization': 'Bearer $idToken',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-      }),
     );
 
     if (response.statusCode == 200) {
