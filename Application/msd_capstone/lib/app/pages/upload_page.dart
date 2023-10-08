@@ -53,19 +53,6 @@ class UploadPageState extends State<UploadPage> {
     });
   }
 
-  // Future uploadFile() async {
-  //   const url = 'http://localhost:3000/upload';
-  //   final request = http.MultipartRequest('POST', Uri.parse(url));
-  //   final file = await http.MultipartFile.fromPath('file', _file!.path);
-  //   request.files.add(file);
-  //   final response = await request.send();
-  //   if (response.statusCode == 200) {
-  //     logger.i('File uploaded successfully');
-  //   } else {
-  //     logger.e('File upload failed');
-  //   }
-  // }
-
   Future<void> _uploadFile() async {
     try {
       await uploadFile(_file!);
