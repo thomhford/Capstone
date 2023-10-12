@@ -76,55 +76,58 @@ class UploadPageState extends State<UploadPage> {
         title: const Text('File Upload'),
       ),
       body: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: getImage,
-                  child: const Text('Pick Image'),
-                ),
-                ElevatedButton(
-                  onPressed: getVideo,
-                  child: const Text('Pick Video'),
-                ),
-                ElevatedButton(
-                  onPressed: getMedia,
-                  child: const Text('Pick Media'),
-                ),
-                ElevatedButton(
-                  onPressed: _file != null ? () => _uploadFile() : null,
-                  child: const Text('Upload File'),
-                ),
-              ],
-            ),
-            if (_file != null)
-              Expanded(
-                child: FutureBuilder(
-                  future: _uploadFile(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error uploading file: ${snapshot.error}'),
-                      );
-                    } else {
-                      return _videoPlayerController != null
-                          ? AspectRatio(
-                              aspectRatio:
-                                  _videoPlayerController!.value.aspectRatio,
-                              child: VideoPlayer(_videoPlayerController!),
-                            )
-                          : Image.file(_file!);
-                    }
-                  },
-                ),
+        child: SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: getImage,
+                    child: const Text('Pick Image'),
+                  ),
+                  ElevatedButton(
+                    onPressed: getVideo,
+                    child: const Text('Pick Video'),
+                  ),
+                  ElevatedButton(
+                    onPressed: getMedia,
+                    child: const Text('Pick Media'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _file != null ? () => _uploadFile() : null,
+                    child: const Text('Upload File'),
+                  ),
+                ],
               ),
-          ],
+              if (_file != null)
+                Expanded(
+                  child: FutureBuilder(
+                    future: _uploadFile(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child:
+                              Text('Error uploading file: ${snapshot.error}'),
+                        );
+                      } else {
+                        return _videoPlayerController != null
+                            ? AspectRatio(
+                                aspectRatio:
+                                    _videoPlayerController!.value.aspectRatio,
+                                child: VideoPlayer(_videoPlayerController!),
+                              )
+                            : Image.file(_file!);
+                      }
+                    },
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

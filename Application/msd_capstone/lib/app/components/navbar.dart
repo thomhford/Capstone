@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../pages/camera_page.dart';
 import 'animated_button.dart';
 import '../pages/home_page.dart';
 import '../pages/search_page.dart';
@@ -28,7 +29,7 @@ class NavBarState extends State<NavBar> {
       case 1:
         return const SearchPage();
       case 2:
-        return const UploadPage();
+        return const CameraPage();
       case 3:
         return const ChatsPage();
       case 4:

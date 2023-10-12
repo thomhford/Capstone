@@ -56,7 +56,7 @@ class MyAppTest extends StatelessWidget {
     return MaterialApp(
       theme: lightMode,
       darkTheme: darkMode,
-      home: const CameraPage(),
+      home: const NavBar(),
     );
   }
 }
