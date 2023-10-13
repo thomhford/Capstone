@@ -19,10 +19,12 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   CameraController? _controller;
   List<CameraDescription>? cameras;
+  bool hasCamera = true; // To track whether the device has a camera
   bool isCameraReady = false;
   FlashMode _flashMode = FlashMode.off; // Initialize flash mode to "off"
   String imagePath = ''; // Path to the captured image
   bool isPictureTaken = false; // To track whether a picture has been taken
+  bool isUpload = false;
 
   @override
   void initState() {
@@ -33,7 +35,9 @@ class _CameraPageState extends State<CameraPage> {
   Future<void> initializeCamera() async {
     cameras = await availableCameras();
     if (cameras!.isEmpty) {
-      logger.e('No cameras available');
+      setState(() {
+        hasCamera = false;
+      });
       return;
     }
     _controller = CameraController(cameras![0], ResolutionPreset.veryHigh);
@@ -63,7 +67,7 @@ class _CameraPageState extends State<CameraPage> {
     if (!_controller!.value.isTakingPicture) {
       try {
         final XFile file = await _controller!.takePicture();
-        // Update the path to the captured image
+        // Path to the captured image
         imagePath = file.path;
         // Update the picture taken status
         isPictureTaken = true;
@@ -102,6 +106,7 @@ class _CameraPageState extends State<CameraPage> {
   Widget buildCameraPreview() {
     final mediaSize = MediaQuery.of(context).size;
     var scale = _controller!.value.aspectRatio * mediaSize.aspectRatio;
+    // Ensure scale does not shrink the camera preview
     if (scale < 1) scale = 1 / scale;
     return Stack(
       children: [
@@ -115,7 +120,8 @@ class _CameraPageState extends State<CameraPage> {
         ),
         Positioned(
           bottom: 16,
-          left: mediaSize.width / 2 - 38,
+          left: mediaSize.width / 2 -
+              38, // 38 = 76 / 2. 76 is the width of the button
           child: CameraButton(
             onPressed: takePicture,
           ),
@@ -177,9 +183,45 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
+  Widget buildUploadPreview() {
+    return Stack(
+      children: [
+        Image.file(
+          File(imagePath),
+          fit:
+              BoxFit.cover, // Display the image as if it were the CameraPreview
+        ),
+        Positioned(
+          top: 16,
+          left: 16,
+          child: FloatingActionButton(
+            onPressed: () {
+              // Reset the path to the captured image
+              imagePath = '';
+              // Reset the picture taken status
+              isPictureTaken = false;
+              setState(() {});
+            },
+            child: const Icon(
+              CupertinoIcons.xmark_circle_fill,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!isCameraReady) {
+    if (!hasCamera) {
+      return const Center(
+        child: Text(
+          'No camera found',
+          style: TextStyle(fontSize: 24.0),
+        ),
+      );
+    } else if (!isCameraReady) {
       return const Center(child: CircularProgressIndicator());
     } else {
       return Scaffold(

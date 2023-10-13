@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class AnimatedButton extends StatefulWidget {
+class UploadNavButton extends StatefulWidget {
   final String label;
   final String iconPath;
   final bool isSelected;
 
-  const AnimatedButton({
+  const UploadNavButton({
     super.key,
     required this.label,
     required this.iconPath,
@@ -20,7 +20,7 @@ class AnimatedButton extends StatefulWidget {
       AnimatedNavigationDestinationState();
 }
 
-class AnimatedNavigationDestinationState extends State<AnimatedButton>
+class AnimatedNavigationDestinationState extends State<UploadNavButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -47,7 +47,7 @@ class AnimatedNavigationDestinationState extends State<AnimatedButton>
   }
 
   @override
-  void didUpdateWidget(covariant AnimatedButton oldWidget) {
+  void didUpdateWidget(covariant UploadNavButton oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.isSelected != widget.isSelected) {

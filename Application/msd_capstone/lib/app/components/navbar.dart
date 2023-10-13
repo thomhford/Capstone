@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../pages/camera_page.dart';
-import 'animated_button.dart';
+import 'upload_nav_button.dart';
 import '../pages/home_page.dart';
 import '../pages/search_page.dart';
-import '../pages/upload_page.dart';
 import '../pages/chats_page.dart';
 import '../pages/profile_page.dart';
 
@@ -62,7 +61,7 @@ class NavBarState extends State<NavBar> {
             icon: SvgPicture.asset('assets/images/icons/Search.svg'),
             label: 'Search',
           ),
-          AnimatedButton(
+          UploadNavButton(
             iconPath: 'assets/images/icons/Upload.svg',
             label: 'Upload',
             isSelected: currentPageIndex == 2,
