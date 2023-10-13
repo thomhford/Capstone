@@ -25,6 +25,7 @@ class _CameraPageState extends State<CameraPage> {
   String imagePath = ''; // Path to the captured image
   bool isPictureTaken = false; // To track whether a picture has been taken
   bool isUpload = false;
+  bool isRecording = false; // To track whether video recording is in progress
 
   @override
   void initState() {
@@ -78,6 +79,31 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
+  void toggleVideoRecording() async {
+    if (isRecording) {
+      // If already recording, stop recording
+      try {
+        final XFile file = (_controller!.stopVideoRecording) as XFile;
+        // Path to the captured video
+        imagePath = file.path;
+        isRecording = false;
+        isPictureTaken = true;
+        setState(() {});
+      } catch (e) {
+        logger.e("Failed to stop video recording: $e");
+      }
+    } else {
+      // If not recording, start recording
+      try {
+        _controller!.startVideoRecording();
+        isRecording = true;
+        setState(() {});
+      } catch (e) {
+        logger.e("Failed to start video recording: $e");
+      }
+    }
+  }
+
   void toggleCamera() {
     final isFront =
         _controller!.description.lensDirection == CameraLensDirection.front;
@@ -124,6 +150,8 @@ class _CameraPageState extends State<CameraPage> {
               38, // 38 = 76 / 2. 76 is the width of the button
           child: CameraButton(
             onPressed: takePicture,
+            onLongPress: toggleVideoRecording,
+            onLongPressEnd: toggleVideoRecording,
           ),
         ),
         Positioned(

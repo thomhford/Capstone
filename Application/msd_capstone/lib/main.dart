@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:msd_capstone/app/pages/camera_page.dart';
-import 'package:msd_capstone/app/pages/upload_page.dart';
-import 'package:msd_capstone/app/theme/theme.dart';
-import 'app/pages/profile_page.dart';
-import 'app/pages/search_page.dart';
 import 'firebase_options.dart';
-
 import 'app/components/navbar.dart';
 import 'app/pages/login_page.dart';
+import 'app/theme/theme.dart';
+
+import 'app/pages/camera_page.dart';
+import 'app/pages/upload_page.dart';
+import 'app/pages/profile_page.dart';
+import 'app/pages/search_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
