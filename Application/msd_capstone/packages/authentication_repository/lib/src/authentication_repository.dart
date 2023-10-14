@@ -12,11 +12,19 @@ import 'package:meta/meta.dart';
 /// {@endtemplate}
 class SendPasswordResetEmailFailure implements Exception {
   const SendPasswordResetEmailFailure([
-    this.message = 'An unknown exception occurred.',
+    this.message = 'An unknown exception occurred from email.',
   ]);
 
+  /// Create an authentication message
+  /// from a firebase authentication exception code.
+  /// https://pub.dev/documentation/firebase_auth/latest/firebase_auth/FirebaseAuth/sendPasswordResetEmail.html
   factory SendPasswordResetEmailFailure.fromCode(String code) {
+    print(code);
     switch (code) {
+      case 'missing-email':
+        return const SendPasswordResetEmailFailure(
+          'Please enter an email address.',
+        );
       case 'invalid-email':
         return const SendPasswordResetEmailFailure(
           'Email is not valid or badly formatted.',

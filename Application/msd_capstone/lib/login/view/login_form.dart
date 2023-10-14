@@ -44,10 +44,9 @@ class LoginForm extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               _EmailInput(),
-              const SizedBox(height: 8),
               _PasswordInput(),
               _ForgotPassword(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _LoginButton(),
               const SizedBox(height: 8),
               _GoogleLoginButton(),
@@ -82,7 +81,7 @@ class _EmailInput extends StatelessWidget {
                 hintText: 'Email',
                 helperText: '',
                 errorText:
-                    state.email.displayError != null ? 'invalid email' : null,
+                    state.email.displayError != null ? 'Invalid Email' : null,
                 enabledBorder: OutlineInputBorder(
                   borderSide:
                       BorderSide(color: Theme.of(context).colorScheme.outline),
@@ -90,6 +89,14 @@ class _EmailInput extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       color: Theme.of(context).colorScheme.outlineVariant),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                 ),
                 fillColor: Theme.of(context).colorScheme.primary,
                 filled: true,
@@ -131,7 +138,7 @@ class _PasswordInputState extends State<_PasswordInput> {
                 hintText: 'Password',
                 helperText: '',
                 errorText: state.password.displayError != null
-                    ? 'invalid password'
+                    ? 'Invalid Password'
                     : null,
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -152,6 +159,14 @@ class _PasswordInputState extends State<_PasswordInput> {
                   borderSide: BorderSide(
                       color: Theme.of(context).colorScheme.outlineVariant),
                 ),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
+                ),
                 fillColor: Theme.of(context).colorScheme.primary,
                 filled: true,
                 hintStyle:
@@ -168,33 +183,14 @@ class _PasswordInputState extends State<_PasswordInput> {
 class _ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
-      builder: (context, state) {
-        return state.status.isInProgress
-            ? const CircularProgressIndicator()
-            : ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: GestureDetector(
-                  onTap: state.isValid
-                      ? () => context.read<LoginCubit>().logInWithCredentials()
-                      : null,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-      },
+    final theme = Theme.of(context);
+    return TextButton(
+      key: const Key('loginForm_forgotPassword_flatButton'),
+      onPressed: () => context.read<LoginCubit>().sendPasswordResetEmail(),
+      child: Text(
+        'Forgot Password?',
+        style: TextStyle(color: theme.primaryColor),
+      ),
     );
   }
 }
@@ -206,18 +202,22 @@ class _LoginButton extends StatelessWidget {
       builder: (context, state) {
         return state.status.isInProgress
             ? const CircularProgressIndicator()
-            : ElevatedButton(
-                key: const Key('loginForm_continue_raisedButton'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+            : SizedBox(
+                width: 400,
+                height: 50,
+                child: ElevatedButton(
+                  key: const Key('loginForm_continue_raisedButton'),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(80),
+                    ),
+                    backgroundColor: Colors.red,
                   ),
-                  backgroundColor: const Color(0xFFFFD600),
+                  onPressed: state.isValid
+                      ? () => context.read<LoginCubit>().logInWithCredentials()
+                      : null,
+                  child: const Text('LOGIN'),
                 ),
-                onPressed: state.isValid
-                    ? () => context.read<LoginCubit>().logInWithCredentials()
-                    : null,
-                child: const Text('LOGIN'),
               );
       },
     );
@@ -228,20 +228,24 @@ class _GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ElevatedButton.icon(
-      key: const Key('loginForm_googleLogin_raisedButton'),
-      label: const Text(
-        'SIGN IN WITH GOOGLE',
-        style: TextStyle(color: Colors.white),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+    return SizedBox(
+      width: 400,
+      height: 50,
+      child: ElevatedButton.icon(
+        key: const Key('loginForm_googleLogin_raisedButton'),
+        label: const Text(
+          'SIGN IN WITH GOOGLE',
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: theme.colorScheme.secondary,
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          backgroundColor: theme.colorScheme.secondary,
+        ),
+        icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
+        onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
       ),
-      icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
-      onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
     );
   }
 }
