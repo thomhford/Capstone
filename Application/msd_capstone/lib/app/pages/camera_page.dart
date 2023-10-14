@@ -207,6 +207,32 @@ class _CameraPageState extends State<CameraPage> {
             ),
           ),
         ),
+        Positioned(
+          bottom: 16,
+          left: 16,
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              CupertinoIcons.arrow_down_to_line,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 16,
+          left: 36,
+          child: TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Upload',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
