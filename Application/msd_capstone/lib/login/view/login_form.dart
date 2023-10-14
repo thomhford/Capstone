@@ -69,30 +69,33 @@ class _EmailInput extends StatelessWidget {
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: TextField(
-            key: const Key('loginForm_emailInput_textField'),
-            onChanged: (email) =>
-                context.read<LoginCubit>().emailChanged(email),
-            keyboardType: TextInputType.emailAddress,
-            cursorColor: Theme.of(context).colorScheme.outlineVariant,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              hintText: 'Email',
-              helperText: '',
-              errorText:
-                  state.email.displayError != null ? 'invalid email' : null,
-              enabledBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: Theme.of(context).colorScheme.outline),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: TextField(
+              key: const Key('loginForm_emailInput_textField'),
+              onChanged: (email) =>
+                  context.read<LoginCubit>().emailChanged(email),
+              keyboardType: TextInputType.emailAddress,
+              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              textInputAction: TextInputAction.next,
+              decoration: InputDecoration(
+                hintText: 'Email',
+                helperText: '',
+                errorText:
+                    state.email.displayError != null ? 'invalid email' : null,
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant),
+                ),
+                fillColor: Theme.of(context).colorScheme.primary,
+                filled: true,
+                hintStyle:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.outlineVariant),
-              ),
-              fillColor: Theme.of(context).colorScheme.primary,
-              filled: true,
-              hintStyle:
-                  TextStyle(color: Theme.of(context).colorScheme.onPrimary),
             ),
           ),
         );
@@ -115,42 +118,45 @@ class _PasswordInputState extends State<_PasswordInput> {
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: TextField(
-            key: const Key('loginForm_passwordInput_textField'),
-            onChanged: (password) =>
-                context.read<LoginCubit>().passwordChanged(password),
-            obscureText: _obscureText,
-            textInputAction: TextInputAction.done,
-            cursorColor: Theme.of(context).colorScheme.outlineVariant,
-            decoration: InputDecoration(
-              hintText: 'password',
-              helperText: '',
-              errorText: state.password.displayError != null
-                  ? 'invalid password'
-                  : null,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                  color: Theme.of(context).colorScheme.onPrimary,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: TextField(
+              key: const Key('loginForm_passwordInput_textField'),
+              onChanged: (password) =>
+                  context.read<LoginCubit>().passwordChanged(password),
+              obscureText: _obscureText,
+              textInputAction: TextInputAction.done,
+              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                helperText: '',
+                errorText: state.password.displayError != null
+                    ? 'invalid password'
+                    : null,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                },
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant),
+                ),
+                fillColor: Theme.of(context).colorScheme.primary,
+                filled: true,
+                hintStyle:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: Theme.of(context).colorScheme.outline),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.outlineVariant),
-              ),
-              fillColor: Theme.of(context).colorScheme.primary,
-              filled: true,
-              hintStyle:
-                  TextStyle(color: Theme.of(context).colorScheme.onPrimary),
             ),
           ),
         );
@@ -166,22 +172,25 @@ class _ForgotPassword extends StatelessWidget {
       builder: (context, state) {
         return state.status.isInProgress
             ? const CircularProgressIndicator()
-            : GestureDetector(
-                onTap: state.isValid
-                    ? () => context.read<LoginCubit>().logInWithCredentials()
-                    : null,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground,
+            : ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: GestureDetector(
+                  onTap: state.isValid
+                      ? () => context.read<LoginCubit>().logInWithCredentials()
+                      : null,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
