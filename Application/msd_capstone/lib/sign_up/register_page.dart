@@ -9,7 +9,7 @@ import '../components/main_button.dart';
 import '../components/user_textfield.dart';
 import '../components/square_tile_button.dart';
 import '../services/register.dart';
-import 'login_page.dart';
+import '../login/login_page.dart';
 
 final logger = Logger();
 

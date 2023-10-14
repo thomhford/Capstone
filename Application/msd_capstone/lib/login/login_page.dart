@@ -12,7 +12,7 @@ import '../components/navbar.dart';
 import '../components/main_button.dart';
 import '../components/user_textfield.dart';
 import '../components/square_tile_button.dart';
-import 'register_page.dart';
+import '../sign_up/register_page.dart';
 
 var logger = Logger();
 

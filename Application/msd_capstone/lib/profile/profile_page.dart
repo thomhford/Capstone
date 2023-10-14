@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/logout.dart';
-import 'login_page.dart';
+import '../login/login_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

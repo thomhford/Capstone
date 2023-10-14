@@ -7,6 +7,45 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
+/// {@template send_password_reset_email_failure}
+/// Thrown if Password Reset Email fails.
+/// {@endtemplate}
+class SendPasswordResetEmailFailure implements Exception {
+  const SendPasswordResetEmailFailure([
+    this.message = 'An unknown exception occurred.',
+  ]);
+
+  factory SendPasswordResetEmailFailure.fromCode(String code) {
+    switch (code) {
+      case 'invalid-email':
+        return const SendPasswordResetEmailFailure(
+          'Email is not valid or badly formatted.',
+        );
+      case 'user-not-found':
+        return const SendPasswordResetEmailFailure(
+          'Email is not found, please create an account.',
+        );
+      case 'user-disabled':
+        return const SendPasswordResetEmailFailure(
+          'This user has been disabled. Please contact support for help.',
+        );
+      case 'too-many-requests':
+        return const SendPasswordResetEmailFailure(
+          'Too many requests, please try again later.',
+        );
+      case 'operation-not-allowed':
+        return const SendPasswordResetEmailFailure(
+          'Operation is not allowed.  Please contact support.',
+        );
+      default:
+        return const SendPasswordResetEmailFailure();
+    }
+  }
+
+  /// The associated error message.
+  final String message;
+}
+
 /// {@template sign_up_with_email_and_password_failure}
 /// Thrown during the sign up process if a failure occurs.
 /// {@endtemplate}
@@ -269,6 +308,23 @@ class AuthenticationRepository {
       ]);
     } catch (_) {
       throw LogOutFailure();
+    }
+  }
+
+  /// Sends a password reset link to the given email address.
+  /// https://pub.dev/documentation/firebase_auth/latest/firebase_auth/FirebaseAuth/sendPasswordResetEmail.html
+  /// Throws a [SendPasswordResetEmailFailure] if an exception occurs.
+  Future<void> sendPasswordResetEmail({
+    required String email,
+  }) async {
+    try {
+      await firebase_auth.FirebaseAuth.instance.sendPasswordResetEmail(
+        email: email,
+      );
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw SendPasswordResetEmailFailure.fromCode(e.code);
+    } catch (_) {
+      throw const SendPasswordResetEmailFailure();
     }
   }
 }
