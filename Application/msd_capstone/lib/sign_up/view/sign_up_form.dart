@@ -22,31 +22,138 @@ class SignUpForm extends StatelessWidget {
       },
       child: Align(
         alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.account_circle,
-              size: 100,
-              color: Theme.of(context).colorScheme.onBackground,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Register',
-              style: TextStyle(
-                fontSize: 60,
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.account_circle,
+                size: 100,
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-            ),
-            _EmailInput(),
-            const SizedBox(height: 8),
-            _PasswordInput(),
-            const SizedBox(height: 8),
-            _SignUpButton(),
-          ],
+              const SizedBox(height: 20),
+              Text(
+                'Register',
+                style: TextStyle(
+                  fontSize: 60,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+              const SizedBox(height: 40),
+              _FirstNameInput(),
+              _LastNameInput(),
+              _EmailInput(),
+              _PasswordInput(),
+              _SignUpButton(),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _FirstNameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.firstName != current.firstName,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: TextField(
+              key: const Key('signUpForm_firstNameInput_textField'),
+              onChanged: (firstName) =>
+                  context.read<SignUpCubit>().firstNameChanged(firstName),
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                hintText: 'First Name',
+                helperText: '',
+                errorText: state.firstName.displayError != null
+                    ? 'Invalid First Name'
+                    : null,
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
+                ),
+                fillColor: Theme.of(context).colorScheme.primary,
+                filled: true,
+                hintStyle:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              textInputAction: TextInputAction.next,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LastNameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.lastName != current.lastName,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: TextField(
+              key: const Key('signUpForm_lastNameInput_textField'),
+              onChanged: (lastName) =>
+                  context.read<SignUpCubit>().lastNameChanged(lastName),
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                hintText: 'Last Name',
+                helperText: '',
+                errorText: state.lastName.displayError != null
+                    ? 'Invalid Last Name'
+                    : null,
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
+                ),
+                fillColor: Theme.of(context).colorScheme.primary,
+                filled: true,
+                hintStyle:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              textInputAction: TextInputAction.next,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -213,7 +320,7 @@ class _PasswordInputState extends State<_PasswordInput> {
                       TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                 ),
                 cursorColor: Theme.of(context).colorScheme.outlineVariant,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
               ),
             );
           },
@@ -226,22 +333,36 @@ class _PasswordInputState extends State<_PasswordInput> {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<SignUpCubit, SignUpState>(
       builder: (context, state) {
         return state.status.isInProgress
             ? const CircularProgressIndicator()
-            : ElevatedButton(
+            : GestureDetector(
                 key: const Key('signUpForm_continue_raisedButton'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  backgroundColor: Colors.orangeAccent,
-                ),
-                onPressed: state.isValid
+                onTap: state.isValid
                     ? () => context.read<SignUpCubit>().signUpFormSubmitted()
                     : null,
-                child: const Text('SIGN UP'),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
+                  decoration: BoxDecoration(
+                    color: state.isValid
+                        ? theme.colorScheme.secondary
+                        : theme.colorScheme.secondary.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'SIGN UP',
+                      style: TextStyle(
+                        color: theme.colorScheme.onSecondary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
               );
       },
     );

@@ -44,17 +44,58 @@ class LoginForm extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               _EmailInput(),
-              _PasswordInput(),
-              _ForgotPassword(),
+              Stack(children: [
+                _PasswordInput(),
+                Positioned(
+                  right: 20,
+                  bottom: -15,
+                  child: _ForgotPassword(),
+                ),
+              ]),
               const SizedBox(height: 16),
               _LoginButton(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 25),
+              _ContinueWith(),
+              const SizedBox(height: 25),
               _GoogleLoginButton(),
               const SizedBox(height: 4),
               _SignUpButton(),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ContinueWith extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Divider(
+              thickness: 0.5,
+              color: Colors.grey[400],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Or continue with',
+              style:
+                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
+            ),
+          ),
+          Expanded(
+            child: Divider(
+              thickness: 0.5,
+              color: Colors.grey[400],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -198,25 +239,35 @@ class _ForgotPassword extends StatelessWidget {
 class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<LoginCubit, LoginState>(
       builder: (context, state) {
         return state.status.isInProgress
             ? const CircularProgressIndicator()
-            : SizedBox(
-                width: 400,
-                height: 50,
-                child: ElevatedButton(
-                  key: const Key('loginForm_continue_raisedButton'),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(80),
-                    ),
-                    backgroundColor: Colors.red,
+            : GestureDetector(
+                key: const Key('loginForm_continue_raisedButton'),
+                onTap: state.isValid
+                    ? () => context.read<LoginCubit>().logInWithCredentials()
+                    : null,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
+                  decoration: BoxDecoration(
+                    color: state.isValid
+                        ? theme.colorScheme.secondary
+                        : theme.colorScheme.secondary.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  onPressed: state.isValid
-                      ? () => context.read<LoginCubit>().logInWithCredentials()
-                      : null,
-                  child: const Text('LOGIN'),
+                  child: Center(
+                    child: Text(
+                      'LOGIN',
+                      style: TextStyle(
+                        color: theme.colorScheme.onSecondary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ),
               );
       },
@@ -233,9 +284,9 @@ class _GoogleLoginButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton.icon(
         key: const Key('loginForm_googleLogin_raisedButton'),
-        label: const Text(
+        label: Text(
           'SIGN IN WITH GOOGLE',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: theme.colorScheme.onSecondary),
         ),
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(

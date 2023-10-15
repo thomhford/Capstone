@@ -192,7 +192,25 @@ class LogInWithGoogleFailure implements Exception {
 }
 
 /// Thrown during the logout process if a failure occurs.
-class LogOutFailure implements Exception {}
+class LogOutFailure implements Exception {
+  /// {@macro log_out_with_google_failure}
+  const LogOutFailure([
+    this.message = 'An unknown exception occurred.',
+  ]);
+
+  /// Create an authentication message
+  /// from a firebase authentication exception code.
+  factory LogOutFailure.fromCode(String code) {
+    print('Logout Exeption: $code');
+    switch (code) {
+      default:
+        return const LogOutFailure();
+    }
+  }
+
+  /// The associated error message.
+  final String message;
+}
 
 /// {@template authentication_repository}
 /// Repository which manages user authentication.
@@ -240,15 +258,21 @@ class AuthenticationRepository {
     return _cache.read<User>(key: userCacheKey) ?? User.empty;
   }
 
-  /// Creates a new user with the provided [email] and [password].
+  /// Creates a new user with the provided [firstName], [lastName], [email] and [password].
   ///
   /// Throws a [SignUpWithEmailAndPasswordFailure] if an exception occurs.
-  Future<void> signUp({required String email, required String password}) async {
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+  }) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      await userCredential.user!.updateDisplayName('$firstName $lastName');
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -314,7 +338,8 @@ class AuthenticationRepository {
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
-    } catch (_) {
+    } catch (e) {
+      print(e);
       throw LogOutFailure();
     }
   }

@@ -11,12 +11,46 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   final AuthenticationRepository _authenticationRepository;
 
+  void firstNameChanged(String value) {
+    final firstName = Name.dirty(value);
+    emit(
+      state.copyWith(
+        firstName: firstName,
+        isValid: Formz.validate([
+          firstName,
+          state.lastName,
+          state.email,
+          state.password,
+          state.confirmedPassword,
+        ]),
+      ),
+    );
+  }
+
+  void lastNameChanged(String value) {
+    final lastName = Name.dirty(value);
+    emit(
+      state.copyWith(
+        lastName: lastName,
+        isValid: Formz.validate([
+          state.firstName,
+          lastName,
+          state.email,
+          state.password,
+          state.confirmedPassword,
+        ]),
+      ),
+    );
+  }
+
   void emailChanged(String value) {
     final email = Email.dirty(value);
     emit(
       state.copyWith(
         email: email,
         isValid: Formz.validate([
+          state.firstName,
+          state.lastName,
           email,
           state.password,
           state.confirmedPassword,
@@ -36,6 +70,8 @@ class SignUpCubit extends Cubit<SignUpState> {
         password: password,
         confirmedPassword: confirmedPassword,
         isValid: Formz.validate([
+          state.firstName,
+          state.lastName,
           state.email,
           password,
           confirmedPassword,
@@ -53,6 +89,8 @@ class SignUpCubit extends Cubit<SignUpState> {
       state.copyWith(
         confirmedPassword: confirmedPassword,
         isValid: Formz.validate([
+          state.firstName,
+          state.lastName,
           state.email,
           state.password,
           confirmedPassword,
@@ -66,6 +104,8 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       await _authenticationRepository.signUp(
+        firstName: state.firstName.value,
+        lastName: state.lastName.value,
         email: state.email.value,
         password: state.password.value,
       );
