@@ -6,20 +6,20 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
+import 'package:server_repository/server_repository.dart';
 
 /// {@template send_password_reset_email_failure}
 /// Thrown if Password Reset Email fails.
 /// {@endtemplate}
 class SendPasswordResetEmailFailure implements Exception {
   const SendPasswordResetEmailFailure([
-    this.message = 'An unknown exception occurred from email.',
+    this.message = 'An unknown exception occurred.',
   ]);
 
   /// Create an authentication message
   /// from a firebase authentication exception code.
   /// https://pub.dev/documentation/firebase_auth/latest/firebase_auth/FirebaseAuth/sendPasswordResetEmail.html
   factory SendPasswordResetEmailFailure.fromCode(String code) {
-    print(code);
     switch (code) {
       case 'missing-email':
         return const SendPasswordResetEmailFailure(
@@ -221,13 +221,16 @@ class AuthenticationRepository {
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
+    ServerRepository? serverRepository,
   })  : _cache = cache ?? CacheClient(),
         _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
+        _serverRepository = serverRepository ?? ServerRepository();
 
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final ServerRepository _serverRepository;
 
   /// Whether or not the current environment is web
   /// Should only be overridden for testing purposes. Otherwise,
@@ -273,8 +276,12 @@ class AuthenticationRepository {
         password: password,
       );
       await userCredential.user!.updateDisplayName('$firstName $lastName');
+      await _serverRepository.registerUser(
+          idToken: await userCredential.user!.getIdToken());
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+    } on RegisterUserFailure catch (e) {
+      throw SignUpWithEmailAndPasswordFailure(e.message);
     } catch (_) {
       throw const SignUpWithEmailAndPasswordFailure();
     }
