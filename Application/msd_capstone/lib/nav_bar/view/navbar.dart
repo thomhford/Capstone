@@ -3,10 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/navigation_bloc.dart';
-import 'routes/nav_route.dart';
-
-import '../components/upload_nav_button.dart';
+import '../bloc/navigation_bloc.dart';
+import '../routes/nav_route.dart';
+import 'upload_nav_button.dart';
 
 class NavBar extends StatelessWidget {
   final NavigationBloc? navigationBloc;
