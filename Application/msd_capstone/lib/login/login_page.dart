@@ -8,7 +8,7 @@ import 'dart:async';
 import 'dart:io';
 
 import '../services/login.dart';
-import '../components/navbar.dart';
+import '../nav_bar/navbar.dart';
 import '../components/main_button.dart';
 import '../components/user_textfield.dart';
 import '../components/square_tile_button.dart';
@@ -61,7 +61,7 @@ class LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             // cannot go back to login page after login
             context,
-            MaterialPageRoute(builder: (context) => const NavBar()),
+            MaterialPageRoute(builder: (context) => NavBar()),
           );
         }
       } on FirebaseAuthException catch (e) {
