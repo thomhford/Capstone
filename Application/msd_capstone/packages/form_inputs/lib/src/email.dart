@@ -6,14 +6,10 @@ enum EmailValidationError {
   invalid
 }
 
-/// {@template email}
 /// Form input for an email input.
-/// {@endtemplate}
 class Email extends FormzInput<String, EmailValidationError> {
-  /// {@macro email}
   const Email.pure() : super.pure('');
 
-  /// {@macro email}
   const Email.dirty([super.value = '']) : super.dirty();
 
   static final RegExp _emailRegExp = RegExp(

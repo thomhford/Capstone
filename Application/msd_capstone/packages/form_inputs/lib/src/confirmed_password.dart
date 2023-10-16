@@ -6,15 +6,11 @@ enum ConfirmedPasswordValidationError {
   invalid
 }
 
-/// {@template confirmed_password}
 /// Form input for a confirmed password input.
-/// {@endtemplate}
 class ConfirmedPassword
     extends FormzInput<String, ConfirmedPasswordValidationError> {
-  /// {@macro confirmed_password}
   const ConfirmedPassword.pure({this.password = ''}) : super.pure('');
 
-  /// {@macro confirmed_password}
   const ConfirmedPassword.dirty({required this.password, String value = ''})
       : super.dirty(value);
 

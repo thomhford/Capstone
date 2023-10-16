@@ -8,9 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 import 'package:server_repository/server_repository.dart';
 
-/// {@template send_password_reset_email_failure}
 /// Thrown if Password Reset Email fails.
-/// {@endtemplate}
 class SendPasswordResetEmailFailure implements Exception {
   const SendPasswordResetEmailFailure([
     this.message = 'An unknown exception occurred.',
@@ -54,11 +52,8 @@ class SendPasswordResetEmailFailure implements Exception {
   final String message;
 }
 
-/// {@template sign_up_with_email_and_password_failure}
 /// Thrown during the sign up process if a failure occurs.
-/// {@endtemplate}
 class SignUpWithEmailAndPasswordFailure implements Exception {
-  /// {@macro sign_up_with_email_and_password_failure}
   const SignUpWithEmailAndPasswordFailure([
     this.message = 'An unknown exception occurred.',
   ]);
@@ -97,12 +92,9 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
   final String message;
 }
 
-/// {@template log_in_with_email_and_password_failure}
 /// Thrown during the login process if a failure occurs.
 /// https://pub.dev/documentation/firebase_auth/latest/firebase_auth/FirebaseAuth/signInWithEmailAndPassword.html
-/// {@endtemplate}
 class LogInWithEmailAndPasswordFailure implements Exception {
-  /// {@macro log_in_with_email_and_password_failure}
   const LogInWithEmailAndPasswordFailure([
     this.message = 'An unknown exception occurred.',
   ]);
@@ -136,12 +128,9 @@ class LogInWithEmailAndPasswordFailure implements Exception {
   final String message;
 }
 
-/// {@template log_in_with_google_failure}
 /// Thrown during the sign in with google process if a failure occurs.
 /// https://pub.dev/documentation/firebase_auth/latest/firebase_auth/FirebaseAuth/signInWithCredential.html
-/// {@endtemplate}
 class LogInWithGoogleFailure implements Exception {
-  /// {@macro log_in_with_google_failure}
   const LogInWithGoogleFailure([
     this.message = 'An unknown exception occurred.',
   ]);
@@ -193,7 +182,6 @@ class LogInWithGoogleFailure implements Exception {
 
 /// Thrown during the logout process if a failure occurs.
 class LogOutFailure implements Exception {
-  /// {@macro log_out_with_google_failure}
   const LogOutFailure([
     this.message = 'An unknown exception occurred.',
   ]);
@@ -212,11 +200,8 @@ class LogOutFailure implements Exception {
   final String message;
 }
 
-/// {@template authentication_repository}
 /// Repository which manages user authentication.
-/// {@endtemplate}
 class AuthenticationRepository {
-  /// {@macro authentication_repository}
   AuthenticationRepository({
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,

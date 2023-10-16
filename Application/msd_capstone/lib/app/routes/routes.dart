@@ -1,9 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:msd_capstone/app/app.dart';
-// import 'package:msd_capstone/home/home.dart';
 import 'package:msd_capstone/login/login.dart';
-
-import '../../nav_bar/nav_bar.dart';
+import 'package:msd_capstone/nav_bar/nav_bar.dart';
 
 List<Page<dynamic>> onGenerateAppViewPages(
   AppStatus state,

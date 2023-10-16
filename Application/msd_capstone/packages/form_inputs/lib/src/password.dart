@@ -6,14 +6,10 @@ enum PasswordValidationError {
   invalid
 }
 
-/// {@template password}
 /// Form input for an password input.
-/// {@endtemplate}
 class Password extends FormzInput<String, PasswordValidationError> {
-  /// {@macro password}
   const Password.pure() : super.pure('');
 
-  /// {@macro password}
   const Password.dirty([super.value = '']) : super.dirty();
 
   static final _passwordRegExp =

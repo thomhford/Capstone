@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
+/// Thrown when a new user server request fails.
 class RegisterUserFailure implements Exception {
   const RegisterUserFailure([this.message = 'An unknown exception occurred']);
 
+  /// Creates a [RegisterUserFailure] when a specific status code is returned.
   factory RegisterUserFailure.fromCode(int code) {
     switch (code) {
       case 400:
@@ -19,6 +21,8 @@ class RegisterUserFailure implements Exception {
         return const RegisterUserFailure();
     }
   }
+
+  /// Creates a [RegisterUserFailure] when a specific exception is thrown.
   factory RegisterUserFailure.fromException(Exception exception) {
     switch (exception.runtimeType) {
       case SocketException:
