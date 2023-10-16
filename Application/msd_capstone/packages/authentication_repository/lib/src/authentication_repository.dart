@@ -281,6 +281,7 @@ class AuthenticationRepository {
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } on RegisterUserFailure catch (e) {
+      print(e);
       throw SignUpWithEmailAndPasswordFailure(e.message);
     } catch (_) {
       throw const SignUpWithEmailAndPasswordFailure();

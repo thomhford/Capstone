@@ -38,6 +38,7 @@ class RegisterUserFailure implements Exception {
   final String message;
 }
 
+/// Repository which handles all server requests
 class ServerRepository {
   /// Sends newly created user to the server to be stored in the database
   /// Requires the user's idToken to be passed in the header
