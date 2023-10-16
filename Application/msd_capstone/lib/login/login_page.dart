@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
 
+import '../nav_bar/nav_bar.dart';
 import '../services/login.dart';
-import '../nav_bar/navbar.dart';
 import '../components/main_button.dart';
 import '../components/user_textfield.dart';
 import '../components/square_tile_button.dart';
