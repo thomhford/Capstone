@@ -46,7 +46,6 @@ class RegisterUserFailure implements Exception {
 class ServerRepository {
   /// Sends newly created user to the server to be stored in the database
   /// Requires the user's idToken to be passed in the header
-  /// Returns a Future<http.Response> object
   Future<void> registerUser({
     required String? idToken,
   }) async {
