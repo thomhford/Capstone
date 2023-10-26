@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:msd_capstone/camera/camera_button.dart';
-import 'utilities/media_size_clipper.dart';
+import 'package:msd_capstone/camera/view/camera_button.dart';
+import '../utilities/media_size_clipper.dart';
 
 final logger = Logger();
 
@@ -59,8 +59,6 @@ class _CameraPageState extends State<CameraPage> {
     if (cameras!.isNotEmpty) {
       _controller!.dispose();
     }
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top]);
     super.dispose();
   }
 

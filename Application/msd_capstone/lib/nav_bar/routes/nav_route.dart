@@ -1,7 +1,7 @@
 // navbar.dart
 
 import 'package:flutter/material.dart';
-import 'package:msd_capstone/camera/camera_page.dart';
+import 'package:msd_capstone/camera/view/camera_page.dart';
 import 'package:msd_capstone/chat/chats_page.dart';
 import 'package:msd_capstone/home/home_page.dart';
 import 'package:msd_capstone/profile/profile.dart';
