@@ -81,7 +81,7 @@ class _CameraPageState extends State<CameraPage> {
     if (isRecording) {
       // If already recording, stop recording
       try {
-        final XFile file = (_controller!.stopVideoRecording) as XFile;
+        final XFile file = await _controller!.stopVideoRecording();
         // Path to the captured video
         imagePath = file.path;
         isRecording = false;
@@ -93,7 +93,7 @@ class _CameraPageState extends State<CameraPage> {
     } else {
       // If not recording, start recording
       try {
-        _controller!.startVideoRecording();
+        await _controller!.startVideoRecording();
         isRecording = true;
         setState(() {});
       } catch (e) {
