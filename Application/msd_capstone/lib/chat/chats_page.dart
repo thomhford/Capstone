@@ -46,7 +46,7 @@ class ChatsPage extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.only(left: 20),
               child: Text(
-                'R E C E N T',
+                'P E O P L E',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -60,90 +60,97 @@ class ChatsPage extends StatelessWidget {
               child: RecentUsers(
                 users: [
                   User(
-                      name: 'John Smith',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg'),
+                    name: 'John Smith',
+                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                  ),
                   User(
-                      name: 'Steve Johnson',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg'),
+                    name: 'Steve Johnson',
+                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                  ),
                   User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg'),
+                    name: 'John',
+                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                  ),
                   User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg'),
+                    name: 'John',
+                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                  ),
                   User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg'),
+                    name: 'John',
+                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                  ),
                   User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg'),
+                    name: 'John',
+                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                  ),
                 ],
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            Container(
-              height: 600,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+            Expanded(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                  color: Color(0xFF292F3F),
                 ),
-                color: Color(0xFF292F3F),
-              ),
-              child: RecentMessages(
-                messages: [
-                  Message(
-                    user: User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                child: RecentMessages(
+                  messages: [
+                    Message(
+                      user: User(
+                        name: 'John',
+                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                      ),
+                      text: 'Hey, how\'s it going?',
+                      timestamp: '2:30 PM',
                     ),
-                    text: 'Hey, how\'s it going?',
-                    timestamp: '2:30 PM',
-                  ),
-                  Message(
-                    user: User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                    Message(
+                      user: User(
+                        name: 'John',
+                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                      ),
+                      text: 'Hey, how\'s it going?',
+                      timestamp: '2:30 PM',
                     ),
-                    text: 'Hey, how\'s it going?',
-                    timestamp: '2:30 PM',
-                  ),
-                  Message(
-                    user: User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                    Message(
+                      user: User(
+                        name: 'John',
+                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                      ),
+                      text: 'Hey, how\'s it going?',
+                      timestamp: '2:30 PM',
                     ),
-                    text: 'Hey, how\'s it going?',
-                    timestamp: '2:30 PM',
-                  ),
-                  Message(
-                    user: User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                    Message(
+                      user: User(
+                        name: 'John',
+                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                      ),
+                      text: 'Hey, how\'s it going?',
+                      timestamp: '2:30 PM',
                     ),
-                    text: 'Hey, how\'s it going?',
-                    timestamp: '2:30 PM',
-                  ),
-                  Message(
-                    user: User(
-                      name: 'John Smith',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                    Message(
+                      user: User(
+                        name: 'John Smith',
+                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                      ),
+                      text: 'Hey, how\'s it going?',
+                      timestamp: '2:30 PM',
                     ),
-                    text: 'Hey, how\'s it going?',
-                    timestamp: '2:30 PM',
-                  ),
-                  Message(
-                    user: User(
-                      name: 'John',
-                      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                    Message(
+                      user: User(
+                        name: 'John',
+                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                      ),
+                      text: 'Hey, how\'s it going hhhhhhhhhhhhhh?',
+                      timestamp: '2:30 PM',
                     ),
-                    text: 'Hey, how\'s it going hhhhhhhhhhhhhh?',
-                    timestamp: '2:30 PM',
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
