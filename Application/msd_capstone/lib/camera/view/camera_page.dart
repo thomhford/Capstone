@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:msd_capstone/camera/view/camera_button.dart';
 import '../utilities/media_size_clipper.dart';
+import 'package:video_player/video_player.dart';
 
 final logger = Logger();
 
@@ -18,6 +18,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   CameraController? _controller;
+  VideoPlayerController? _videoController;
   List<CameraDescription>? cameras;
   bool hasCamera = true; // To track whether the device has a camera
   bool isCameraReady = false;
@@ -26,6 +27,8 @@ class _CameraPageState extends State<CameraPage> {
   bool isPictureTaken = false; // To track whether a picture has been taken
   bool isUpload = false;
   bool isRecording = false; // To track whether video recording is in progress
+  bool isVideoRecorded =
+      false; // To track whether a video is available for playback
 
   @override
   void initState() {
@@ -58,6 +61,7 @@ class _CameraPageState extends State<CameraPage> {
   void dispose() {
     if (cameras!.isNotEmpty) {
       _controller!.dispose();
+      _videoController?.dispose();
     }
     super.dispose();
   }
@@ -79,13 +83,17 @@ class _CameraPageState extends State<CameraPage> {
 
   void toggleVideoRecording() async {
     if (isRecording) {
-      // If already recording, stop recording
       try {
         final XFile file = await _controller!.stopVideoRecording();
-        // Path to the captured video
-        imagePath = file.path;
+        logger.i("Stopped recording video. File path: ${file.path}");
+        _videoController = VideoPlayerController.file(File(file.path))
+          ..initialize().then((_) {
+            setState(() {});
+          });
         isRecording = false;
-        isPictureTaken = true;
+        isPictureTaken =
+            false; // Set this to false to differentiate between picture and video
+        isVideoRecorded = true;
         setState(() {});
       } catch (e) {
         logger.e("Failed to stop video recording: $e");
@@ -94,6 +102,7 @@ class _CameraPageState extends State<CameraPage> {
       // If not recording, start recording
       try {
         await _controller!.startVideoRecording();
+        logger.i("Started recording");
         isRecording = true;
         setState(() {});
       } catch (e) {
@@ -180,7 +189,7 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Widget buildCapturedImagePreview() {
+  Widget buildImagePreview() {
     return Stack(
       children: [
         Image.file(
@@ -192,6 +201,7 @@ class _CameraPageState extends State<CameraPage> {
           top: 16,
           left: 16,
           child: FloatingActionButton(
+            // cancel button, return to camera
             onPressed: () {
               // Reset the path to the captured image
               imagePath = '';
@@ -233,6 +243,25 @@ class _CameraPageState extends State<CameraPage> {
         ),
       ],
     );
+  }
+
+  Widget buildMediaPreview() {
+    if (isVideoRecorded) {
+      return Stack(
+        children: <Widget>[
+          Center(
+            child: AspectRatio(
+              aspectRatio: _videoController!.value.aspectRatio,
+              child: VideoPlayer(_videoController!),
+            ),
+          ),
+        ],
+      );
+    }
+    if (isPictureTaken) {
+      return buildImagePreview();
+    }
+    return Container();
   }
 
   Widget buildUploadPreview() {
@@ -279,8 +308,10 @@ class _CameraPageState extends State<CameraPage> {
       return Scaffold(
         body: SafeArea(
           child: isPictureTaken
-              ? buildCapturedImagePreview()
-              : buildCameraPreview(),
+              ? buildMediaPreview()
+              : isVideoRecorded
+                  ? buildMediaPreview()
+                  : buildCameraPreview(),
         ),
       );
     }
