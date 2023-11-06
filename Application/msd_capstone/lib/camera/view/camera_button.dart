@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 
 class CameraButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final VoidCallback onLongPress;
-  final VoidCallback onLongPressEnd;
+  // final VoidCallback onLongPress;
+  // final VoidCallback onLongPressEnd;
 
   const CameraButton({
     Key? key,
     required this.onPressed,
-    required this.onLongPress,
-    required this.onLongPressEnd,
+    // required this.onLongPress,
+    // required this.onLongPressEnd,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: onLongPress,
-      onLongPressEnd: (LongPressEndDetails details) {
-        onLongPressEnd();
-      },
+      // onLongPress: onLongPress,
+      // onLongPressEnd: (LongPressEndDetails details) {
+      //   onLongPressEnd();
+      // },
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../services/file.dart';
 
 class SearchPage extends StatefulWidget {
@@ -17,10 +18,12 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    files = FileService(
-      auth: FirebaseAuth.instance,
-      client: http.Client(),
-    ).fetchFiles();
+    try {
+      files = FileService(
+        auth: FirebaseAuth.instance,
+        client: http.Client(),
+      ).fetchFiles();
+    } catch (e) {}
   }
 
   @override
@@ -37,8 +40,8 @@ class _SearchPageState extends State<SearchPage> {
             return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             // If there's an error
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
+            return const Center(
+              child: Text('Error: Cannot connect to server.'),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             // If there's no data
@@ -55,8 +58,12 @@ class _SearchPageState extends State<SearchPage> {
                 final file = snapshot.data![index];
                 return Padding(
                   padding: const EdgeInsets.all(2.0),
-                  child: Image.network(
-                    'http://localhost:3000/${file.filePath}',
+                  child: CachedNetworkImage(
+                    imageUrl: 'http://localhost:3000/${file.filePath}',
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 );
               },

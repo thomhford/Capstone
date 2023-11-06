@@ -157,8 +157,8 @@ class _CameraPageState extends State<CameraPage> {
               38, // 38 = 76 / 2. 76 is the width of the button
           child: CameraButton(
             onPressed: takePicture,
-            onLongPress: toggleVideoRecording,
-            onLongPressEnd: toggleVideoRecording,
+            // onLongPress: toggleVideoRecording,
+            // onLongPressEnd: toggleVideoRecording,
           ),
         ),
         Positioned(
@@ -245,24 +245,24 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Widget buildMediaPreview() {
-    if (isVideoRecorded) {
-      return Stack(
-        children: <Widget>[
-          Center(
-            child: AspectRatio(
-              aspectRatio: _videoController!.value.aspectRatio,
-              child: VideoPlayer(_videoController!),
-            ),
-          ),
-        ],
-      );
-    }
-    if (isPictureTaken) {
-      return buildImagePreview();
-    }
-    return Container();
-  }
+  // Widget buildMediaPreview() {
+  //   if (isVideoRecorded) {
+  //     return Stack(
+  //       children: <Widget>[
+  //         Center(
+  //           child: AspectRatio(
+  //             aspectRatio: _videoController!.value.aspectRatio,
+  //             child: VideoPlayer(_videoController!),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  //   }
+  //   if (isPictureTaken) {
+  //     return buildImagePreview();
+  //   }
+  //   return Container();
+  // }
 
   Widget buildUploadPreview() {
     return Stack(
@@ -307,11 +307,7 @@ class _CameraPageState extends State<CameraPage> {
     } else {
       return Scaffold(
         body: SafeArea(
-          child: isPictureTaken
-              ? buildMediaPreview()
-              : isVideoRecorded
-                  ? buildMediaPreview()
-                  : buildCameraPreview(),
+          child: isPictureTaken ? buildImagePreview() : buildCameraPreview(),
         ),
       );
     }
