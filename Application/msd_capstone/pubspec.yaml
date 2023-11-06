@@ -11,6 +11,7 @@ dependencies:
   authentication_repository:
     path: packages/authentication_repository
   bloc: ^8.1.0
+  camerawesome: ^2.0.0-dev.1
   equatable: ^2.0.3
   flutter_bloc: ^8.1.1
   bloc_concurrency: ^0.2.0

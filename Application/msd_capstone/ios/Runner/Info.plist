@@ -28,6 +28,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs access to your camera for taking photos and videos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your GPS location to include geolocation data</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs access to your microphone for recording videos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
