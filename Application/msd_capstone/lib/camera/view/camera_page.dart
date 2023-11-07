@@ -47,7 +47,7 @@ class _CameraPageState extends State<CameraPage> {
     if (permitted.isAuth) {
       // Fetch the most recent asset (photo or video)
       final List<AssetPathEntity> albums =
-          await PhotoManager.getAssetPathList(type: RequestType.image);
+          await PhotoManager.getAssetPathList(type: RequestType.all);
       final List<AssetEntity> recentAssets =
           await albums.first.getAssetListPaged(page: 0, size: 1);
       if (recentAssets.isNotEmpty) {

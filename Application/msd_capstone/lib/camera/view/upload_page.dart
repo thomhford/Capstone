@@ -54,13 +54,30 @@ class UploadPageState extends State<UploadPage> {
   }
 
   Future<void> _uploadFile() async {
+    if (_file == null) {
+      _showSnackBar('No file selected for upload');
+      return;
+    }
     try {
       await uploadFile(_file!);
-      logger.i('File uploaded successfully');
+      _file = null;
+      setState(() {
+        _videoPlayerController?.dispose();
+        _videoPlayerController = null;
+      });
+      _showSnackBar('File uploaded successfully');
     } catch (e) {
+      _showSnackBar('Error uploading file');
       logger.e('Error uploading file: $e');
-      throw Exception('File upload failed: $e');
     }
+  }
+
+  void _showSnackBar(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 3),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -74,6 +91,20 @@ class UploadPageState extends State<UploadPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('File Upload'),
+        actions: [
+          TextButton(
+            onPressed: _file != null
+                ? _uploadFile
+                : null, // This will enable/disable the button
+            child: Text(
+              'Upload',
+              style: TextStyle(
+                color: _file != null ? Colors.white : Colors.grey,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -99,7 +130,7 @@ class UploadPageState extends State<UploadPage> {
   Widget _buildGridView() {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // Adjust the number of columns as needed
+        crossAxisCount: 4, // Adjust the number of columns as needed
         childAspectRatio: 1, // Ensures the grid tiles are square
       ),
       itemCount: mediaList?.length,
@@ -176,7 +207,7 @@ class UploadPageState extends State<UploadPage> {
         return Image.file(_file!);
       }
     } else {
-      // If no file is selected, display a placeholder.
+      // Should not get here, but if no file is selected, display a placeholder.
       return const Text('Please select a media file.');
     }
   }
