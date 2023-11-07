@@ -2,6 +2,9 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../models/models.dart';
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({super.key});
@@ -109,7 +112,7 @@ class ChatsPage extends StatelessWidget {
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
                       text: 'Hey, how\'s it going?',
-                      timestamp: '2:30 PM',
+                      timestamp: DateTime.now(),
                     ),
                     Message(
                       user: User(
@@ -117,7 +120,7 @@ class ChatsPage extends StatelessWidget {
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
                       text: 'Hey, how\'s it going?',
-                      timestamp: '2:30 PM',
+                      timestamp: DateTime.now(),
                     ),
                     Message(
                       user: User(
@@ -125,7 +128,7 @@ class ChatsPage extends StatelessWidget {
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
                       text: 'Hey, how\'s it going?',
-                      timestamp: '2:30 PM',
+                      timestamp: DateTime.now(),
                     ),
                     Message(
                       user: User(
@@ -133,7 +136,7 @@ class ChatsPage extends StatelessWidget {
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
                       text: 'Hey, how\'s it going?',
-                      timestamp: '2:30 PM',
+                      timestamp: DateTime.now(),
                     ),
                     Message(
                       user: User(
@@ -141,7 +144,7 @@ class ChatsPage extends StatelessWidget {
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
                       text: 'Hey, how\'s it going?',
-                      timestamp: '2:30 PM',
+                      timestamp: DateTime.now(),
                     ),
                     Message(
                       user: User(
@@ -149,7 +152,7 @@ class ChatsPage extends StatelessWidget {
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
                       text: 'Hey, how\'s it going hhhhhhhhhhhhhh?',
-                      timestamp: '2:30 PM',
+                      timestamp: DateTime.now(),
                     ),
                   ],
                 ),
@@ -213,7 +216,7 @@ class RecentMessages extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              message.timestamp,
+                              formatTimestamp(message.timestamp),
                               style: const TextStyle(
                                 color: Colors.white70,
                                 fontFamily: 'Quicksand',
@@ -301,24 +304,30 @@ class RecentUsers extends StatelessWidget {
   }
 }
 
-class User {
-  final String name;
-  final String imageUrl;
+String formatTimestamp(DateTime timestamp) {
+  final DateTime now = DateTime.now();
+  final Duration difference = now.difference(timestamp);
 
-  User({
-    required this.name,
-    required this.imageUrl,
-  });
+  if (difference.inDays < 1) {
+    // Less than 24 hours, show hours and minutes
+    return DateFormat('h:mm a').format(timestamp);
+  } else if (difference.inDays < 7) {
+    // Less than a week, show day of the week
+    return DateFormat('EEEE').format(timestamp);
+  } else {
+    // Over 7 days, show month and year
+    return DateFormat('MM/yy').format(timestamp);
+  }
 }
 
 class Message {
   final User user;
   final String text;
-  final String timestamp;
+  final DateTime timestamp; // Changed to DateTime
 
   Message({
     required this.user,
     required this.text,
-    required this.timestamp,
+    required this.timestamp, // Changed to DateTime
   });
 }
