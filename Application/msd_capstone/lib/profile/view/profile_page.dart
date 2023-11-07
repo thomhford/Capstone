@@ -56,51 +56,54 @@ class _ProfilePageState extends State<ProfilePage> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
+                const SizedBox(height: 16),
                 Avatar(photo: user.photo),
                 const SizedBox(height: 4),
-                Text(user.email ?? '', style: textTheme.titleLarge),
+                Center(
+                    child: Text(user.email ?? '', style: textTheme.titleLarge)),
                 const SizedBox(height: 4),
-                Text(user.name ?? '', style: textTheme.headlineSmall),
+                Center(
+                    child:
+                        Text(user.name ?? '', style: textTheme.headlineSmall)),
               ],
             ),
           ),
-          SliverToBoxAdapter(
-            child: FutureBuilder<List<FileMetadata>>(
-              future: files,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) {
-                  return const SliverToBoxAdapter(
-                    child:
-                        Center(child: Text('Error: Cannot connect to server.')),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: Text('No files available.')),
-                  );
-                } else {
-                  return SliverMasonryGrid.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 4,
-                    crossAxisSpacing: 4,
-                    itemBuilder: (BuildContext context, int index) {
-                      final file = snapshot.data![index];
-                      return CachedNetworkImage(
-                        imageUrl:
-                            'http://${dotenv.env['API_URL'] ?? "localhost:3000"}/${file.filePath}',
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+          FutureBuilder<List<FileMetadata>>(
+            future: files,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else if (snapshot.hasError) {
+                return const SliverFillRemaining(
+                  child:
+                      Center(child: Text('Error: Cannot connect to server.')),
+                );
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const SliverFillRemaining(
+                  child: Center(child: Text('No files available.')),
+                );
+              } else {
+                return SliverMasonryGrid.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                  childCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final file = snapshot.data![index];
+                    return CachedNetworkImage(
+                      imageUrl:
+                          'http://${dotenv.env['API_URL'] ?? "localhost:3000"}/${file.filePath}',
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    );
+                  },
+                );
+              }
+            },
           ),
         ],
       ),
