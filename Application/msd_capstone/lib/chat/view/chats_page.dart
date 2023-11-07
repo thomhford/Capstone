@@ -1,5 +1,6 @@
 // chats_page.dart
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ChatsPage extends StatelessWidget {
@@ -7,8 +8,9 @@ class ChatsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF1B202D),
+      backgroundColor: theme.colorScheme.primary,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,12 +94,12 @@ class ChatsPage extends StatelessWidget {
             Expanded(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40),
                   ),
-                  color: Color(0xFF292F3F),
+                  color: theme.colorScheme.secondary,
                 ),
                 child: RecentMessages(
                   messages: [
@@ -182,7 +184,8 @@ class RecentMessages extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: NetworkImage(message.user.imageUrl),
+                  backgroundImage:
+                      CachedNetworkImageProvider(message.user.imageUrl),
                 ),
                 const SizedBox(
                   width: 15,
@@ -273,7 +276,8 @@ class RecentUsers extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(users[index].imageUrl),
+                    backgroundImage:
+                        CachedNetworkImageProvider(users[index].imageUrl),
                   ),
                   const SizedBox(
                     height: 10,
