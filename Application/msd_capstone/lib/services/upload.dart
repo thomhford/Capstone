@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +29,7 @@ Future<void> uploadFile(File file) async {
 
     var request = http.MultipartRequest(
       'POST',
-      Uri.http('localhost:3000', 'upload'),
+      Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", 'upload'),
     );
 
     // Add headers to the request (including the idToken)

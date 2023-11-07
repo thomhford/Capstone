@@ -1,6 +1,7 @@
 // file.dart
 
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -55,7 +56,7 @@ class FileService {
       final idTokenResult = await user.getIdTokenResult();
 
       final response = await _client.post(
-        Uri.http('localhost:3000', '/file'),
+        Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/file'),
         headers: {
           'Authorization': 'Bearer ${idTokenResult.token}',
           'Content-Type': 'application/json',

@@ -1,41 +1,5 @@
 // main.dart
 
-// import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'firebase_options.dart';
-
-// import 'camera/camera_page.dart';
-// import 'post/upload_page.dart';
-// import 'profile/profile_page.dart';
-// import 'search/search_page.dart';
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: lightMode,
-//       darkTheme: darkMode,
-//       home: StreamBuilder<User?>(
-//         stream: FirebaseAuth.instance.authStateChanges(),
-//         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-//           if (snapshot.connectionState == ConnectionState.active) {
-//             final User? user = snapshot.data;
-//             if (user == null) {
-//               return const LoginPage(); // If the user is not logged in, navigate to LoginPage
-//             } else {
-//               return const NavBar(); // If the user is logged in, navigate to NavBar
-//             }
-//           }
-//           return const CircularProgressIndicator(); // Show a loading spinner while waiting for the user data
-//         },
-//       ),
-//     );
-//   }
-// }
-
 /// *******************-TESTING OF WIDGETS-**********************
 // import 'package:flutter/material.dart';
 // import 'package:msd_capstone/chat/chats_page.dart';
@@ -69,6 +33,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'firebase_options.dart';
 import 'package:flutter/widgets.dart';
 import 'app/app.dart';
@@ -79,6 +44,9 @@ Future<void> main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await dotenv.load(
+    fileName: '.env',
   );
 
   final authenticationRepository = AuthenticationRepository();

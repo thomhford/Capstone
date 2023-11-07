@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:msd_capstone/camera/view/camera_button.dart';
+import 'package:msd_capstone/camera/view/upload_page.dart';
 import '../utilities/media_size_clipper.dart';
 import 'package:video_player/video_player.dart';
 
@@ -230,7 +231,14 @@ class _CameraPageState extends State<CameraPage> {
           bottom: 16,
           left: 36,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UploadPage(filePath: imagePath),
+                ),
+              );
+            },
             child: const Text(
               'Upload',
               style: TextStyle(
@@ -264,44 +272,10 @@ class _CameraPageState extends State<CameraPage> {
   //   return Container();
   // }
 
-  Widget buildUploadPreview() {
-    return Stack(
-      children: [
-        Image.file(
-          File(imagePath),
-          fit:
-              BoxFit.cover, // Display the image as if it were the CameraPreview
-        ),
-        Positioned(
-          top: 16,
-          left: 16,
-          child: FloatingActionButton(
-            onPressed: () {
-              // Reset the path to the captured image
-              imagePath = '';
-              // Reset the picture taken status
-              isPictureTaken = false;
-              setState(() {});
-            },
-            child: const Icon(
-              CupertinoIcons.xmark_circle_fill,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!hasCamera) {
-      return const Center(
-        child: Text(
-          'No camera found',
-          style: TextStyle(fontSize: 24.0),
-        ),
-      );
+      return const Center(child: UploadPage());
     } else if (!isCameraReady) {
       return const Center(child: CircularProgressIndicator());
     } else {

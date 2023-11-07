@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -59,7 +60,8 @@ class _SearchPageState extends State<SearchPage> {
                 return Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: CachedNetworkImage(
-                    imageUrl: 'http://localhost:3000/${file.filePath}',
+                    imageUrl:
+                        'http://${dotenv.env['API_URL'] ?? "localhost:3000"}/${file.filePath}',
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
                     errorWidget: (context, url, error) =>
