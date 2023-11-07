@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:msd_capstone/camera/view/camera_button.dart';
 import 'package:msd_capstone/camera/view/upload_page.dart';
+import 'package:photo_manager/photo_manager.dart';
 import '../utilities/media_size_clipper.dart';
 import 'package:video_player/video_player.dart';
 
@@ -30,11 +32,32 @@ class _CameraPageState extends State<CameraPage> {
   bool isRecording = false; // To track whether video recording is in progress
   bool isVideoRecorded =
       false; // To track whether a video is available for playback
+  AssetEntity? _lastPhoto;
 
   @override
   void initState() {
     super.initState();
     initializeCamera();
+    fetchLastPhoto();
+  }
+
+  Future<void> fetchLastPhoto() async {
+    // Request permissions
+    final permitted = await PhotoManager.requestPermissionExtend();
+    if (permitted.isAuth) {
+      // Fetch the most recent asset (photo or video)
+      final List<AssetPathEntity> albums =
+          await PhotoManager.getAssetPathList(type: RequestType.image);
+      final List<AssetEntity> recentAssets =
+          await albums.first.getAssetListPaged(page: 0, size: 1);
+      if (recentAssets.isNotEmpty) {
+        setState(() {
+          _lastPhoto = recentAssets.first;
+        });
+      }
+    } else {
+      _lastPhoto = const Icon(Icons.photo) as AssetEntity?;
+    }
   }
 
   Future<void> initializeCamera() async {
@@ -138,6 +161,33 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Widget buildCameraPreview() {
+    Widget lastPhotoThumbnail = _lastPhoto != null
+        ? FutureBuilder<Uint8List?>(
+            future: _lastPhoto!.thumbnailData,
+            builder: (_, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.data != null) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UploadPage(),
+                      ),
+                    );
+                  },
+                  child: Image.memory(
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          )
+        : const Icon(Icons.photo,
+            size: 50); // Placeholder icon if _lastPhoto is null
     final mediaSize = MediaQuery.of(context).size;
     var scale = _controller!.value.aspectRatio * mediaSize.aspectRatio;
     // Ensure scale does not shrink the camera preview
@@ -160,6 +210,19 @@ class _CameraPageState extends State<CameraPage> {
             onPressed: takePicture,
             // onLongPress: toggleVideoRecording,
             // onLongPressEnd: toggleVideoRecording,
+          ),
+        ),
+        Positioned(
+          bottom: 25,
+          left: 25,
+          child: Container(
+            width: 50, // Set your desired width for the square button
+            height: 50, // Set your desired height for the square button
+            decoration: BoxDecoration(
+              color: Colors.white, // Or any other color for the button
+              borderRadius: BorderRadius.circular(8), // Rounded corners
+            ),
+            child: lastPhotoThumbnail,
           ),
         ),
         Positioned(
