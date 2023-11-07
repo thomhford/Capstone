@@ -22,7 +22,7 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, int>(builder: (context, state) {
       return Scaffold(
-        // Need to figure out how to use a IntexedStack to keep the state of the pages
+        // Need to figure out how to use a IndexedStack to keep the state of the pages
         body: NavRoute(index: state),
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
