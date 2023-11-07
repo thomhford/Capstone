@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:msd_capstone/nav_bar/routes/nav_route.dart';
 import '../../camera/camera.dart';
 import '../../chat/chat.dart';
 import '../../home/home.dart';
@@ -21,16 +22,8 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, int>(builder: (context, state) {
       return Scaffold(
-        body: IndexedStack(
-          index: state,
-          children: const <Widget>[
-            HomePage(),
-            SearchPage(),
-            CameraPage(),
-            ChatsPage(),
-            ProfilePage(),
-          ],
-        ),
+        // Need to figure out how to use a IntexedStack to keep the state of the pages
+        body: NavRoute(index: state),
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           selectedIndex: state,

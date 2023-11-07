@@ -1,20 +1,43 @@
-// profile_page.dart
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http/http.dart' as http;
 import 'package:msd_capstone/app/app.dart';
 
+import '../../services/file.dart';
 import '../profile.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
-  static Page<void> page() => const MaterialPage<void>(child: ProfilePage());
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late Future<List<FileMetadata>> files;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      files = FileService(
+        auth: FirebaseAuth.instance,
+        client: http.Client(),
+      ).fetchAllFiles();
+    } catch (e) {
+      logger.e("Failed to initialize user images: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final user = context.select((AppBloc bloc) => bloc.state.user);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile Page'),
@@ -28,18 +51,58 @@ class ProfilePage extends StatelessWidget {
           )
         ],
       ),
-      body: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Avatar(photo: user.photo),
-            const SizedBox(height: 4),
-            Text(user.email ?? '', style: textTheme.titleLarge),
-            const SizedBox(height: 4),
-            Text(user.name ?? '', style: textTheme.headlineSmall),
-          ],
-        ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Avatar(photo: user.photo),
+                const SizedBox(height: 4),
+                Text(user.email ?? '', style: textTheme.titleLarge),
+                const SizedBox(height: 4),
+                Text(user.name ?? '', style: textTheme.headlineSmall),
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: FutureBuilder<List<FileMetadata>>(
+              future: files,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SliverToBoxAdapter(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return const SliverToBoxAdapter(
+                    child:
+                        Center(child: Text('Error: Cannot connect to server.')),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const SliverToBoxAdapter(
+                    child: Center(child: Text('No files available.')),
+                  );
+                } else {
+                  return SliverMasonryGrid.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 4,
+                    itemBuilder: (BuildContext context, int index) {
+                      final file = snapshot.data![index];
+                      return CachedNetworkImage(
+                        imageUrl:
+                            'http://${dotenv.env['API_URL'] ?? "localhost:3000"}/${file.filePath}',
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
