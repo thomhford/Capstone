@@ -76,4 +76,36 @@ class FileService {
       throw Exception('Failed to load files: $error');
     }
   }
+
+  Future<List<FileMetadata>> fetchUserFiles() async {
+    try {
+      final User? user = _auth.currentUser;
+      if (user == null) {
+        logger.e('User not signed in.');
+        throw Exception('User not signed in.');
+      }
+
+      final idTokenResult = await user.getIdTokenResult();
+
+      final response = await _client.post(
+        Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/user_file'),
+        headers: {
+          'Authorization': 'Bearer ${idTokenResult.token}',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        logger.i('Successfully loaded files');
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((item) => FileMetadata.fromJson(item)).toList();
+      } else {
+        logger.e('Failed to load files');
+        throw Exception('Failed to load files');
+      }
+    } catch (error) {
+      logger.e('Error fetching files: $error');
+      throw Exception('Failed to load files: $error');
+    }
+  }
 }
