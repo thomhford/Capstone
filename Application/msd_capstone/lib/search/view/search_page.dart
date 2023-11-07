@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../services/file.dart';
+import '../../services/file.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -15,6 +15,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   late Future<List<FileMetadata>> files;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -23,8 +24,10 @@ class _SearchPageState extends State<SearchPage> {
       files = FileService(
         auth: FirebaseAuth.instance,
         client: http.Client(),
-      ).fetchFiles();
-    } catch (e) {}
+      ).fetchAllFiles();
+    } catch (e) {
+      logger.e("Failed to initialize search: $e");
+    }
   }
 
   @override
@@ -52,9 +55,11 @@ class _SearchPageState extends State<SearchPage> {
           } else {
             // If data is available, display it in a MasonryGridView
             return MasonryGridView.builder(
+              controller: _scrollController,
               gridDelegate:
                   const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2),
+              cacheExtent: 1000,
               itemBuilder: (BuildContext context, int index) {
                 final file = snapshot.data![index];
                 return Padding(

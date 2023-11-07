@@ -45,7 +45,7 @@ class FileService {
       : _auth = auth,
         _client = client;
 
-  Future<List<FileMetadata>> fetchFiles() async {
+  Future<List<FileMetadata>> fetchAllFiles() async {
     try {
       final User? user = _auth.currentUser;
       if (user == null) {
