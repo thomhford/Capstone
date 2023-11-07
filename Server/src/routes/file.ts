@@ -2,10 +2,11 @@
 
 import express from 'express';
 import { verifyUser } from '../utils/authUtils';
-import { handleFileRequest } from "../controllers/fileController";
+import {handleFileRequest, handleUserFileRequest} from "../controllers/fileController";
 
 const router = express.Router();
 
 router.post('/file', verifyUser, handleFileRequest);
+router.post('/user_file', verifyUser, handleUserFileRequest);
 
 export default router;
