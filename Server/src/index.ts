@@ -27,7 +27,7 @@ sequelize.sync().then(() => {
 
 app.use(express.json());
 app.use(express.static('public'));
-app.use('/user', userRoutes);
+app.use(userRoutes);
 app.use(uploadRoutes);
 app.use(fileRoutes);
 

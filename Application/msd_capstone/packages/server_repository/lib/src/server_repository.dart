@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Thrown when a new user server request fails.
 class RegisterUserFailure implements Exception {
@@ -52,7 +53,7 @@ class ServerRepository {
     http.Response response;
     try {
       response = await http.post(
-        Uri.http('localhost:3000', '/user/register'),
+        Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/register'),
         headers: {
           'Authorization': 'Bearer $idToken',
           'Content-Type': 'application/json',
