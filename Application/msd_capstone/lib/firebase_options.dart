@@ -73,6 +73,7 @@ class DefaultFirebaseOptions {
     projectId: 'msdcapstone-d9d54',
     databaseURL: 'https://msdcapstone-d9d54-default-rtdb.firebaseio.com',
     storageBucket: 'msdcapstone-d9d54.appspot.com',
+    iosClientId: '475156078086-telk0r06ilb4bf3ieju4jfpq3tgcrefu.apps.googleusercontent.com',
     iosBundleId: 'com.MSD.msdCapstone',
   );
 }

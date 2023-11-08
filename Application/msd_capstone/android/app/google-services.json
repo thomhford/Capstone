@@ -13,7 +13,12 @@
           "package_name": "com.MSD.msd_capstone"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "475156078086-tmh7ra2p7kr4l3vo5qmomlbopsj3afst.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCajlAHvQKywKLEOwkNr0gJC-BLiY64kiA"
@@ -21,7 +26,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "475156078086-tmh7ra2p7kr4l3vo5qmomlbopsj3afst.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "475156078086-telk0r06ilb4bf3ieju4jfpq3tgcrefu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.MSD.msdCapstone"
+              }
+            }
+          ]
         }
       }
     }
