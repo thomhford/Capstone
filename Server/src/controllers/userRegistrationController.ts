@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { getUserId } from '../utils/authUtils';
-import User from '../models/User';
+import { User } from '../models';
 import appRoot from 'app-root-path';
 
 const rootDirectory = appRoot.path; // Get the root directory of the project for folder creation

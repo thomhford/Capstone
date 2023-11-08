@@ -1,9 +1,7 @@
 // index.ts
 import express from 'express';
-import sequelize from "../config/db";
-import userRoutes from "./routes/user";
-import uploadRoutes from "./routes/upload";
-import fileRoutes from "./routes/file";
+import sequelize from "./config/db";
+import applyRoutes from "./routes";
 import 'dotenv/config';
 import admin from "firebase-admin";
 
@@ -21,15 +19,13 @@ admin.initializeApp({
     databaseURL: databaseURL
 });
 
-sequelize.sync().then(() => {
+sequelize.sync({ alter: true }).then(() => {
     console.log('Database & tables created!');
 });
 
 app.use(express.json());
 app.use(express.static('public'));
-app.use(userRoutes);
-app.use(uploadRoutes);
-app.use(fileRoutes);
+applyRoutes(app);
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

@@ -3,7 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import { getUserId } from '../utils/authUtils';
 import appRoot from "app-root-path";
-import File from '../models/File';
+import { File } from '../models';
+import { format } from 'date-fns';
 
 const rootDirectory = appRoot.path; // Get the root directory to find the folder to store the file
 
@@ -18,19 +19,29 @@ const storage = multer.diskStorage({
         }
     },
     filename: (req: Request, file, cb) => {
-        const timestamp = new Date();
-        const extension = path.extname(file.originalname);
+        const timestamp = format(new Date(), 'yyyyMMddHHmmss');
+        const sanitizedOriginalName = file.originalname.replace(/[^a-zA-Z0-9.]/g, "_"); // Sanitize original name
+        const extension = path.extname(sanitizedOriginalName);
         const filename = `${timestamp}${extension}`;
         cb(null, filename);
     },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: {fileSize: 50000000}, // 50 MB
+});
 
 export const handleFileUpload = async (req: Request, res: Response) => {
     try {
         upload.single('file')(req, res, async (err) => {
-            if (err) {
+            if (err instanceof multer.MulterError) {
+                // A Multer error occurred when uploading.
+                if (err.code === 'LIMIT_FILE_SIZE') {
+                    console.log('Upload Controller:', err);
+                    return res.status(422).json({message: 'File size limit is exceeded'});
+                }
+            } else if (err) {
                 console.log("Upload Controller:",err);
                 if (err.message === 'Unauthorized request') {
                     return res.status(401).json({ message: 'Unauthorized request' });

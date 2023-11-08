@@ -1,4 +1,4 @@
-// file.ts
+// routes/file.ts
 
 import express from 'express';
 import { verifyUser } from '../utils/authUtils';

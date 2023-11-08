@@ -1,7 +1,7 @@
 // fileController.ts
 
 import { Request, Response } from 'express';
-import File from '../models/File';
+import { File } from '../models';
 import {getUserId} from "../utils/authUtils";
 
 export const handleFileRequest = async (req: Request, res: Response) => {
@@ -17,7 +17,6 @@ export const handleFileRequest = async (req: Request, res: Response) => {
                 file_size: file.file_size,
                 upload_date: file.upload_date,
                 file_path:  file.file_path,
-                // file_url: 'http://localhost:3000/${json['file.file_path']}',
             };
         });
         return res.status(200).json(formattedFiles);
@@ -44,7 +43,6 @@ export const handleUserFileRequest = async (req: Request, res: Response) => {
                 file_size: file.file_size,
                 upload_date: file.upload_date,
                 file_path:  file.file_path,
-                // file_url: 'http://localhost:3000/${file.file_path}',
             };
         });
         return res.status(200).json(formattedFiles);
