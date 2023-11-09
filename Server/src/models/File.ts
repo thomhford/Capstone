@@ -10,8 +10,8 @@ interface FileAttributes {
     file_size: number;
     upload_date: Date;
     file_path: string;
-    user_uid?: string;
-    messageId?: number;
+    user_uid?: string; // Optional becasue could be an attachment to a message
+    messageId?: number; // Optional becasue could be an upload from a user
 }
 
 interface FileInstance extends Model<FileAttributes>, FileAttributes {}

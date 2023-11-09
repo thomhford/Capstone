@@ -31,9 +31,10 @@ export const registerUser = async (req: Request, res: Response) => {
         const { displayName, email } = firebaseUser;
 
         await User.create({
-            firstName: displayName?.split(' ')[0],
-            lastName: displayName?.split(' ')[1],
-            email,
+            // TODO: Do better checks for first name, last name and email...
+            firstName: displayName!.split(' ')[0],
+            lastName: displayName!.split(' ')[1],
+            email: email!,
             uid: userId,
         });
 

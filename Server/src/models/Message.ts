@@ -1,8 +1,17 @@
 // models/Message.ts
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/db';
 
-const Message = sequelize.define('Message', {
+interface MessageAttributes {
+    senderId: number;
+    message: string;
+    isRead: boolean;
+    type: string;
+}
+
+interface MessageInstance extends Model<MessageAttributes>, MessageAttributes {}
+
+const Message = sequelize.define<MessageInstance>('Message', {
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
