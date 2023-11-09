@@ -33,6 +33,13 @@ io.on('connection', (socket) => {
         io.to(room).emit('chat message', 'a user has left the room');
     });
 
+    // Handle 'private message' event
+    socket.on('private message', ({ recipient, message }) => {
+        console.log('sending private message to: ', recipient);
+        // Send a message to the recipient
+        socket.to(recipient).emit('private message', message);
+    });
+
     socket.on('disconnect', () => {
         console.log('user disconnected', socket.id)
     })
