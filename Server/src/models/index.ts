@@ -14,25 +14,43 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
     User.hasMany(File, {
         foreignKey: 'user_uid',
         sourceKey: 'uid',
-        as: 'files'
+        as: 'files',
+        onDelete: 'CASCADE'
     });
     File.belongsTo(User, {
         foreignKey: 'user_uid',
         targetKey: 'uid',
-        as: 'user'
+        as: 'user',
+        onDelete: 'SET NULL'
     });
 
 
-    // User-Message Associations
+    // Sender-Message Associations
     User.hasMany(Message, {
         foreignKey: 'senderId',
         sourceKey: 'uid',
-        as: 'sentMessages'
+        as: 'sentMessages',
+        onDelete: 'CASCADE'
     });
     Message.belongsTo(User, {
         foreignKey: 'senderId',
         targetKey: 'uid',
-        as: 'sender'
+        as: 'sender',
+        onDelete: 'SET NULL'
+    });
+
+    // Receiver-Message Associations
+    User.hasMany(Message, {
+        foreignKey: 'receiverId',
+        sourceKey: 'uid',
+        as: 'receivedMessages',
+        onDelete: 'CASCADE'
+    });
+    Message.belongsTo(User, {
+        foreignKey: 'receiverId',
+        targetKey: 'uid',
+        as: 'receiver',
+        onDelete: 'SET NULL'
     });
 
 
@@ -40,12 +58,14 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
     Message.hasOne(File, {
         foreignKey: 'messageId',
         sourceKey: 'id',
-        as: 'attachment'
+        as: 'attachment',
+        onDelete: 'CASCADE'
     });
     File.belongsTo(Message, {
         foreignKey: 'messageId',
         targetKey: 'id',
-        as: 'message'
+        as: 'message',
+        onDelete: 'SET NULL'
     });
 
     return {
