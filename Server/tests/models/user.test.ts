@@ -1,6 +1,8 @@
 // user.test.ts
-import { User } from '../../src/models';
+import { createUserModel } from '../../src/models/User';
 import { testDb } from '../testDb';
+
+const User = createUserModel(testDb);
 
 describe('User Model', () => {
     beforeAll(async () => {
