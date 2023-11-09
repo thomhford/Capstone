@@ -48,7 +48,8 @@ export const createFileModel = (sequelize: Sequelize) => sequelize.define<FileIn
     },
     file_path: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
     },
     user_uid: {
         type: DataTypes.STRING,
