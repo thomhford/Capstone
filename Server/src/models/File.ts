@@ -59,4 +59,6 @@ export const createFileModel = (sequelize: Sequelize) => sequelize.define<FileIn
         type: DataTypes.INTEGER,
         allowNull: true,
     }
+},{
+    timestamps: true,
 });
