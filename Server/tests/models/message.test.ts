@@ -2,7 +2,7 @@
 import { initializeModelsAndAssociations } from '../../src/models';
 import { testDb } from '../testDb';
 
-const { Message, User, File } = initializeModelsAndAssociations(testDb);
+const { Message, User } = initializeModelsAndAssociations(testDb);
 
 describe('Message Model', () => {
     beforeAll(async () => {
