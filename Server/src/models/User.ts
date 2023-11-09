@@ -10,10 +10,11 @@ interface UserAttributes {
     uid: string;
 }
 
-interface UserInstance extends Model<UserAttributes>, UserAttributes {
+export interface UserInstance extends Model<UserAttributes>, UserAttributes {
     // Instance methods for testing associations
     getFiles: () => Promise<FileInstance[]>;
     getSentMessages: () => Promise<MessageInstance[]>;
+    getReceivedMessages: () => Promise<MessageInstance[]>;
 }
 
 export const createUserModel = (sequelize: Sequelize) => {

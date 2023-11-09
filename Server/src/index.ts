@@ -4,6 +4,7 @@ import sequelize from "./config/db";
 import applyRoutes from "./routes";
 import 'dotenv/config';
 import admin from "firebase-admin";
+import { server } from './config/socket';
 
 const app = express();
 const port = 3000;
@@ -27,6 +28,6 @@ app.use(express.json());
 app.use(express.static('public'));
 applyRoutes(app);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

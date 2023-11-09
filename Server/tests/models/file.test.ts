@@ -39,25 +39,35 @@ describe('File Model', () => {
     });
 
     it('should create a message attachment', async () => {
-        const user = await User.create({
-            firstName: 'Test',
-            lastName: 'User',
-            email: 'test@test1.test',
-            uid: 'should_create_a_message_attachment'
+        const sender = await User.create({
+            firstName: 'TestSender',
+            lastName: 'UserSender',
+            email: 'test@test1.testSender',
+            uid: 'should_create_a_message_attachment_sender'
         });
+        await sender.save();
+        const receiver = await User.create({
+            firstName: 'TestReceiver',
+            lastName: 'UserReceiver',
+            email: 'test@test1.testReceiver',
+            uid: 'should_create_a_message_attachment_receiver'
+        });
+        await receiver.save();
         const message =  await Message.create({
-            senderId: user.uid,
+            senderId: sender.uid,
+            receiverId: receiver.uid,
             message: 'test message',
             isRead: false,
             type: 'text',
         });
+        await message.save();
         const file = await File.create({
-            file_name: 'test_file',
-            original_name: 'test_file',
+            file_name: 'test_attachment',
+            original_name: 'test_attachment',
             mime_type: 'text/plain',
             file_size: 100,
             upload_date: new Date(),
-            file_path: 'test_file',
+            file_path: 'test_attachment.txt',
             messageId: message.id
         });
         expect(file.messageId).toBe(message.id);

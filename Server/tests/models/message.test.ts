@@ -14,19 +14,29 @@ describe('Message Model', () => {
     });
 
     it('should create a message', async () => {
-        const user = await User.create({
+        const sender = await User.create({
             firstName: 'Test',
             lastName: 'User',
             email: 'test@test.test',
             uid: '1234567890'
         });
+        await sender.save();
+        const receiver = await User.create({
+            firstName: 'TestReceiver',
+            lastName: 'UserReceiver',
+            email: 'receiver@test.test',
+            uid: '0987654321'
+        });
+        await receiver.save();
         const message = await Message.create({
-            senderId: user.uid,
+            senderId: sender.uid,
+            receiverId: receiver.uid,
             message: 'test message',
             isRead: false,
             type: 'text',
         });
-        expect(message.senderId).toBe(user.uid);
+        await message.save();
+        expect(message.senderId).toBe(sender.uid);
         expect(message.message).toBe('test message');
         expect(message.isRead).toBe(false);
         expect(message.type).toBe('text');

@@ -4,7 +4,6 @@ import { Message, File as Attachment } from '../models';
 import {Op} from "sequelize";
 import { getUserId } from '../utils/authUtils';
 import sequelize from "../config/db";
-import { FirebaseAuthError } from "firebase-admin/lib/utils/error";
 
 // Function to send a message with possible attachments
 export const sendMessage = async (req: Request, res: Response) => {
@@ -51,10 +50,7 @@ export const sendMessage = async (req: Request, res: Response) => {
         return res.status(201).json({ message: 'Message sent successfully.', data: result });
 
     } catch (error: unknown) {
-        if (error instanceof FirebaseAuthError) {
-            console.error('FirebaseAuth error:', error);
-            return res.status(401).json({message: 'Unauthorized: ' + error.message});
-        } else if (error instanceof Error) {
+        if (error instanceof Error) {
             console.error(error);
             return res.status(500).json({ message: 'Internal server error', error: error.message });
         } else {
@@ -84,10 +80,7 @@ export const getMessages = async (req: Request, res: Response) => {
 
         return res.status(200).json({ messages });
     } catch (error: unknown) {
-        if (error instanceof FirebaseAuthError) {
-            console.error('FirebaseAuth error:', error);
-            return res.status(401).json({message: 'Unauthorized: ' + error.message});
-        } else if (error instanceof Error) {
+        if (error instanceof Error) {
             console.error(error);
             return res.status(500).json({ message: 'Internal server error', error: error.message });
         } else {

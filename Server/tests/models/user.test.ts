@@ -76,13 +76,22 @@ describe('User Model with Associations', () => {
     });
 
     it('should create a user with associated files and messages', async () => {
-        const user = await User.create({
+        const sender = await User.create({
             firstName: 'Test',
             lastName: 'User',
             email: 'test@test.test',
             uid: '1234567890'
-
         });
+        await sender.save();
+
+        const receiver = await User.create({
+            firstName: 'TestReceiver',
+            lastName: 'UserReceiver',
+            email: 'receiver@test.test',
+            uid: '0987654321'
+        });
+        await receiver.save();
+
         const file = await File.create({
             file_name: 'test_file',
             original_name: 'test_file',
@@ -90,22 +99,40 @@ describe('User Model with Associations', () => {
             file_size: 100,
             upload_date: new Date(),
             file_path: 'test_file',
-            user_uid: user.uid
+            user_uid: sender.uid
         });
+        await file.save();
+
         const message =  await Message.create({
-            senderId: user.uid,
+            senderId: sender.uid,
+            receiverId: receiver.uid,
             message: 'test message',
             isRead: false,
             type: 'text',
         });
+        await message.save();
+
+        const attachment = await File.create({
+            file_name: 'test_attachment',
+            original_name: 'test_attachment',
+            mime_type: 'text/plain',
+            file_size: 100,
+            upload_date: new Date(),
+            file_path: 'test_Attachment.txt',
+            messageId: message.id
+        });
 
         // Check if the associations are working correctly
-        const files = await user.getFiles();
-        const messages = await user.getSentMessages();
+        const senderFiles = await sender.getFiles();
+        const senderMessages = await sender.getSentMessages();
+        const receiverMessages = await receiver.getReceivedMessages();
+        const messageFile = await message.getAttachment();
 
-        expect(files.length).toBeGreaterThan(0);
-        expect(messages.length).toBeGreaterThan(0);
-        expect(files[0].id).toBe(file.id);
-        expect(messages[0].id).toBe(message.id);
+        expect(senderFiles.length).toBeGreaterThan(0);
+        expect(senderMessages.length).toBeGreaterThan(0);
+        expect(senderFiles[0].id).toBe(file.id);
+        expect(senderMessages[0].id).toBe(message.id);
+        expect(receiverMessages[0].id).toBe(message.id);
+        expect(messageFile.id).toBe(attachment.id);
     });
 });

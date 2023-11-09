@@ -5,7 +5,6 @@ import { getUserId } from '../utils/authUtils';
 import appRoot from "app-root-path";
 import { File } from '../models';
 import { format } from 'date-fns';
-import { FirebaseAuthError } from "firebase-admin/lib/utils/error";
 
 const rootDirectory = appRoot.path; // Get the root directory to find the folder to store the file
 
@@ -86,12 +85,8 @@ export const handleFileUpload = async (req: Request, res: Response) => {
             }
         });
     } catch (error) {
-        if (error instanceof FirebaseAuthError) {
-            console.error('FirebaseAuth error:', error);
-            return res.status(401).json({ message: 'Unauthorized: ' + error.message });
-        } else {
-            console.log("Upload Controller:", error);
-            return res.status(500).json({message: 'Internal server error'});
-        }
+        console.log("Upload Controller:", error);
+        return res.status(500).json({message: 'Internal server error'});
+
     }
 };
