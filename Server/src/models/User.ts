@@ -1,5 +1,7 @@
 // models/User.ts
 import {DataTypes, Model, Sequelize} from 'sequelize';
+import { FileInstance } from './File';
+import { MessageInstance } from './Message';
 
 interface UserAttributes {
     firstName: string;
@@ -8,9 +10,12 @@ interface UserAttributes {
     uid: string;
 }
 
-interface UserInstance extends Model<UserAttributes>, UserAttributes {}
+interface UserInstance extends Model<UserAttributes>, UserAttributes {
+    // Instance methods for testing associations
+    getFiles: () => Promise<FileInstance[]>;
+    getSentMessages: () => Promise<MessageInstance[]>;
+}
 
-// Modify your model definition to accept a Sequelize instance as an argument
 export const createUserModel = (sequelize: Sequelize) => {
     return sequelize.define<UserInstance>('User', {
         firstName: {
@@ -36,7 +41,3 @@ export const createUserModel = (sequelize: Sequelize) => {
         }
     });
 };
-
-// Allow for test database but use the real database connection by default
-const sequelize = require('../config/db').default;
-export default createUserModel(sequelize);

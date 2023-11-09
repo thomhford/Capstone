@@ -13,7 +13,7 @@ interface FileAttributes {
     messageId?: number; // Optional because it could be an upload from a user
 }
 
-interface FileInstance extends Model<FileAttributes>, FileAttributes {}
+export interface FileInstance extends Model<FileAttributes>, FileAttributes {}
 
 export const createFileModel = (sequelize: Sequelize) => sequelize.define<FileInstance>('File', {
     id: {
@@ -59,7 +59,3 @@ export const createFileModel = (sequelize: Sequelize) => sequelize.define<FileIn
         allowNull: true,
     }
 });
-
-// Allow for test database but use the real database connection by default
-const sequelize = require('../config/db').default;
-export default createFileModel(sequelize);

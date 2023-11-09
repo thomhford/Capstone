@@ -1,7 +1,7 @@
 // authUtils.ts
 import { Request, Response, NextFunction } from 'express';
 import admin from 'firebase-admin';
-import User from "../models/User";
+import { User } from "../models";
 
 export const getUserId = async (req: Request) => {
     const idToken = req.headers.authorization?.split('Bearer ')[1];
