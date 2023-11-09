@@ -37,6 +37,6 @@ export const createUserModel = (sequelize: Sequelize) => {
     });
 };
 
-// Use the real database connection by default
+// Allow for test database but use the real database connection by default
 const sequelize = require('../config/db').default;
 export default createUserModel(sequelize);

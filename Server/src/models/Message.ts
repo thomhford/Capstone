@@ -1,6 +1,5 @@
 // models/Message.ts
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/db';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 
 interface MessageAttributes {
     senderId: number;
@@ -11,7 +10,7 @@ interface MessageAttributes {
 
 interface MessageInstance extends Model<MessageAttributes>, MessageAttributes {}
 
-const Message = sequelize.define<MessageInstance>('Message', {
+export const createMessageModel = (sequelize: Sequelize) => sequelize.define<MessageInstance>('Message', {
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -35,4 +34,6 @@ const Message = sequelize.define<MessageInstance>('Message', {
     paranoid: true,
 });
 
-export default Message;
+// Allow for test database but use the real database connection by default
+const sequelize = require('../config/db').default;
+export default createMessageModel(sequelize);
