@@ -33,6 +33,7 @@ describe('Message Model', () => {
             receiverId: receiver.uid,
             message: 'test message',
             isRead: false,
+            isReceived: false,
             type: 'text',
         });
         await message.save();
