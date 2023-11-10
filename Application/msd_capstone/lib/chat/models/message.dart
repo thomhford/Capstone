@@ -5,6 +5,7 @@ class Message {
   final String recipientId;
   final String message;
   final bool isRead;
+  final bool isReceived;
   final String type;
   final DateTime timestamp;
 
@@ -13,6 +14,7 @@ class Message {
     required this.recipientId,
     required this.message,
     required this.isRead,
+    required this.isReceived,
     required this.type,
     required this.timestamp,
   });
@@ -23,6 +25,7 @@ class Message {
       'recipient_id': recipientId,
       'message': message,
       'is_read': isRead,
+      'is_received': isReceived,
       'type': type,
       'timestamp': timestamp.toIso8601String(),
     };

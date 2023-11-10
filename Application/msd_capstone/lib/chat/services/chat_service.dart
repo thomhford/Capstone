@@ -1,52 +1,111 @@
-// // chat_service.dart
+// chat_service.dart
 
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:msd_capstone/chat/models/message.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:logger/logger.dart';
+import '../models/message.dart';
 
-// class ChatService extends ChangeNotifier {
-//   final FirebaseAuth auth;
+final logger = Logger();
 
-//   ChatService({
-//     required this.auth,
-//   });
+class ChatService extends ChangeNotifier {
+  final FirebaseAuth auth;
+  late IO.Socket socket;
 
-//   // SEND MESSAGE
-//   Future<void> sendMessage({
-//     required String message,
-//     required String recipientId,
-//   }) async {
-//     // get the current user
-//     final String currentUserId = auth.currentUser!.uid;
-//     final String currentUserEmail = auth.currentUser!.email!;
-//     final DateTime timestamp = DateTime.now();
+  ChatService({
+    required this.auth,
+  }) {
+    connect();
+  }
 
-//     // create a new message
-//     Message newMessage = Message(
-//       senderId: currentUserId,
-//       senderEmail: currentUserEmail,
-//       recipientId: recipientId,
-//       message: message,
-//       timestamp: timestamp,
-//     );
+  void connect() {
+    socket = IO.io('http://localhost:3000', <String, dynamic>{
+      'transports': ['websocket'],
+    });
 
-//     // constuct chat room id from current user id and recipient id (sorted to ensure uniqueness)
-//     List<String> roomIds = [currentUserId, recipientId];
-//     roomIds
-//         .sort(); // sort the ids (ensures the same chat room id for both users)
-//     String chatRoomId = roomIds.join('_'); // join the ids with an underscore
+    socket.onConnect((_) {
+      logger.i('Connected');
+      socket.emit('register', auth.currentUser!.uid);
+    });
 
-//     // TODO: add new message to backend
-//   }
+    socket.onDisconnect((_) => logger.i('Disconnected'));
 
-//   // GET MESSAGES
-//   Stream<QuerySnapshot> getMessages(String userId, String otherUserId) {
-//     // constuct chat room id from current user id and recipient id (sorted to ensure uniqueness)
-//     List<String> roomIds = [userId, otherUserId];
-//     roomIds
-//         .sort(); // sort the ids (ensures the same chat room id for both users)
-//     String chatRoomId = roomIds.join('_'); // join the ids with an underscore
+    socket.on('message received', (data) {
+      // Parse the data into a Message object
+      Message message = Message(
+        senderId: data['sender_id'],
+        recipientId: data['recipient_id'],
+        message: data['message'],
+        isRead: data['is_read'],
+        isReceived: data['is_received'],
+        type: data['type'],
+        timestamp: DateTime.parse(data['timestamp']),
+      );
 
-//     // TODO: get messages from backend
-//   }
-// }
+      // TODO: Update application state with the new message
+      // This could involve adding the message to a list of messages and calling notifyListeners()
+    });
+
+    socket.on('message deleted', (data) {
+      // TODO: handle deleted message
+    });
+
+    socket.on('typing', (data) {
+      // TODO: handle typing indicator
+    });
+
+    socket.on('stop typing', (data) {
+      // TODO: handle stop typing indicator
+    });
+
+    socket.on('read', (data) {
+      // TODO: handle read receipt
+    });
+
+    socket.onError((data) {
+      logger.e('Error: $data');
+    });
+  }
+
+  Future<void> sendMessage({
+    required String recipientId,
+    required String message,
+  }) async {
+    final String senderId = auth.currentUser!.uid;
+    socket.emit('message sent', {
+      'senderId': senderId,
+      'recipientId': recipientId,
+      'message': message,
+      'type': 'text',
+    });
+  }
+
+  void deleteMessage(String messageId) {
+    socket.emit('delete message', messageId);
+  }
+
+  void startTyping(String recipientId) {
+    socket.emit('typing', {
+      'senderId': auth.currentUser!.uid,
+      'recipientId': recipientId,
+    });
+  }
+
+  void stopTyping(String recipientId) {
+    socket.emit('stop typing', {
+      'senderId': auth.currentUser!.uid,
+      'recipientId': recipientId,
+    });
+  }
+
+  void readMessage(String messageId) {
+    socket.emit('read', {
+      'readerId': auth.currentUser!.uid,
+      'messageId': messageId,
+    });
+  }
+
+  void disconnect() {
+    socket.disconnect();
+  }
+}
