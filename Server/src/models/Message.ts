@@ -9,6 +9,7 @@ interface MessageAttributes {
     receiverId: string;
     message: string;
     isRead: boolean;
+    isReceived: boolean;
     type: string;
 }
 
@@ -39,6 +40,11 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
         allowNull: false,
     },
     isRead: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
+    isReceived: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
