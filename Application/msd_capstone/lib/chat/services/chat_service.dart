@@ -12,6 +12,10 @@ class ChatService extends ChangeNotifier {
   final FirebaseAuth auth;
   late IO.Socket socket;
 
+  // Lists of messages
+  List<User> users = [];
+  List<Message> messages = [];
+
   ChatService({
     required this.auth,
   }) {
@@ -31,7 +35,7 @@ class ChatService extends ChangeNotifier {
     socket.onDisconnect((_) => logger.i('Disconnected'));
 
     socket.on('message received', (data) {
-      // Parse the data into a Message object
+      // Parse the data into a Message
       Message message = Message(
         senderId: data['sender_id'],
         recipientId: data['recipient_id'],
@@ -41,9 +45,8 @@ class ChatService extends ChangeNotifier {
         type: data['type'],
         timestamp: DateTime.parse(data['timestamp']),
       );
-
-      // TODO: Update application state with the new message
-      // This could involve adding the message to a list of messages and calling notifyListeners()
+      // Add the message to the list of messages
+      messages.add(message);
     });
 
     socket.on('message deleted', (data) {

@@ -1,8 +1,10 @@
 // message.dart
 
+import './user.dart';
+
 class Message {
-  final String senderId;
-  final String recipientId;
+  final User senderId;
+  final User recipientId;
   final String message;
   final bool isRead;
   final bool isReceived;
@@ -18,16 +20,4 @@ class Message {
     required this.type,
     required this.timestamp,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'sender_id': senderId,
-      'recipient_id': recipientId,
-      'message': message,
-      'is_read': isRead,
-      'is_received': isReceived,
-      'type': type,
-      'timestamp': timestamp.toIso8601String(),
-    };
-  }
 }

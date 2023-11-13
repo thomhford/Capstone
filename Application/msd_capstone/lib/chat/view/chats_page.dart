@@ -65,26 +65,32 @@ class ChatsPage extends StatelessWidget {
               child: RecentUsers(
                 users: [
                   User(
+                    id: '1',
                     name: 'John Smith',
                     imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                   ),
                   User(
+                    id: '1',
                     name: 'Steve Johnson',
                     imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                   ),
                   User(
+                    id: '1',
                     name: 'John',
                     imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                   ),
                   User(
+                    id: '1',
                     name: 'John',
                     imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                   ),
                   User(
+                    id: '1',
                     name: 'John',
                     imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                   ),
                   User(
+                    id: '1',
                     name: 'John',
                     imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                   ),
@@ -108,6 +114,7 @@ class ChatsPage extends StatelessWidget {
                   messages: [
                     Message(
                       user: User(
+                        id: '1',
                         name: 'John',
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
@@ -116,6 +123,7 @@ class ChatsPage extends StatelessWidget {
                     ),
                     Message(
                       user: User(
+                        id: '1',
                         name: 'John',
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
@@ -124,6 +132,7 @@ class ChatsPage extends StatelessWidget {
                     ),
                     Message(
                       user: User(
+                        id: '1',
                         name: 'John',
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
@@ -132,6 +141,7 @@ class ChatsPage extends StatelessWidget {
                     ),
                     Message(
                       user: User(
+                        id: '1',
                         name: 'John',
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
@@ -140,6 +150,7 @@ class ChatsPage extends StatelessWidget {
                     ),
                     Message(
                       user: User(
+                        id: '1',
                         name: 'John Smith',
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
@@ -148,6 +159,7 @@ class ChatsPage extends StatelessWidget {
                     ),
                     Message(
                       user: User(
+                        id: '1',
                         name: 'John',
                         imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
                       ),
