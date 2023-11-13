@@ -23,6 +23,10 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
     User.hasMany(Post, { foreignKey: 'userId', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     Post.belongsTo(User, { foreignKey: 'userId', targetKey: 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
+    // User to File association
+    User.hasMany(File, { foreignKey: 'owner_uid', sourceKey: 'uid' });
+    File.belongsTo(User, { foreignKey: 'owner_uid', targetKey: 'uid' });
+
     // Message to File association
     Message.hasMany(File, { as: 'Attachments', foreignKey: 'messageId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     File.belongsTo(Message, { as: 'Message', foreignKey: 'messageId', onDelete: 'SET NULL', onUpdate: 'CASCADE' });

@@ -31,7 +31,7 @@ export const handleUserFileRequest = async (req: Request, res: Response) => {
         const userId = await getUserId(req);
         const files = await File.findAll({
             where: {
-                user_uid: userId
+                owner_uid: userId
             },
             order: [['upload_date', 'DESC']]
         });

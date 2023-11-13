@@ -26,6 +26,7 @@ describe('Post Model', () => {
             userId: user.uid,
         });
         const file = await File.create({
+            owner_uid: user.uid,
             file_name: 'test_file',
             original_name: 'test_file',
             mime_type: 'text/plain',

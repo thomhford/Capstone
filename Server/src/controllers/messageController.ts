@@ -30,7 +30,7 @@ export const sendMessage = async ({ senderId, receiverId, text, type, fileId }:S
             // If type indicates an attachment and fileId is provided, associate the file with the message
             if (type !== 'text' && fileId) {
                 const file = await Attachment.findOne({
-                    where: {id: fileId, user_uid: senderId}, // Ensuring the file belongs to the sender
+                    where: {id: fileId, owner_uid: senderId}, // Ensuring the file belongs to the sender
                     transaction: t
                 });
 

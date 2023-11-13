@@ -62,13 +62,15 @@ export const handleFileUpload = async (req: Request, res: Response) => {
 
                 // Create a new File record in the database
                 const fileRecord = {
+                    owner_uid: userId,
                     file_name: metadata.filename,
                     original_name: metadata.original_name,
                     mime_type: metadata.mimetype,
                     file_size: metadata.size,
                     upload_date: metadata.upload_date,
                     file_path: path.join('uploads', userId, metadata.filename),
-                    user_uid: userId,
+                    // We don't know if this file is an attachment to a message or an upload from a user
+                    // So we set both to null and will update the record later
                 }
 
                 const createdFile = await File.create(fileRecord);

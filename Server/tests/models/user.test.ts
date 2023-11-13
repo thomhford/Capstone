@@ -99,6 +99,7 @@ describe('User Model with Associations', () => {
         });
 
         const file = await File.create({
+            owner_uid: sender.uid,
             file_name: 'test_file',
             original_name: 'test_file',
             mime_type: 'text/plain',
@@ -120,6 +121,7 @@ describe('User Model with Associations', () => {
         await message.save();
 
         const attachment = await File.create({
+            owner_uid: sender.uid,
             file_name: 'test_attachment',
             original_name: 'test_attachment',
             mime_type: 'text/plain',
