@@ -2,7 +2,7 @@
 import { initializeModelsAndAssociations } from '../../src/models';
 import { testDb } from '../testDb';
 
-const { User, Message, File } = initializeModelsAndAssociations(testDb);
+const { User, Message, File, Post } = initializeModelsAndAssociations(testDb);
 
 describe('User Model', () => {
     beforeAll(async () => {
@@ -75,7 +75,7 @@ describe('User Model with Associations', () => {
         await testDb.sync({ force: true });
     });
 
-    it('should create a user with associated files and messages', async () => {
+    it('should create a user with associated posts and messages', async () => {
         const sender = await User.create({
             firstName: 'Test',
             lastName: 'User',
@@ -92,6 +92,12 @@ describe('User Model with Associations', () => {
         });
         await receiver.save();
 
+        const post = await Post.create({
+            title: 'test post',
+            content: 'test content',
+            userId: sender.uid,
+        });
+
         const file = await File.create({
             file_name: 'test_file',
             original_name: 'test_file',
@@ -99,7 +105,7 @@ describe('User Model with Associations', () => {
             file_size: 100,
             upload_date: new Date(),
             file_path: 'test_file',
-            user_uid: sender.uid
+            postId: post.id
         });
         await file.save();
 
@@ -124,16 +130,13 @@ describe('User Model with Associations', () => {
         });
 
         // Check if the associations are working correctly
-        const senderFiles = await sender.getFiles();
         const senderMessages = await sender.getSentMessages();
         const receiverMessages = await receiver.getReceivedMessages();
-        const messageFile = await message.getAttachment();
+        const messageFile = await message.getAttachments();
 
-        expect(senderFiles.length).toBeGreaterThan(0);
         expect(senderMessages.length).toBeGreaterThan(0);
-        expect(senderFiles[0].id).toBe(file.id);
         expect(senderMessages[0].id).toBe(message.id);
         expect(receiverMessages[0].id).toBe(message.id);
-        expect(messageFile.id).toBe(attachment.id);
+        expect(messageFile[0].id).toBe(attachment.id);
     });
 });

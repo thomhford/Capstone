@@ -2,7 +2,7 @@
 import { initializeModelsAndAssociations } from '../../src/models';
 import { testDb } from '../testDb';
 
-const { Message, User, File } = initializeModelsAndAssociations(testDb);
+const { Message, User, File, Post } = initializeModelsAndAssociations(testDb);
 
 describe('File Model', () => {
     beforeAll(async () => {
@@ -13,12 +13,17 @@ describe('File Model', () => {
         expect(File).toBeDefined();
     });
 
-    it('should create an uploaded file', async () => {
+    it('should create a post', async () => {
         const user = await User.create({
             firstName: 'Test',
             lastName: 'User',
             email: 'test@test.test',
             uid: 'should_create_an_uploaded_file'
+        });
+        const post = await Post.create({
+            title: 'test post',
+            content: 'test content',
+            userId: user.uid,
         });
         const file = await File.create({
             file_name: 'test_file',
@@ -27,7 +32,7 @@ describe('File Model', () => {
             file_size: 100,
             upload_date: new Date(),
             file_path: 'test_file',
-            user_uid: user.uid
+            postId: post.id
         });
         expect(file.file_name).toBe('test_file');
         expect(file.original_name).toBe('test_file');
@@ -35,7 +40,7 @@ describe('File Model', () => {
         expect(file.file_size).toBe(100);
         expect(file.upload_date).toBeDefined();
         expect(file.file_path).toBe('test_file');
-        expect(file.user_uid).toBe(user.uid);
+        expect(file.postId).toBe(post.id);
     });
 
     it('should create a message attachment', async () => {

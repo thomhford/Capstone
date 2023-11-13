@@ -9,56 +9,59 @@ interface FileAttributes {
     file_size: number;
     upload_date: Date;
     file_path: string;
-    user_uid?: string; // Optional because it could be an attachment to a message
+    postId?: number; // Optional because it could be an attachment to a message
     messageId?: number; // Optional because it could be an upload from a user
 }
 
 export interface FileInstance extends Model<FileAttributes>, FileAttributes {}
 
-export const createFileModel = (sequelize: Sequelize) => sequelize.define<FileInstance>('File', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        allowNull: false
-    },
-    file_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    original_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    mime_type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    file_size: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            isInt: true,
-            max: 50000000, // 50 MB
+export const createFileModel = (sequelize: Sequelize) => {
+    return sequelize.define<FileInstance>('File', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+            allowNull: false
+        },
+        file_name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        original_name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        mime_type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        file_size: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                isInt: true,
+                max: 50000000, // 50 MB
+            }
+        },
+        upload_date: {
+            type: DataTypes.DATE,
+            allowNull: false
+        },
+        file_path: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        postId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        messageId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
         }
-    },
-    upload_date: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    file_path: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    user_uid: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    messageId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    }
-},{
-    timestamps: true,
-});
+    }, {
+        timestamps: true,
+        indexes: [{ fields: ['upload_date'] }]
+    })
+}

@@ -1,7 +1,7 @@
 // models/User.ts
 import {DataTypes, Model, Sequelize} from 'sequelize';
-import { FileInstance } from './File';
 import { MessageInstance } from './Message';
+import {PostInstance} from "./Post";
 
 interface UserAttributes {
     firstName: string;
@@ -12,7 +12,7 @@ interface UserAttributes {
 
 export interface UserInstance extends Model<UserAttributes>, UserAttributes {
     // Instance methods for testing associations
-    getFiles: () => Promise<FileInstance[]>;
+    getPosts: () => Promise<PostInstance[]>;
     getSentMessages: () => Promise<MessageInstance[]>;
     getReceivedMessages: () => Promise<MessageInstance[]>;
 }
@@ -40,5 +40,9 @@ export const createUserModel = (sequelize: Sequelize) => {
             allowNull: false,
             unique: true
         }
+    }, {
+        timestamps: true,
+        paranoid: true,
+        indexes: [{ fields: ['uid'] }]
     });
 };

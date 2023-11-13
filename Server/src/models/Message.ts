@@ -17,7 +17,7 @@ export interface MessageInstance extends Model<MessageAttributes>, MessageAttrib
     // Instance methods for testing associations
     getSender: () => Promise<UserInstance>;
     getReceiver: () => Promise<UserInstance>;
-    getAttachment: () => Promise<FileInstance>;
+    getAttachments: () => Promise<FileInstance[]>;
 }
 
 export const createMessageModel = (sequelize: Sequelize) => sequelize.define<MessageInstance>('Message', {
@@ -50,11 +50,12 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
         defaultValue: false,
     },
     type: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('text', 'image', 'file'),
         allowNull: false,
         defaultValue: 'text', // 'text', 'image', 'file', etc.
     },
 }, {
     timestamps: true,
     paranoid: true,
+    indexes: [{ fields: ['senderId', 'receiverId'] }]
 });
