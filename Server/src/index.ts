@@ -20,7 +20,7 @@ admin.initializeApp({
     databaseURL: databaseURL
 });
 
-sequelize.sync({ alter: true }).then(() => { // TODO: remove alter: true when Models are finalized
+sequelize.sync({ /*alter: true*/ }).then(() => { // TODO: remove alter: true when Models are finalized
     console.log('Database & tables created!');
 });
 

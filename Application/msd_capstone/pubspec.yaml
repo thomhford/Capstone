@@ -34,8 +34,6 @@ dependencies:
   camera: ^0.10.5+5
   stream_transform: ^2.0.0
   flow_builder: ^0.0.9
-  firebase_in_app_messaging: ^0.7.4+2
-  firebase_messaging: ^14.7.2
   flutter_dotenv: ^5.0.2
   mime: ^1.0.4
   photo_manager: ^2.7.2
