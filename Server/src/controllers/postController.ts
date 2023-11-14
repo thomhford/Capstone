@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { Post } from '../models';
 import {getUserId} from "../utils/authUtils";
 
-export const handleFileRequest = async (_req: Request, res: Response) => {
+export const handlePostRequest = async (_req: Request, res: Response) => {
     try {
         const posts = await Post.findAll({
             order : [['upload_date', 'DESC']]
@@ -16,7 +16,7 @@ export const handleFileRequest = async (_req: Request, res: Response) => {
     }
 }
 
-export const handleUserFileRequest = async (req: Request, res: Response) => {
+export const handleUserPostRequest = async (req: Request, res: Response) => {
     try {
         const userId = await getUserId(req);
         const posts = await Post.findAll({
