@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -75,3 +76,27 @@ Future<FileMetadata> uploadFile(File file) async {
     throw Exception('File upload failed: $e');
   }
 }
+
+// Future<bool> uploadPost(File selectedMedia, String title, String content ) async {
+//   FileMetadata fileMetadata = await uploadFile(selectedMedia);
+//
+//   PostUpload newPostUpload = PostUpload(
+//     title: title,
+//     content: content,
+//     ids: [fileMetadata.id],
+//   );
+//
+//   return false;
+// }
+//
+// class PostUpload {
+//   final String title;
+//   final String content;
+//   final List<int> ids;
+//
+//   PostUpload({
+//     required this.title,
+//     required this.content,
+//     required this.ids,
+//   });
+// }

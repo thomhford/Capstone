@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:msd_capstone/camera/view/camera_button.dart';
-import 'package:msd_capstone/camera/view/upload_page.dart';
+import 'package:msd_capstone/camera/view/media_selection_page.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../utilities/media_size_clipper.dart';
 import 'package:video_player/video_player.dart';

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:msd_capstone/camera/view/post_creation_page.dart';
 import 'package:video_player/video_player.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -93,11 +94,16 @@ class UploadPageState extends State<UploadPage> {
         title: const Text('File Upload'),
         actions: [
           TextButton(
-            onPressed: _file != null
-                ? _uploadFile
-                : null, // This will enable/disable the button
+            onPressed: _file != null ? () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostCreationPage(selectedMedia: _file!),
+                  ),
+              );
+            } : null, // This will enable/disable the button
             child: Text(
-              'Upload',
+              'Next',
               style: TextStyle(
                 color: _file != null ? Colors.white : Colors.grey,
                 fontSize: 16,

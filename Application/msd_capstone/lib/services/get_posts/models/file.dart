@@ -7,6 +7,7 @@ class FileMetadata {
   final int fileSize;
   final DateTime uploadDate;
   final String filePath;
+  final int id;
 
   FileMetadata({
     required this.fileName,
@@ -15,6 +16,7 @@ class FileMetadata {
     required this.fileSize,
     required this.uploadDate,
     required this.filePath,
+    required this.id,
   });
 
   factory FileMetadata.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class FileMetadata {
       fileSize: json['file_size'],
       uploadDate: DateTime.parse(json['upload_date']),
       filePath: json['file_path'],
+      id: json['id'],
     );
   }
 }
