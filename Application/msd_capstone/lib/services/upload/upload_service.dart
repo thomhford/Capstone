@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -24,8 +23,10 @@ Future<String?> getIdToken() async {
 }
 
 Future<FileMetadata> uploadFile(File file) async {
+  logger.i('uploadFile function called');
   try {
     final idToken = await getIdToken();
+    logger.i('idToken: $idToken');
 
     if (idToken == null) {
       throw Exception('Failed to get authentication token');
@@ -52,6 +53,7 @@ Future<FileMetadata> uploadFile(File file) async {
 
     // Send the request
     var response = await request.send();
+    logger.i('File upload request sent');
 
     // Wait for the response from the server
     final resp = await http.Response.fromStream(response);
@@ -63,10 +65,10 @@ Future<FileMetadata> uploadFile(File file) async {
       final data = json.decode(resp.body);
 
       // Create a new FileMetadata object from the JSON data
-      final fileResponseData = FileMetadata.fromJson(data['fileResponseData'] as Map<String, dynamic>);
+      final fileResponseData = FileMetadata.fromJson(
+          data['fileResponseData'] as Map<String, dynamic>);
 
       return fileResponseData;
-
     } else {
       logger.e('Error uploading file: ${resp.reasonPhrase}');
       throw Exception('File upload failed: ${resp.reasonPhrase}');
@@ -77,26 +79,44 @@ Future<FileMetadata> uploadFile(File file) async {
   }
 }
 
-// Future<bool> uploadPost(File selectedMedia, String title, String content ) async {
-//   FileMetadata fileMetadata = await uploadFile(selectedMedia);
-//
-//   PostUpload newPostUpload = PostUpload(
-//     title: title,
-//     content: content,
-//     ids: [fileMetadata.id],
-//   );
-//
-//   return false;
-// }
-//
-// class PostUpload {
-//   final String title;
-//   final String content;
-//   final List<int> ids;
-//
-//   PostUpload({
-//     required this.title,
-//     required this.content,
-//     required this.ids,
-//   });
-// }
+Future<bool> uploadPost(
+    File selectedMedia, String title, String content) async {
+  logger.i('uploadPost function called');
+  try {
+    FileMetadata fileMetadata = await uploadFile(selectedMedia);
+
+    PostUpload newPostUpload = PostUpload(
+      title: title,
+      content: content,
+      ids: [fileMetadata.fileId],
+    );
+
+    final idToken = await getIdToken();
+    var request = http.Request(
+      'POST',
+      Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", 'post'),
+    );
+    // Add headers to the request (including the idToken)
+    request.headers['Authorization'] = 'Bearer $idToken';
+    request.body = jsonEncode(newPostUpload);
+
+    logger.i('Post upload request sent');
+    logger.i('request.body: ${request.body}');
+    return true;
+  } catch (e) {
+    logger.e('Error uploading post: $e');
+    throw Exception('Post upload failed: $e');
+  }
+}
+
+class PostUpload {
+  final String title;
+  final String content;
+  final List<int> ids;
+
+  PostUpload({
+    required this.title,
+    required this.content,
+    required this.ids,
+  });
+}

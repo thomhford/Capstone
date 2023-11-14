@@ -1,11 +1,8 @@
 // socket.ts
-import { Server } from 'socket.io';
-import http from 'http';
+import { io } from '../index';
 import { sendMessage, getMessages, deleteMessage } from '../controllers/messageController';
 import { MessageInstance } from "../models/Message";
 
-const server = http.createServer();
-const io = new Server(server);
 
 // Map of user IDs to socket IDs
 const users = new Map();
@@ -144,4 +141,4 @@ io.on('connection', (socket) => {
     });
 });
 
-export { io, server };
+export { io };

@@ -1,10 +1,11 @@
 // index.ts
 import express from 'express';
+import { Server } from 'http';
+import { Server as IOServer } from 'socket.io';
 import sequelize from "./config/db";
 import applyRoutes from "./routes";
 import 'dotenv/config';
 import admin from "firebase-admin";
-import { server } from './config/socket';
 
 const app = express();
 const port = 3000;
@@ -27,6 +28,12 @@ sequelize.sync({ /*alter: true*/ }).then(() => { // TODO: remove alter: true whe
 app.use(express.json());
 app.use(express.static('public'));
 applyRoutes(app);
+
+const server = new Server(app);
+
+export const io = new IOServer(server);
+
+import './config/socket';
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);

@@ -16,14 +16,16 @@ class _PostCreationPageState extends State<PostCreationPage> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 
-  // Future<void> _uploadFile() async {
-  //   try {
-  //     await uploadFile(widget.selectedMedia, titleController.text, contentController.text);
-  //     Navigator.pop(context); // Go back to the previous page
-  //   } catch (e) {
-  //     print('Error uploading file: $e');
-  //   }
-  // }
+  Future<void> _uploadPost() async {
+    logger.i('Uploading post');
+    try {
+      await uploadPost(widget.selectedMedia, titleController.text, contentController.text);
+      logger.i('Post uploaded successfully');
+      Navigator.pop(context); // Go back to the previous page
+    } catch (e) {
+      logger.e('Error uploading file: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class _PostCreationPageState extends State<PostCreationPage> {
               ),
             ),
             ElevatedButton(
-              onPressed: (){}, //_uploadFile,
+              onPressed: _uploadPost,
               child: const Text('Submit'),
             ),
           ],

@@ -7,6 +7,7 @@ import { File, Post } from '../models';
 import { format } from 'date-fns';
 import { Transaction } from "sequelize";
 import sequelize from "../config/db";
+import { registerUser } from "./userRegistrationController";
 
 const rootDirectory = appRoot.path; // Get the root directory to find the folder to store the file
 
@@ -35,6 +36,7 @@ const upload = multer({
 });
 
 export const handleFileUpload = async (req: Request, res: Response) => {
+    console.log('Upload Controller:', req.file);
     try {
         upload.single('file')(req, res, async (err) => {
             if (err instanceof multer.MulterError) {
@@ -61,7 +63,11 @@ export const handleFileUpload = async (req: Request, res: Response) => {
                 };
 
                 const userId = await getUserId(req);
-
+                if (await registerUser(userId)){
+                    console.log('User not yet created, creating user');
+                } else{
+                    console.log('User already exists');
+                }
                 // Create a new File record in the database
                 const fileRecord = {
                     owner_uid: userId,
