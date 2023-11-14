@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:msd_capstone/app/app.dart';
 
-import '../../services/file.dart';
+import '../../services/services.dart';
 import '../profile.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -18,16 +18,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late Future<List<FileMetadata>> files;
+  late Future<List<Post>> posts;
 
   @override
   void initState() {
     super.initState();
     try {
-      files = FileService(
+      posts = PostService(
         auth: FirebaseAuth.instance,
         client: http.Client(),
-      ).fetchAllFiles();
+      ).fetchAllPosts();
     } catch (e) {
       logger.e("Failed to initialize user images: $e");
     }
@@ -68,8 +68,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          FutureBuilder<List<FileMetadata>>(
-            future: files,
+          FutureBuilder<List<Post>>(
+            future: posts,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SliverFillRemaining(
@@ -91,10 +91,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisSpacing: 4,
                   childCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final file = snapshot.data![index];
+                    final post = snapshot.data![index];
                     return CachedNetworkImage(
                       imageUrl:
-                          'http://${dotenv.env['API_URL'] ?? "localhost:3000"}/${file.filePath}',
+                          'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
+                              '/${post.files[0].filePath}',
+                      // TODO: Update this to use all files(If multiple files are uploaded)
                       placeholder: (context, url) =>
                           const CircularProgressIndicator(),
                       errorWidget: (context, url, error) =>

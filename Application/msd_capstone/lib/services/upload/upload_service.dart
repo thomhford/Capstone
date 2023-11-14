@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import './models/models.dart';
 
 final logger = Logger();
 
@@ -19,7 +22,7 @@ Future<String?> getIdToken() async {
   return null;
 }
 
-Future<void> uploadFile(File file) async {
+Future<FileMetadata> uploadFile(File file) async {
   try {
     final idToken = await getIdToken();
 
@@ -49,11 +52,23 @@ Future<void> uploadFile(File file) async {
     // Send the request
     var response = await request.send();
 
-    if (response.statusCode == 200) {
+    // Wait for the response from the server
+    final resp = await http.Response.fromStream(response);
+
+    if (resp.statusCode == 200) {
       logger.i('File uploaded successfully');
+
+      // Decode the JSON data from the response
+      final data = json.decode(resp.body);
+
+      // Create a new FileMetadata object from the JSON data
+      final fileResponseData = FileMetadata.fromJson(data['fileResponseData'] as Map<String, dynamic>);
+
+      return fileResponseData;
+
     } else {
-      logger.e('Error uploading file: ${response.reasonPhrase}');
-      throw Exception('File upload failed: ${response.reasonPhrase}');
+      logger.e('Error uploading file: ${resp.reasonPhrase}');
+      throw Exception('File upload failed: ${resp.reasonPhrase}');
     }
   } catch (e) {
     logger.e('Error uploading file: $e');

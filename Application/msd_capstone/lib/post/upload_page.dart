@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:video_player/video_player.dart';
 
-import '../services/upload.dart';
+import '../services/upload/upload_service.dart';
 
 final logger = Logger();
 

@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:video_player/video_player.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import 'package:msd_capstone/services/upload.dart';
+import 'package:msd_capstone/services/upload/upload_service.dart';
 
 final logger = Logger();
 

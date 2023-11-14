@@ -1,51 +1,21 @@
-// file.dart
-
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
+import 'models/post.dart';
 
 final logger = Logger();
 
-class FileMetadata {
-  final String fileName;
-  final String originalName;
-  final String mimeType;
-  final int fileSize;
-  final DateTime uploadDate;
-  final String filePath;
-
-  FileMetadata({
-    required this.fileName,
-    required this.originalName,
-    required this.mimeType,
-    required this.fileSize,
-    required this.uploadDate,
-    required this.filePath,
-  });
-
-  factory FileMetadata.fromJson(Map<String, dynamic> json) {
-    return FileMetadata(
-      fileName: json['file_name'],
-      originalName: json['original_name'],
-      mimeType: json['mime_type'],
-      fileSize: json['file_size'],
-      uploadDate: DateTime.parse(json['upload_date']),
-      filePath: json['file_path'],
-    );
-  }
-}
-
-class FileService {
+class PostService {
   final FirebaseAuth _auth;
   final http.Client _client;
 
-  FileService({required FirebaseAuth auth, required http.Client client})
+  PostService({required FirebaseAuth auth, required http.Client client})
       : _auth = auth,
         _client = client;
 
-  Future<List<FileMetadata>> fetchAllFiles() async {
+  Future<List<Post>> fetchAllPosts() async {
     try {
       final User? user = _auth.currentUser;
       if (user == null) {
@@ -55,7 +25,7 @@ class FileService {
 
       final idTokenResult = await user.getIdTokenResult();
 
-      final response = await _client.post(
+      final response = await _client.get(
         Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/file'),
         headers: {
           'Authorization': 'Bearer ${idTokenResult.token}',
@@ -66,7 +36,7 @@ class FileService {
       if (response.statusCode == 200) {
         logger.i('Successfully loaded files');
         final List<dynamic> data = json.decode(response.body);
-        return data.map((item) => FileMetadata.fromJson(item)).toList();
+        return data.map((item) => Post.fromJson(item)).toList();
       } else {
         logger.e('Failed to load files');
         throw Exception('Failed to load files');
@@ -77,7 +47,7 @@ class FileService {
     }
   }
 
-  Future<List<FileMetadata>> fetchUserFiles() async {
+  Future<List<Post>> fetchUserPosts() async {
     try {
       final User? user = _auth.currentUser;
       if (user == null) {
@@ -87,7 +57,7 @@ class FileService {
 
       final idTokenResult = await user.getIdTokenResult();
 
-      final response = await _client.post(
+      final response = await _client.get(
         Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/user_file'),
         headers: {
           'Authorization': 'Bearer ${idTokenResult.token}',
@@ -98,7 +68,7 @@ class FileService {
       if (response.statusCode == 200) {
         logger.i('Successfully loaded files');
         final List<dynamic> data = json.decode(response.body);
-        return data.map((item) => FileMetadata.fromJson(item)).toList();
+        return data.map((item) => Post.fromJson(item)).toList();
       } else {
         logger.e('Failed to load files');
         throw Exception('Failed to load files');
@@ -109,3 +79,4 @@ class FileService {
     }
   }
 }
+

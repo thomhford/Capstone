@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../services/file.dart';
+import '../../services/services.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -14,17 +14,17 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  late Future<List<FileMetadata>> files;
+  late Future<List<Post>> files;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     try {
-      files = FileService(
+      files = PostService(
         auth: FirebaseAuth.instance,
         client: http.Client(),
-      ).fetchAllFiles();
+      ).fetchAllPosts();
     } catch (e) {
       logger.e("Failed to initialize search: $e");
     }
@@ -36,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: const Text('Search Page'),
       ),
-      body: FutureBuilder<List<FileMetadata>>(
+      body: FutureBuilder<List<Post>>(
         future: files,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -61,12 +61,12 @@ class _SearchPageState extends State<SearchPage> {
                       crossAxisCount: 2),
               cacheExtent: 1000,
               itemBuilder: (BuildContext context, int index) {
-                final file = snapshot.data![index];
+                final post = snapshot.data![index];
                 return Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: CachedNetworkImage(
                     imageUrl:
-                        'http://${dotenv.env['API_URL'] ?? "localhost:3000"}/${file.filePath}',
+                        'http://${dotenv.env['API_URL'] ?? "localhost:3000"}/${post.files[0].filePath}', // TODO: Update this to use all files(If multiple files are uploaded)
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
                     errorWidget: (context, url, error) =>
