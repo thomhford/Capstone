@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
       posts = PostService(
         auth: FirebaseAuth.instance,
         client: http.Client(),
-      ).fetchAllPosts();
+      ).fetchUserPosts();
     } catch (e) {
       logger.e("Failed to initialize user images: $e");
     }
@@ -92,15 +92,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   childCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     final post = snapshot.data![index];
-                    return CachedNetworkImage(
-                      imageUrl:
-                          'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
-                              '/${post.files[0].filePath}',
-                      // TODO: Update this to use all files(If multiple files are uploaded)
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                    return Card(
+                      child: Column(
+                        children: <Widget>[
+                          Text(post.title, style: Theme.of(context).textTheme.titleLarge),
+                          Text(post.content),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: CachedNetworkImage(
+                              imageUrl: 'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
+                                  '/${post.files[0].filePath}',
+                              // TODO: Update this to use all files(If multiple files are uploaded)
+                              placeholder: (context, url) => const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );
