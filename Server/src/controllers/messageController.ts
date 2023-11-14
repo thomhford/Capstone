@@ -22,24 +22,22 @@ export const sendMessage = async ({ senderId, receiverId, text, type, fileId }:S
                 senderId,
                 receiverId,
                 message: text,
-                isRead: false,
-                isReceived: false,
                 type
             }, {transaction: t});
 
             // If type indicates an attachment and fileId is provided, associate the file with the message
             if (type !== 'text' && fileId) {
-                const file = await Attachment.findOne({
-                    where: {id: fileId, owner_uid: senderId}, // Ensuring the file belongs to the sender
+                const attachment = await Attachment.findOne({
+                    where: {id: fileId, owner_uid: senderId}, // Ensuring the attachment belongs to the sender
                     transaction: t
                 });
 
-                if (!file) {
+                if (!attachment) {
                     throw new Error('File not found or does not belong to the sender');
                 }
 
-                // Associate the message with the file
-                await file.update({messageId: message.id}, {transaction: t});
+                // Associate the message with the attachment
+                await attachment.update({messageId: message.id}, {transaction: t});
             }
 
             return message; // Return the message as the result of the transaction

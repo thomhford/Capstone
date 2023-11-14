@@ -3,13 +3,15 @@ import multer from 'multer';
 import path from 'path';
 import { getUserId } from '../utils/authUtils';
 import appRoot from "app-root-path";
-import { File } from '../models';
+import { File, Post } from '../models';
 import { format } from 'date-fns';
+import { Transaction } from "sequelize";
+import sequelize from "../config/db";
 
 const rootDirectory = appRoot.path; // Get the root directory to find the folder to store the file
 
 const storage = multer.diskStorage({
-    destination: async (req: Request, file, cb) => {
+    destination: async (req: Request, _file, cb) => {
         const userId = await getUserId(req);
         if (userId) {
             const userFolder = path.join(rootDirectory, 'public/uploads', userId);
@@ -18,7 +20,7 @@ const storage = multer.diskStorage({
             cb(new Error('Unauthorized request'), '');
         }
     },
-    filename: (req: Request, file, cb) => {
+    filename: (_req: Request, file, cb) => {
         const timestamp = format(new Date(), 'yyyyMMddHHmmss');
         const sanitizedOriginalName = file.originalname.replace(/[^a-zA-Z0-9.]/g, "_"); // Sanitize original name
         const extension = path.extname(sanitizedOriginalName);
@@ -69,7 +71,7 @@ export const handleFileUpload = async (req: Request, res: Response) => {
                     file_size: metadata.size,
                     upload_date: metadata.upload_date,
                     file_path: path.join('uploads', userId, metadata.filename),
-                    // We don't know if this file is an attachment to a message or an upload from a user
+                    // Don't know if this file is an attachment to a message or an upload from a user
                     // So we set both to null and will update the record later
                 }
 
@@ -90,5 +92,44 @@ export const handleFileUpload = async (req: Request, res: Response) => {
         console.log("Upload Controller:", error);
         return res.status(500).json({message: 'Internal server error'});
 
+    }
+};
+export const handlePostCreation = async (req: Request, res: Response) => {
+    const { title, content, fileId } = req.body;
+    const userId = await getUserId(req);
+
+    // Start a transaction
+    const t: Transaction = await sequelize.transaction();
+
+    try {
+        // Find the File with the provided fileId
+        const file = await File.findByPk(fileId, { transaction: t });
+
+        // If the file does not exist, rollback the transaction and return an error
+        if (!file) {
+            await t.rollback();
+            return res.status(400).json({ message: 'File not found' });
+        }
+
+        // Create a new Post
+        const post = await Post.create({
+            userId,
+            title,
+            content,
+        }, { transaction: t });
+
+        // Update the File with the postId
+        file.postId = post.id;
+        await file.save({ transaction: t });
+
+        // If everything is successful, commit the transaction
+        await t.commit();
+
+        res.status(200).json({ message: 'Post created successfully' });
+    } catch (error) {
+        // If there's an error, rollback the transaction
+        await t.rollback();
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };

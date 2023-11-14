@@ -2,7 +2,7 @@
 
 import express from 'express';
 import { verifyUser } from '../utils/authUtils';
-import {handleFileRequest, handleUserFileRequest} from "../controllers/fileController";
+import {handleFileRequest, handleUserFileRequest} from "../controllers/postController";
 
 const router = express.Router();
 

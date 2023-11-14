@@ -8,8 +8,8 @@ interface MessageAttributes {
     senderId: string;
     receiverId: string;
     message: string;
-    isRead: boolean;
-    isReceived: boolean;
+    isRead?: boolean; // Not needed at message creation, will be set to false by default
+    isReceived?: boolean; // Not needed at message creation, will be set to false by default
     type: string;
 }
 
@@ -50,9 +50,9 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
         defaultValue: false,
     },
     type: {
-        type: DataTypes.ENUM('text', 'image', 'file'),
+        type: DataTypes.ENUM('text', 'file'),
         allowNull: false,
-        defaultValue: 'text', // 'text', 'image', 'file', etc.
+        defaultValue: 'text', // 'text', 'file'
     },
 }, {
     timestamps: true,
