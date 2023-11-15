@@ -7,8 +7,6 @@ import 'package:msd_capstone/camera/view/post_creation_page.dart';
 import 'package:video_player/video_player.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import 'package:msd_capstone/services/upload/upload_service.dart';
-
 final logger = Logger();
 
 class UploadPage extends StatefulWidget {
@@ -52,33 +50,6 @@ class UploadPageState extends State<UploadPage> {
         mediaList = recentMedia;
       },
     );
-  }
-
-  Future<void> _uploadFile() async {
-    if (_file == null) {
-      _showSnackBar('No file selected for upload');
-      return;
-    }
-    try {
-      await uploadFile(_file!);
-      _file = null;
-      setState(() {
-        _videoPlayerController?.dispose();
-        _videoPlayerController = null;
-      });
-      _showSnackBar('File uploaded successfully');
-    } catch (e) {
-      _showSnackBar('Error uploading file');
-      logger.e('Error uploading file: $e');
-    }
-  }
-
-  void _showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(seconds: 3),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

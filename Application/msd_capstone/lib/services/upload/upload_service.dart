@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import './models/models.dart';
-
 final logger = Logger();
 
 User? getCurrentUser() {
@@ -22,7 +20,7 @@ Future<String?> getIdToken() async {
   return null;
 }
 
-Future<FileMetadata> uploadFile(File file) async {
+Future<_FileMetadata> _uploadFile(File file) async {
   logger.i('uploadFile function called');
   try {
     final idToken = await getIdToken();
@@ -61,14 +59,22 @@ Future<FileMetadata> uploadFile(File file) async {
     if (resp.statusCode == 200) {
       logger.i('File uploaded successfully');
 
-      // Decode the JSON data from the response
-      final data = json.decode(resp.body);
+      try {
+        // Decode the JSON data from the response
+        final data = json.decode(resp.body);
+        logger.i('Upload data: $data');
 
-      // Create a new FileMetadata object from the JSON data
-      final fileResponseData = FileMetadata.fromJson(
-          data['fileResponseData'] as Map<String, dynamic>);
+        // Access the 'fileResponseData' field from the data map
+        final fileResponseData = data['fileResponseData'] as Map<String, dynamic>;
 
-      return fileResponseData;
+        // Create a new FileMetadata object from the fileResponseData
+        final fileMetadata = _FileMetadata.fromJson(fileResponseData);
+        logger.i('fileMetadata: $fileMetadata');
+        return fileMetadata;
+      } catch (e) {
+        logger.e('Error parsing JSON data: $e');
+        throw Exception('Error parsing JSON data: $e');
+      }
     } else {
       logger.e('Error uploading file: ${resp.reasonPhrase}');
       throw Exception('File upload failed: ${resp.reasonPhrase}');
@@ -83,9 +89,10 @@ Future<bool> uploadPost(
     File selectedMedia, String title, String content) async {
   logger.i('uploadPost function called');
   try {
-    FileMetadata fileMetadata = await uploadFile(selectedMedia);
+    _FileMetadata fileMetadata = await _uploadFile(selectedMedia);
+    logger.i('fileMetadata: $fileMetadata');
 
-    PostUpload newPostUpload = PostUpload(
+    _PostUpload newPostUpload = _PostUpload(
       title: title,
       content: content,
       ids: [fileMetadata.fileId],
@@ -109,14 +116,52 @@ Future<bool> uploadPost(
   }
 }
 
-class PostUpload {
+class _FileMetadata {
+
+  final String fileName;
+  final String originalName;
+  final String mimeType;
+  final int size;
+  final DateTime uploadDate;
+  final int fileId;
+
+  _FileMetadata({
+    required this.fileName,
+    required this.originalName,
+    required this.mimeType,
+    required this.size,
+    required this.uploadDate,
+    required this.fileId,
+  });
+
+  factory _FileMetadata.fromJson(Map<String, dynamic> json) {
+    return _FileMetadata(
+      fileName: json['filename'],
+      originalName: json['original_name'],
+      mimeType: json['mimetype'],
+      size: json['size'] as int,
+      uploadDate: DateTime.parse(json['upload_date']),
+      fileId: json['id'] as int,
+    );
+  }
+}
+
+class _PostUpload {
   final String title;
   final String content;
   final List<int> ids;
 
-  PostUpload({
+  _PostUpload({
     required this.title,
     required this.content,
     required this.ids,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'content': content,
+      'ids': ids,
+    };
+  }
 }

@@ -26,7 +26,7 @@ class PostService {
       final idTokenResult = await user.getIdTokenResult();
 
       final response = await _client.get(
-        Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/file'),
+        Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/post'),
         headers: {
           'Authorization': 'Bearer ${idTokenResult.token}',
           'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ class PostService {
       final idTokenResult = await user.getIdTokenResult();
 
       final response = await _client.get(
-        Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/user_file'),
+        Uri.http(dotenv.env['API_URL'] ?? "localhost:3000", '/user_post'),
         headers: {
           'Authorization': 'Bearer ${idTokenResult.token}',
           'Content-Type': 'application/json',
