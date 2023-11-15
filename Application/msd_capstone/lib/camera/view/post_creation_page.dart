@@ -17,10 +17,10 @@ class _PostCreationPageState extends State<PostCreationPage> {
   final contentController = TextEditingController();
 
   Future<void> _uploadPost() async {
-    logger.i('Uploading post');
+    // logger.i('Uploading post');
     try {
       await uploadPost(widget.selectedMedia, titleController.text, contentController.text);
-      logger.i('Post uploaded successfully');
+      // logger.i('Post uploaded successfully');
       Navigator.pop(context); // Go back to the previous page
     } catch (e) {
       logger.e('Error uploading file: $e');

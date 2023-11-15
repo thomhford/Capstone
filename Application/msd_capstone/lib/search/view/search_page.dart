@@ -49,54 +49,70 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Post>>(
-        future: files,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While data is loading
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            // If there's an error
-            return const Center(
-              child: Text('Error: Cannot connect to server.'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            // If there's no data
-            return const Center(
-              child: Text('No files available.'),
-            );
-          } else {
-            // If data is available, display it in a MasonryGridView
-            return MasonryGridView.builder(
-              controller: _scrollController,
-              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
-              cacheExtent: 1000,
-              itemBuilder: (BuildContext context, int index) {
-                final post = snapshot.data![index];
-                return Card(
-                  child: Column(
-                    children: <Widget>[
-                      Text(post.title, style: Theme.of(context).textTheme.titleLarge),
-                      Text(post.content),
-                      Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: CachedNetworkImage(
-                          imageUrl: 'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
-                              '/${post.files[0].filePath}',
-                          // TODO: Update this to use all files(If multiple files are uploaded)
-                          placeholder: (context, url) => const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              itemCount: snapshot.data!.length,
-            );
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            files = PostService(
+              auth: FirebaseAuth.instance,
+              client: http.Client(),
+            ).fetchAllPosts();
+          });
         },
+        child: FutureBuilder<List<Post>>(
+          future: files,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // While data is loading
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              // If there's an error
+              return const Center(
+                child: Text('Error: Cannot connect to server.'),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              // If there's no data
+              return const Center(
+                child: Text('No files available.'),
+              );
+            } else {
+              // If data is available, display it in a MasonryGridView
+              return MasonryGridView.builder(
+                controller: _scrollController,
+                gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                cacheExtent: 1000,
+                itemBuilder: (BuildContext context, int index) {
+                  final post = snapshot.data![index];
+                  return Card(
+                    child: Column(
+                      children: <Widget>[
+                        Text(post.title, style: Theme
+                            .of(context)
+                            .textTheme
+                            .titleLarge),
+                        Text(post.content),
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: CachedNetworkImage(
+                            imageUrl: 'http://${dotenv.env['API_URL'] ??
+                                "localhost:3000"}'
+                                '/${post.files[0].filePath}',
+                            // TODO: Update this to use all files(If multiple files are uploaded)
+                            placeholder: (context,
+                                url) => const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                itemCount: snapshot.data!.length,
+              );
+            }
+          },
+        ),
       ),
     );
   }

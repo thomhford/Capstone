@@ -12,7 +12,7 @@ export const handlePostRequest = async (_req: Request, res: Response) => {
                 as: 'Files'
 
             }],
-            order : [['upload_date', 'DESC']]
+            order : [['createdAt', 'DESC']]
         });
         return res.status(200).json(posts);
     } catch (error) {
@@ -32,7 +32,7 @@ export const handleUserPostRequest = async (req: Request, res: Response) => {
                 model: File,
                 as: 'Files'
             }],
-            order: [['upload_date', 'DESC']]
+            order: [['createdAt', 'DESC']]
         });
         return res.status(200).json(posts);
     } catch (error) {

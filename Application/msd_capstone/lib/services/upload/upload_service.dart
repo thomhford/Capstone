@@ -21,10 +21,10 @@ Future<String?> getIdToken() async {
 }
 
 Future<_FileMetadata> _uploadFile(File file) async {
-  logger.i('uploadFile function called');
+  // logger.i('uploadFile function called');
   try {
     final idToken = await getIdToken();
-    logger.i('idToken: $idToken');
+    // logger.i('idToken: $idToken');
 
     if (idToken == null) {
       throw Exception('Failed to get authentication token');
@@ -51,25 +51,25 @@ Future<_FileMetadata> _uploadFile(File file) async {
 
     // Send the request
     var response = await request.send();
-    logger.i('File upload request sent');
+    // logger.i('File upload request sent');
 
     // Wait for the response from the server
     final resp = await http.Response.fromStream(response);
 
     if (resp.statusCode == 200) {
-      logger.i('File uploaded successfully');
+      // logger.i('File uploaded successfully');
 
       try {
         // Decode the JSON data from the response
         final data = json.decode(resp.body);
-        logger.i('Upload data: $data');
+        // logger.i('Upload data: $data');
 
         // Access the 'fileResponseData' field from the data map
         final fileResponseData = data['fileResponseData'] as Map<String, dynamic>;
 
         // Create a new FileMetadata object from the fileResponseData
         final fileMetadata = _FileMetadata.fromJson(fileResponseData);
-        logger.i('fileMetadata: $fileMetadata');
+        // logger.i('fileMetadata: $fileMetadata');
         return fileMetadata;
       } catch (e) {
         logger.e('Error parsing JSON data: $e');
@@ -87,10 +87,10 @@ Future<_FileMetadata> _uploadFile(File file) async {
 
 Future<bool> uploadPost(
     File selectedMedia, String title, String content) async {
-  logger.i('uploadPost function called');
+  // logger.i('uploadPost function called');
   try {
     _FileMetadata fileMetadata = await _uploadFile(selectedMedia);
-    logger.i('fileMetadata: $fileMetadata');
+    // logger.i('fileMetadata: $fileMetadata');
 
     _PostUpload newPostUpload = _PostUpload(
       title: title,
@@ -105,11 +105,24 @@ Future<bool> uploadPost(
     );
     // Add headers to the request (including the idToken)
     request.headers['Authorization'] = 'Bearer $idToken';
+    request.headers['Content-Type'] = 'application/json';
     request.body = jsonEncode(newPostUpload);
+    // logger.i('request.body: ${request.body}');
 
-    logger.i('Post upload request sent');
-    logger.i('request.body: ${request.body}');
-    return true;
+    var response = await request.send();
+    // logger.i('Post upload request sent');
+
+
+    final resp = await http.Response.fromStream(response);
+    // logger.i('resp.body: ${resp.body}');
+    // logger.i('resp.statusCode: ${resp.statusCode}');
+    if (resp.statusCode == 200) {
+      // logger.i('Post uploaded successfully');
+      return true;
+    } else {
+      logger.e('Error uploading post: ${resp.reasonPhrase}');
+      throw Exception('Post upload failed: ${resp.reasonPhrase}');
+    }
   } catch (e) {
     logger.e('Error uploading post: $e');
     throw Exception('Post upload failed: $e');

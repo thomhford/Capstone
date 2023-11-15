@@ -34,8 +34,10 @@ class PostService {
       );
 
       if (response.statusCode == 200) {
-        logger.i('Successfully loaded files');
+        // logger.i('Successfully loaded files');
+        // logger.i('All Posts JSON ${response.body}');
         final List<dynamic> data = json.decode(response.body);
+        // logger.i('All Posts List $data');
         return data.map((item) => Post.fromJson(item)).toList();
       } else {
         logger.e('Failed to load files');
@@ -66,7 +68,7 @@ class PostService {
       );
 
       if (response.statusCode == 200) {
-        logger.i('Successfully loaded files');
+        // logger.i('Successfully loaded files');
         final List<dynamic> data = json.decode(response.body);
         return data.map((item) => Post.fromJson(item)).toList();
       } else {

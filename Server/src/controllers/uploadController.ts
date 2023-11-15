@@ -101,21 +101,24 @@ export const handleFileUpload = async (req: Request, res: Response) => {
     }
 };
 export const handlePostCreation = async (req: Request, res: Response) => {
-    const { title, content, fileId } = req.body;
+    console.log('Post Controller:', req.body);
+    const { title, content, ids: fileIds } = req.body; // Change fileId to fileIds
     const userId = await getUserId(req);
 
     // Start a transaction
     const t: Transaction = await sequelize.transaction();
 
     try {
-        // Find the File with the provided fileId
-        const file = await File.findByPk(fileId, { transaction: t });
+        // Find the Files with the provided fileIds
+        const files = await Promise.all(fileIds.map((fileId: number) => File.findByPk(fileId, { transaction: t })));
 
-        // If the file does not exist, rollback the transaction and return an error
-        if (!file) {
+        // If any of the files do not exist, rollback the transaction and return an error
+        if (files.some(file => !file)) {
+            console.log(`One or more files not found: ${fileIds}`);
             await t.rollback();
-            return res.status(400).json({ message: 'File not found' });
+            return res.status(400).json({ message: 'One or more files not found' });
         }
+        console.log(`Post associated files: ${files}`);
 
         // Create a new Post
         const post = await Post.create({
@@ -123,14 +126,19 @@ export const handlePostCreation = async (req: Request, res: Response) => {
             title,
             content,
         }, { transaction: t });
+        console.log(`Created post: ${post}`);
 
-        // Update the File with the postId
-        file.postId = post.id;
-        await file.save({ transaction: t });
+        // Update each File with the postId
+        await Promise.all(files.map(file => {
+            file.postId = post.id;
+            return file.save({ transaction: t });
+        }));
+        console.log(`Updated files: ${files}`);
 
         // If everything is successful, commit the transaction
         await t.commit();
 
+        console.log('Post created successfully');
         res.status(200).json({ message: 'Post created successfully' });
     } catch (error) {
         // If there's an error, rollback the transaction

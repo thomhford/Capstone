@@ -6,7 +6,7 @@ import {handlePostRequest, handleUserPostRequest} from "../controllers/postContr
 
 const router = express.Router();
 
-router.post('/post', verifyUser, handlePostRequest);
-router.post('/user_post', verifyUser, handleUserPostRequest);
+router.get('/post', verifyUser, handlePostRequest);
+router.get('/user_post', verifyUser, handleUserPostRequest);
 
 export default router;
