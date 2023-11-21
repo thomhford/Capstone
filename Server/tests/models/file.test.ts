@@ -63,7 +63,7 @@ describe('File Model', () => {
             senderId: sender.uid,
             receiverId: receiver.uid,
             message: 'test message',
-            isRead: false,
+            read: false,
             isReceived: false,
             type: 'text',
         });
