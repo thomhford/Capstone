@@ -13,7 +13,7 @@ import 'package:video_player/video_player.dart';
 final logger = Logger();
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({Key? key}) : super(key: key);
+  const CameraPage({super.key});
 
   @override
   _CameraPageState createState() => _CameraPageState();

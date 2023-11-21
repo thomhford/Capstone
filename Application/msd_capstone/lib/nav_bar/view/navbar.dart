@@ -13,7 +13,7 @@ import 'upload_nav_button.dart';
 
 class NavBar extends StatelessWidget {
   final NavigationBloc? navigationBloc;
-  const NavBar({Key? key, this.navigationBloc}) : super(key: key);
+  const NavBar({super.key, this.navigationBloc});
 
   static Page<void> page() => const MaterialPage<void>(child: NavBar());
 

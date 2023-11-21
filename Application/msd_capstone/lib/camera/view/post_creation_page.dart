@@ -6,7 +6,7 @@ import 'package:msd_capstone/services/upload/upload_service.dart';
 class PostCreationPage extends StatefulWidget {
   final File selectedMedia;
 
-  const PostCreationPage({Key? key, required this.selectedMedia}) : super(key: key);
+  const PostCreationPage({super.key, required this.selectedMedia});
 
   @override
   _PostCreationPageState createState() => _PostCreationPageState();

@@ -11,7 +11,7 @@ final logger = Logger();
 
 class UploadPage extends StatefulWidget {
   final String? filePath;
-  const UploadPage({Key? key, this.filePath}) : super(key: key);
+  const UploadPage({super.key, this.filePath});
 
   @override
   UploadPageState createState() => UploadPageState();

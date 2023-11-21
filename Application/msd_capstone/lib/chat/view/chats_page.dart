@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../models/models.dart';
-import './widgets/recent_messages.dart';
+import './widgets/widgets.dart';
 
 class ChatsPage extends StatefulWidget {
   const ChatsPage({super.key});
@@ -39,6 +39,41 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ScrollController scrollController = ScrollController();
+
+
+    // Create sample users
+    final User sender = User(
+      id: '1',
+      name: 'John',
+      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+    );
+    final User recipient = User(
+      id: '2',
+      name: 'Jane',
+      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+    );
+
+    // Create a sample message
+    final ChatMessage message = ChatMessage(
+      senderId: sender.id,
+      recipientId: recipient.id,
+      message: 'Hey, how\'s it going?',
+      read: false,
+      isReceived: true,
+      type: 'text',
+      timestamp: DateTime.now(),
+    );
+
+    // Create a sample conversation
+    final Conversation conversation = Conversation(
+      users: {
+        sender.id: sender,
+        recipient.id: recipient,
+      },
+      messages: [message],
+    );
+
+
     return Scaffold(
       backgroundColor: theme.colorScheme.primary,
       body: SafeArea(
@@ -143,25 +178,7 @@ class _ChatsPageState extends State<ChatsPage> {
                   child: Column(
                     children: [
                       RecentMessages(
-                        messages: [
-                          Message(
-                            senderId: User(
-                              id: '1',
-                              name: 'John',
-                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                            ),
-                            recipientId: User(
-                              id: '2',
-                              name: 'Jane',
-                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                            ),
-                            message: 'Hey, how\'s it going?',
-                            read: false,
-                            isReceived: true,
-                            type: 'text',
-                            timestamp: DateTime.now(),
-                          ),
-                        ],
+                        conversations: [conversation],
                         searchQuery: _searchQuery,
                       ),
                       const SizedBox(

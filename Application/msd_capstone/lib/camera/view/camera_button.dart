@@ -6,11 +6,11 @@ class CameraButton extends StatelessWidget {
   // final VoidCallback onLongPressEnd;
 
   const CameraButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     // required this.onLongPress,
     // required this.onLongPressEnd,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

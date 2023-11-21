@@ -1,17 +1,18 @@
 // message.dart
 
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import './user.dart';
 
-class Message {
-  final User senderId;
-  final User recipientId;
+class ChatMessage {
+  final String senderId;
+  final String recipientId;
   final String message;
   final bool read;
   final bool isReceived;
   final String type;
   final DateTime timestamp;
 
-  Message({
+  ChatMessage({
     required this.senderId,
     required this.recipientId,
     required this.message,
@@ -20,4 +21,13 @@ class Message {
     required this.type,
     required this.timestamp,
   });
+
+  types.Message toChatMessage(Map<String, User> users) {
+    return types.TextMessage(
+      author: users[senderId]!.toChatUser(),
+      id: '', // Generate or use an existing unique message ID
+      text: message,
+      createdAt: timestamp.millisecondsSinceEpoch,
+    );
+  }
 }

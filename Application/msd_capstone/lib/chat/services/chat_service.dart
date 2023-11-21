@@ -14,7 +14,7 @@ class ChatService extends ChangeNotifier {
 
   // Lists of messages
   List<User> users = [];
-  List<Message> messages = [];
+  List<ChatMessage> messages = [];
 
   ChatService({
     required this.auth,
@@ -40,7 +40,7 @@ class ChatService extends ChangeNotifier {
 
     socket.on('message received', (data) {
       // Parse the data into a Message
-      Message message = Message(
+      ChatMessage message = ChatMessage(
         senderId: data['sender_id'],
         recipientId: data['recipient_id'],
         message: data['message'],

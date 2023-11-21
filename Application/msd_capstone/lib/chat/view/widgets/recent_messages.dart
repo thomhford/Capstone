@@ -4,32 +4,35 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
+import '../conversation_page.dart';
 
 class RecentMessages extends StatelessWidget {
-  final List<Message> messages;
+  final List<Conversation> conversations;
   final String searchQuery;
 
   const RecentMessages({
     super.key,
-    required this.messages,
+    required this.conversations,
     required this.searchQuery,
   });
 
   @override
   Widget build(BuildContext context) {
-    final List<Message> filteredMessages = messages.where((message) {
+    final List<Conversation> filteredConversations = conversations.where((conversation) {
       final String query = searchQuery.toLowerCase();
-      final String messageText = message.message.toLowerCase();
-      final String userName = message.recipientId.name.toLowerCase();
-      return messageText.contains(query) || userName.contains(query);
+      return conversation.messages.any((message) {
+        final String messageText = message.message.toLowerCase();
+        final String userName = conversation.users[message.senderId]!.name.toLowerCase();
+        return messageText.contains(query) || userName.contains(query);
+      });
     }).toList();
 
-    if (filteredMessages.isEmpty) {
+    if (filteredConversations.isEmpty) {
       return const Padding(
         padding: EdgeInsets.only(top: 25),
         child: Center(
           child: Text(
-            'No messages found',
+            'No conversations found',
             style: TextStyle(
               color: Colors.white70,
               fontSize: 20,
@@ -41,17 +44,30 @@ class RecentMessages extends StatelessWidget {
     }
 
     return Column(
-      children: filteredMessages.map((message) {
+      children: filteredConversations.map((conversation) {
+        final ChatMessage recentMessage = conversation.messages.reduce((value, element) {
+          return value.timestamp.isAfter(element.timestamp) ? value : element;
+        });
+        final User recipient = conversation.users[recentMessage.recipientId]!;
         return Padding(
           padding: const EdgeInsets.only(left: 20, right: 10, top: 25),
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ConversationPage(
+                    conversation: conversation,
+                  ),
+                ),
+              );
+            },
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 30,
                   backgroundImage:
-                  CachedNetworkImageProvider(message.recipientId.imageUrl),
+                  CachedNetworkImageProvider(recipient.imageUrl),
                 ),
                 const SizedBox(
                   width: 15,
@@ -64,7 +80,7 @@ class RecentMessages extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: Text(
-                            message.recipientId.name,
+                            recipient.name,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 17,
@@ -79,7 +95,7 @@ class RecentMessages extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              formatTimestamp(message.timestamp),
+                              formatTimestamp(recentMessage.timestamp),
                               style: const TextStyle(
                                 color: Colors.white70,
                                 fontFamily: 'Quicksand',
@@ -95,7 +111,7 @@ class RecentMessages extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
-                        message.message,
+                        recentMessage.message,
                         style: const TextStyle(
                           color: Colors.white70,
                           fontFamily: 'Quicksand',
