@@ -44,7 +44,7 @@ class ChatService extends ChangeNotifier {
         senderId: data['sender_id'],
         recipientId: data['recipient_id'],
         message: data['message'],
-        isRead: data['is_read'],
+        read: data['is_read'],
         isReceived: data['is_received'],
         type: data['type'],
         timestamp: DateTime.parse(data['timestamp']),
