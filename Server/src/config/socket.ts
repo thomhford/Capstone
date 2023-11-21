@@ -2,13 +2,34 @@
 import { io } from '../index';
 import { sendMessage, getMessages, deleteMessage } from '../controllers/messageController';
 import { MessageInstance } from "../models/Message";
-
+import { eventEmitter } from "./events";
+import admin from 'firebase-admin';
 
 // Map of user IDs to socket IDs
 const users = new Map();
 
 // Map of user IDs to message queues
 const messageQueues = new Map();
+
+io.use(async (socket, next) => {
+    try {
+        const token = socket.handshake.query.token as string;
+        if (!token) {
+            next(new Error('Authentication error'));
+            return;
+        }
+        await admin.auth().verifyIdToken(token);
+        next();
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Error authenticating socket:', error);
+            next(new Error('Authentication error: ' + error.message));
+        } else {
+            console.error('Error authenticating socket:', error);
+            next(new Error('Authentication error'));
+        }
+    }
+});
 
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
@@ -33,7 +54,7 @@ io.on('connection', (socket) => {
             // Mark the message as read in the database
             const message = await getMessages(messageId);
             if (message && message.receiverId === readerId) {
-                message.isRead = true;
+                message.read = true;
                 await message.save();
 
                 // Emit a 'read' event to the sender
@@ -102,6 +123,18 @@ io.on('connection', (socket) => {
             console.error('Error receiving message:', error);
             // Emit an error event to the client
             socket.emit('error', 'Error receiving message');
+        }
+    });
+
+    eventEmitter.on('message received', ({ message }) => {
+        const recipientSocketId = users.get(message.receiverId);
+        if (recipientSocketId) {
+            socket.to(recipientSocketId).emit('message received', message);
+        } else {
+            // If the recipient is not connected, add the message to their queue
+            const queue = messageQueues.get(message.receiverId) || [];
+            queue.push(message);
+            messageQueues.set(message.receiverId, queue);
         }
     });
 

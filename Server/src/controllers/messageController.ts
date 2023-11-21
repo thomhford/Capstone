@@ -1,6 +1,8 @@
 // controllers/messageController.ts
-import {File as Attachment, Message} from '../models';
+import { File as Attachment, Message } from '../models';
 import sequelize from "../config/db";
+import { Op } from "sequelize";
+import { eventEmitter } from '../config/events';
 
 // Function to send a message with possible attachments
 interface SendMessageParams {
@@ -24,6 +26,9 @@ export const sendMessage = async ({ senderId, receiverId, text, type, fileId }:S
                 message: text,
                 type
             }, {transaction: t});
+
+            // Emit a 'message received' event to the receiver
+            eventEmitter.emit('message received', { message });
 
             // If type indicates an attachment and fileId is provided, associate the file with the message
             if (type !== 'text' && fileId) {
@@ -60,6 +65,19 @@ export const getMessages = async (messageId: number) => {
         console.error(error);
         throw error;
     }
+};
+
+// Create a function to load previous messages
+export const getPreviousMessages = async (userId1: string, userId2: string) => {
+    return await Message.findAll({
+        where: {
+            [Op.or]: [
+                { senderId: userId1, receiverId: userId2 },
+                { senderId: userId2, receiverId: userId1 }
+            ]
+        },
+        order: [['createdAt', 'DESC']]
+    });
 };
 
 // Function to delete a message

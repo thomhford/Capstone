@@ -32,14 +32,14 @@ describe('Message Model', () => {
             senderId: sender.uid,
             receiverId: receiver.uid,
             message: 'test message',
-            isRead: false,
+            read: false,
             isReceived: false,
             type: 'text',
         });
         await message.save();
         expect(message.senderId).toBe(sender.uid);
         expect(message.message).toBe('test message');
-        expect(message.isRead).toBe(false);
+        expect(message.read).toBe(false);
         expect(message.type).toBe('text');
     });
 });

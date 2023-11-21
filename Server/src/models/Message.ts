@@ -8,7 +8,7 @@ interface MessageAttributes {
     senderId: string;
     receiverId: string;
     message: string;
-    isRead?: boolean; // Not needed at message creation, will be set to false by default
+    read?: boolean; // Not needed at message creation, will be set to false by default
     isReceived?: boolean; // Not needed at message creation, will be set to false by default
     type: string;
 }
@@ -39,7 +39,7 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    isRead: {
+    read: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
