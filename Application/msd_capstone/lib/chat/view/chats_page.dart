@@ -6,171 +6,230 @@ import 'package:intl/intl.dart';
 
 import '../models/models.dart';
 
-class ChatsPage extends StatelessWidget {
+class ChatsPage extends StatefulWidget {
   const ChatsPage({super.key});
+
+  @override
+  _ChatsPageState createState() => _ChatsPageState();
+}
+
+class _ChatsPageState extends State<ChatsPage> {
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+
+  String _searchQuery = '';
+
+  void _updateSearchQuery(String newQuery) {
+    setState(() {
+      _searchQuery = newQuery;
+    });
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    _updateSearchQuery('');
+    FocusScope.of(context).unfocus();
+  }
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final ScrollController scrollController = ScrollController();
     return Scaffold(
       backgroundColor: theme.colorScheme.primary,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Messages',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Quicksand',
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.create,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                'P E O P L E',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 100,
-              child: RecentUsers(
-                users: [
-                  User(
-                    id: '1',
-                    name: 'John Smith',
-                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                  ),
-                  User(
-                    id: '1',
-                    name: 'Steve Johnson',
-                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                  ),
-                  User(
-                    id: '1',
-                    name: 'John',
-                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                  ),
-                  User(
-                    id: '1',
-                    name: 'John',
-                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                  ),
-                  User(
-                    id: '1',
-                    name: 'John',
-                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                  ),
-                  User(
-                    id: '1',
-                    name: 'John',
-                    imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
-                  ),
-                  color: theme.colorScheme.secondary,
-                ),
-                child: RecentMessages(
-                  messages: [
-                    Message(
-                      user: User(
-                        id: '1',
-                        name: 'John',
-                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+        child: Scrollbar(
+          controller: scrollController,
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
                       ),
-                      text: 'Hey, how\'s it going?',
-                      timestamp: DateTime.now(),
-                    ),
-                    Message(
-                      user: User(
-                        id: '1',
-                        name: 'John',
-                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Messages',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Quicksand',
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {}, // TODO: implement new message button
+                            icon: const Icon(
+                              Icons.create,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                      text: 'Hey, how\'s it going?',
-                      timestamp: DateTime.now(),
                     ),
-                    Message(
-                      user: User(
-                        id: '1',
-                        name: 'John',
-                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                      ),
-                      text: 'Hey, how\'s it going?',
-                      timestamp: DateTime.now(),
+                    const SizedBox(
+                      height: 5,
                     ),
-                    Message(
-                      user: User(
-                        id: '1',
-                        name: 'John',
-                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: theme.colorScheme.secondary,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _searchController,
+                                focusNode: _searchFocusNode,
+                                onChanged: _updateSearchQuery,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Search',
+                                  hintStyle: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 17,
+                                    fontFamily: 'Quicksand',
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: Colors.white70,
+                                    size: 25,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Only show the cancel button if the TextField is focused
+                            if (_searchFocusNode.hasFocus)
+                              IconButton(
+                                icon: const Icon(Icons.cancel),
+                                onPressed: _clearSearch,
+                              ),
+                          ],
+                        ),
                       ),
-                      text: 'Hey, how\'s it going?',
-                      timestamp: DateTime.now(),
                     ),
-                    Message(
-                      user: User(
-                        id: '1',
-                        name: 'John Smith',
-                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                      ),
-                      text: 'Hey, how\'s it going?',
-                      timestamp: DateTime.now(),
-                    ),
-                    Message(
-                      user: User(
-                        id: '1',
-                        name: 'John',
-                        imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-                      ),
-                      text: 'Hey, how\'s it going hhhhhhhhhhhhhh?',
-                      timestamp: DateTime.now(),
+                    const SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              SliverToBoxAdapter(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40),
+                    ),
+                    color: theme.colorScheme.secondary,
+                  ),
+                  child: Column(
+                    children: [
+                      RecentMessages(
+                        messages: [
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going?',
+                            timestamp: DateTime.now(),
+                          ),
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going?',
+                            timestamp: DateTime.now(),
+                          ),
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going?',
+                            timestamp: DateTime.now(),
+                          ),
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going?',
+                            timestamp: DateTime.now(),
+                          ),
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John Smith',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going?',
+                            timestamp: DateTime.now(),
+                          ),
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going hhhhhhhhhhhhhh?',
+                            timestamp: DateTime.now(),
+                          ),
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going?',
+                            timestamp: DateTime.now(),
+                          ),
+                          Message(
+                            user: User(
+                              id: '1',
+                              name: 'John',
+                              imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+                            ),
+                            text: 'Hey, how\'s it going?',
+                            timestamp: DateTime.now(),
+                          ),
+                        ],
+                        searchQuery: _searchQuery,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -179,18 +238,41 @@ class ChatsPage extends StatelessWidget {
 
 class RecentMessages extends StatelessWidget {
   final List<Message> messages;
+  final String searchQuery;
 
   const RecentMessages({
-    Key? key,
+    super.key,
     required this.messages,
-  }) : super(key: key);
+    required this.searchQuery,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: messages.length,
-      itemBuilder: (context, index) {
-        final message = messages[index];
+    final List<Message> filteredMessages = messages.where((message) {
+      final String query = searchQuery.toLowerCase();
+      final String messageText = message.text.toLowerCase();
+      final String userName = message.user.name.toLowerCase();
+      return messageText.contains(query) || userName.contains(query);
+    }).toList();
+
+    if (filteredMessages.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 25),
+        child: Center(
+          child: Text(
+            'No messages found',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 20,
+              fontFamily: 'Quicksand',
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: filteredMessages.map((message) {
         return Padding(
           padding: const EdgeInsets.only(left: 20, right: 10, top: 25),
           child: GestureDetector(
@@ -259,59 +341,7 @@ class RecentMessages extends StatelessWidget {
             ),
           ),
         );
-      },
-    );
-  }
-}
-
-class RecentUsers extends StatelessWidget {
-  final List<User> users;
-
-  const RecentUsers({
-    Key? key,
-    required this.users,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: users.length,
-      itemBuilder: (context, index) {
-        return Row(
-          children: [
-            const SizedBox(
-              width: 25,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                        CachedNetworkImageProvider(users[index].imageUrl),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    users[index].name.split(' ')[0],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Quicksand',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
+      }).toList(),
     );
   }
 }

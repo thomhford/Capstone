@@ -22,9 +22,13 @@ class ChatService extends ChangeNotifier {
     connect();
   }
 
-  void connect() {
-    socket = IO.io('http://localhost:3000', <String, dynamic>{
+  void connect() async {
+    final token = await auth.currentUser!.getIdToken();
+    socket = IO.io('http://localhost:3000', <String, dynamic>{ // TODO: implement (wss://)
       'transports': ['websocket'],
+      'query': {
+        'token': token,
+      }
     });
 
     socket.onConnect((_) {
