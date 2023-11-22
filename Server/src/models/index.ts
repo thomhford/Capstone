@@ -5,19 +5,24 @@ import { createUserModel } from './User';
 import { createFileModel } from "./File";
 import { createMessageModel } from "./Message";
 import { createPostModel } from "./Post";
+import { createConversationModel } from "./Conversation";
 
 export function initializeModelsAndAssociations(sequelize: Sequelize) {
-    // Assuming you have instances of your models
     const User = createUserModel(sequelize);
     const Message = createMessageModel(sequelize);
     const Post = createPostModel(sequelize);
     const File = createFileModel(sequelize);
+    const Conversation = createConversationModel(sequelize);
+
+    // User to Conversation associations
+    User.hasMany(Conversation, { as: 'User1Conversations', foreignKey: 'user1Id', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+    User.hasMany(Conversation, { as: 'User2Conversations', foreignKey: 'user2Id', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+    Conversation.belongsTo(User, { as: 'User1', foreignKey: 'user1Id', targetKey: 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+    Conversation.belongsTo(User, { as: 'User2', foreignKey: 'user2Id', targetKey: 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
     // User to Message associations
     User.hasMany(Message, { as: 'SentMessages', foreignKey: 'senderId', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     User.hasMany(Message, { as: 'ReceivedMessages', foreignKey: 'receiverId', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-    Message.belongsTo(User, { as: 'Sender', foreignKey: 'senderId', targetKey: 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-    Message.belongsTo(User, { as: 'Receiver', foreignKey: 'receiverId', targetKey: 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
     // User to Post association
     User.hasMany(Post, { foreignKey: 'userId', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
@@ -35,18 +40,23 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
     Post.hasMany(File, { as: 'Files', foreignKey: 'postId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     File.belongsTo(Post, { as: 'Post', foreignKey: 'postId', onDelete: 'SET NULL', onUpdate: 'CASCADE' });
 
+    // Conversation to Message association
+    Conversation.hasMany(Message, { as: 'Messages', foreignKey: 'conversationId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+    Message.belongsTo(Conversation, { as: 'Conversation', foreignKey: 'conversationId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
     return {
         User,
         File,
         Message,
         Post,
+        Conversation
     }
 }
 
 // Initialize models and associations with the default database instance for export where needed
 const { User, File, Message,
-    Post } = initializeModelsAndAssociations(sequelizeDefaultInstance);
-export { User, File, Message, Post };
+    Post, Conversation } = initializeModelsAndAssociations(sequelizeDefaultInstance);
+export { User, File, Message, Post, Conversation };
 
 // Export the function for custom initialization (e.g., for testing)
 export default initializeModelsAndAssociations;

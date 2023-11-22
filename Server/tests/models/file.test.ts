@@ -76,8 +76,8 @@ describe('File Model', () => {
             file_size: 100,
             upload_date: new Date(),
             file_path: 'test_attachment.txt',
-            messageId: message.id
+            messageId: message.message_id
         });
-        expect(file.messageId).toBe(message.id);
+        expect(file.messageId).toBe(message.message_id);
     });
 });

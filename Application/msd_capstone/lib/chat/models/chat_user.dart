@@ -1,17 +1,25 @@
-// user.dart
+// chat_user.dart
 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-class User {
+class ChatUser {
   final String id;
   final String name;
   final String imageUrl;
 
-  User({
+  ChatUser({
     required this.id,
     required this.name,
     required this.imageUrl,
   });
+
+  static ChatUser fromMap(Map<String, dynamic> map) {
+    return ChatUser(
+      id: map['id'],
+      name: map['name'],
+      imageUrl: map['imageUrl'],
+    );
+  }
 
   types.User toChatUser() {
     // Split the name into first and last

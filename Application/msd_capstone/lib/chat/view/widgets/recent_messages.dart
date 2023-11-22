@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:msd_capstone/chat/services/chat_service.dart';
 import '../../models/models.dart';
 import '../conversation_page.dart';
 
@@ -48,7 +49,7 @@ class RecentMessages extends StatelessWidget {
         final ChatMessage recentMessage = conversation.messages.reduce((value, element) {
           return value.timestamp.isAfter(element.timestamp) ? value : element;
         });
-        final User recipient = conversation.users[recentMessage.recipientId]!;
+        final ChatUser recipient = conversation.users[recentMessage.recipientId]!;
         return Padding(
           padding: const EdgeInsets.only(left: 20, right: 10, top: 25),
           child: GestureDetector(

@@ -1,10 +1,10 @@
 // routes/messages.js
 import { Router } from 'express';
-import { sendMessage, getMessages } from '../controllers/messageController';
+import { sendMessage, getMessage } from '../controllers/conversationController';
 
 const router = Router();
 
 router.post('/send', sendMessage);
-router.get('/:conversationId', getMessages);
+router.get('/:conversationId', getMessage);
 
 export default router;

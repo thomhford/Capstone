@@ -128,7 +128,7 @@ describe('User Model with Associations', () => {
             file_size: 100,
             upload_date: new Date(),
             file_path: 'test_Attachment.txt',
-            messageId: message.id
+            messageId: message.message_id
         });
 
         // Check if the associations are working correctly
@@ -137,8 +137,8 @@ describe('User Model with Associations', () => {
         const messageFile = await message.getAttachments();
 
         expect(senderMessages.length).toBeGreaterThan(0);
-        expect(senderMessages[0].id).toBe(message.id);
-        expect(receiverMessages[0].id).toBe(message.id);
+        expect(senderMessages[0].message_id).toBe(message.message_id);
+        expect(receiverMessages[0].message_id).toBe(message.message_id);
         expect(messageFile[0].id).toBe(attachment.id);
     });
 });

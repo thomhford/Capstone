@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import '../models/models.dart';
+import '../services/services.dart';
 
 class ConversationPage extends StatelessWidget {
   final Conversation conversation;
@@ -14,20 +15,17 @@ class ConversationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
     return Chat(
-      messages: conversation.toChatMessages(),
-      showUserAvatars: true,
-      showUserNames: true,
-      onAttachmentPressed: () {
-        print('Attachment pressed!');
-      },
-      onSendPressed: (message) {
-        print('Message: ${message.text}');
-      },
-      user: conversation.users['1']!.toChatUser(),
-
-
-    );
+            messages: conversation.toChatMessages(),
+            showUserAvatars: true,
+            showUserNames: true,
+            onAttachmentPressed: () {
+              print('Attachment pressed!');
+            },
+            onSendPressed: (message) {
+              print('Message: ${message.text}');
+            },
+            user: conversation.users['1']!.toChatUser(),
+          );
   }
 }
