@@ -6,6 +6,7 @@ import { createFileModel } from "./File";
 import { createMessageModel } from "./Message";
 import { createPostModel } from "./Post";
 import { createConversationModel } from "./Conversation";
+import { createUserSocketModel } from "./UserSocket";
 
 export function initializeModelsAndAssociations(sequelize: Sequelize) {
     const User = createUserModel(sequelize);
@@ -13,6 +14,7 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
     const Post = createPostModel(sequelize);
     const File = createFileModel(sequelize);
     const Conversation = createConversationModel(sequelize);
+    const UserSocket = createUserSocketModel(sequelize);
 
     // User to Conversation associations
     User.hasMany(Conversation, { as: 'User1Conversations', foreignKey: 'user1Id', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
@@ -49,14 +51,15 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
         File,
         Message,
         Post,
-        Conversation
+        Conversation,
+        UserSocket
     }
 }
 
 // Initialize models and associations with the default database instance for export where needed
 const { User, File, Message,
-    Post, Conversation } = initializeModelsAndAssociations(sequelizeDefaultInstance);
-export { User, File, Message, Post, Conversation };
+    Post, Conversation, UserSocket } = initializeModelsAndAssociations(sequelizeDefaultInstance);
+export { User, File, Message, Post, Conversation, UserSocket };
 
 // Export the function for custom initialization (e.g., for testing)
 export default initializeModelsAndAssociations;

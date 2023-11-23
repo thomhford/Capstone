@@ -23,7 +23,8 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
             const message = await Message.create({
                 message: text,
                 type,
-                conversationId
+                conversationId,
+                status: 'sent'
             }, {transaction: t});
 
             // Associate the message with the sender
@@ -59,6 +60,36 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
         console.error(error);
         eventEmitter.emit('error', { error: 'Error sending message', details: error });
     }
+};
+
+// Function to update the status of a message
+export const queueMessage = async (messageId: number) => {
+    const message = await Message.findOne({ where: { message_id: messageId } });
+    if (message) {
+        message.status = 'queued';
+        await message.save();
+    }
+};
+
+// Function to deliver queued messages
+export const deliverQueuedMessages = async (userId: string) => {
+    const messages = await Message.findAll({
+        where: {
+            status: 'queued',
+            '$Conversation.user1Id$': userId,
+            '$Conversation.user2Id$': userId
+        },
+        include: [{
+            model: Conversation,
+            as: 'Conversation',
+            attributes: ['user1Id', 'user2Id']
+        }]
+    });
+    for (const message of messages) {
+        message.status = 'delivered';
+        await message.save();
+    }
+    return messages;
 };
 
 // Function to retrieve conversations

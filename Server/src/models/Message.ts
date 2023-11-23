@@ -10,6 +10,7 @@ interface MessageAttributes {
     isReceived?: boolean; // Not needed at message creation, will be set to false by default
     type: string;
     conversationId: number;
+    status?: 'sent' | 'queued' | 'delivered';
 }
 
 export interface MessageInstance extends Model<MessageAttributes>, MessageAttributes {
@@ -49,6 +50,11 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    status: {
+        type: DataTypes.ENUM('sent', 'queued', 'delivered'),
+        allowNull: false,
+        defaultValue: 'sent', // 'sent', 'queued', 'delivered'
+    }
 }, {
     timestamps: true,
     paranoid: true,

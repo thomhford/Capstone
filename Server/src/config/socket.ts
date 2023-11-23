@@ -6,17 +6,13 @@ import {
     deleteMessage,
     getMessage,
     getConversation,
-    deleteConversation
+    deleteConversation,
+    queueMessage,
+    deliverQueuedMessages
 } from '../controllers/conversationController';
-import { MessageInstance } from "../models/Message";
 import { eventEmitter } from "./events";
 import admin from 'firebase-admin';
-
-// Map of user IDs to socket IDs
-const users = new Map();
-
-// Map of user IDs to message queues
-const messageQueues = new Map();
+import { createUserSocket, getUserSocket, deleteUserSocket } from "../controllers/userSocketController";
 
 io.use(async (socket, next) => {
     try {
@@ -43,17 +39,15 @@ io.on('connection',
         console.log('a user connected', socket.id);
 
         // When a user connects, they should emit a 'register' event with their user ID
-        socket.on('register', (userId) => {
-            users.set(userId, socket.id);
+        socket.on('register', async (userId) => {
+            // When a user connects, store their socket ID in the database
+            await createUserSocket(userId, socket.id);
 
             // Send all the messages in the user's queue
-            const queue = messageQueues.get(userId) || [];
-            queue.forEach((message: MessageInstance) => {
+            const queue = await deliverQueuedMessages(userId);
+            queue.forEach((message) => {
                 socket.emit('message received', message);
             });
-
-            // Clear the user's queue
-            messageQueues.set(userId, []);
         });
 
         // Handle 'fetch_conversations' event
@@ -82,12 +76,12 @@ io.on('connection',
                     await message.save();
 
                     // Emit a 'read' event to all users in the conversation
-                    [conversation.user1Id, conversation.user2Id].forEach(userId => {
-                        const userSocketId = users.get(userId);
-                        if (userSocketId) {
-                            socket.to(userSocketId).emit('read', messageId);
+                    for (const userId of [conversation.user1Id, conversation.user2Id]) {
+                        const userSocket = await getUserSocket(userId);
+                        if (userSocket) {
+                            socket.to(userSocket.socketId).emit('read', messageId);
                         }
-                    });
+                    }
                 }
             } catch (error) {
                 console.error('Error marking message as read:', error);
@@ -97,18 +91,18 @@ io.on('connection',
         });
 
         // Handle 'typing' event
-        socket.on('typing', ({senderId, recipientId}) => {
-            const recipientSocketId = users.get(recipientId);
-            if (recipientSocketId) {
-                socket.to(recipientSocketId).emit('typing', senderId);
+        socket.on('typing', async ({senderId, recipientId}) => {
+            const recipientSocket = await getUserSocket(recipientId);
+            if (recipientSocket) {
+                socket.to(recipientSocket.socketId).emit('typing', senderId);
             }
         });
 
         // Handle 'stop typing' event
-        socket.on('stop typing', ({senderId, recipientId}) => {
-            const recipientSocketId = users.get(recipientId);
-            if (recipientSocketId) {
-                socket.to(recipientSocketId).emit('stop typing', senderId);
+        socket.on('stop typing', async ({senderId, recipientId}) => {
+            const recipientSocket = await getUserSocket(recipientId);
+            if (recipientSocket) {
+                socket.to(recipientSocket.socketId).emit('stop typing', senderId);
             }
         });
 
@@ -123,12 +117,12 @@ io.on('connection',
 
                 // If the conversation exists, emit a 'message received' event to all users in the conversation
                 if (conversation) {
-                    conversation.Users.forEach(user => {
-                        const userSocketId = users.get(user.uid);
+                    for (const user of conversation.Users) {
+                        const userSocketId = await getUserSocket(user.uid);
                         if (userSocketId) {
-                            socket.to(userSocketId).emit('message received', savedMessage);
+                            socket.to(userSocketId.socketId).emit('message received', savedMessage);
                         }
-                    });
+                    }
                 }
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -161,12 +155,12 @@ io.on('connection',
                     // Emit a 'message received' event to all users in the conversation
                     const conversation = await getConversation(message.conversationId);
                     if (conversation) {
-                        conversation.Users.forEach(user => {
-                            const userSocketId = users.get(user.uid);
-                            if (userSocketId) {
-                                socket.to(userSocketId).emit('message received', messageId);
+                        for (const user of conversation.Users) {
+                            const userSocket = await getUserSocket(user.uid);
+                            if (userSocket) {
+                                socket.to(userSocket.socketId).emit('message received', messageId);
                             }
-                        });
+                        }
                     }
                 }
             } catch (error) {
@@ -196,17 +190,15 @@ io.on('connection',
 
                 // If the conversation exists, emit a 'message received' event to all users in the conversation
                 if (conversation) {
-                    conversation.Users.forEach(user => {
-                        const userSocketId = users.get(user.uid);
-                        if (userSocketId) {
-                            socket.to(userSocketId).emit('message received', message);
+                    for (const user of conversation.Users) {
+                        const userSocket = await getUserSocket(user.uid);
+                        if (userSocket) {
+                            socket.to(userSocket.socketId).emit('message received', message);
                         } else {
                             // If the user is not connected, add the message to their queue
-                            const queue = messageQueues.get(user.uid) || [];
-                            queue.push(message);
-                            messageQueues.set(user.uid, queue);
+                            await queueMessage(message);
                         }
-                    });
+                    }
                 }
             } catch (error) {
                 console.error('Error receiving message:', error);
@@ -225,12 +217,12 @@ io.on('connection',
                 if (message) {
                     const conversation = await getConversation(message.conversationId);
                     if (conversation) {
-                        conversation.Users.forEach(user => {
-                            const userSocketId = users.get(user.uid);
-                            if (userSocketId) {
-                                socket.to(userSocketId).emit('message deleted', messageId);
+                        for (const user of conversation.Users) {
+                            const userSocket =  await getUserSocket(user.uid);
+                            if (userSocket) {
+                                socket.to(userSocket.socketId).emit('message deleted', messageId);
                             }
-                        });
+                        }
                     }
                 }
             } catch (error) {
@@ -248,12 +240,12 @@ io.on('connection',
 
                 // If the conversation exists, emit a 'conversation deleted' event to all users in the conversation
                 if (conversation) {
-                    [conversation.user1Id, conversation.user2Id].forEach(userId => {
-                        const userSocketId = users.get(userId);
-                        if (userSocketId) {
-                            socket.to(userSocketId).emit('conversation deleted', conversationId);
+                    for (const userId of [conversation.user1Id, conversation.user2Id]) {
+                        const userSocket = await getUserSocket(userId);
+                        if (userSocket) {
+                            socket.to(userSocket.socketId).emit('conversation deleted', conversationId);
                         }
-                    });
+                    }
                 }
             } catch (error) {
                 console.error('Error deleting conversation:', error);
@@ -262,15 +254,10 @@ io.on('connection',
             }
         });
 
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
             console.log('user disconnected', socket.id);
             // Remove the disconnected user from the map
-            for (const [userId, socketId] of users.entries()) {
-                if (socketId === socket.id) {
-                    users.delete(userId);
-                    break;
-                }
-            }
+            await deleteUserSocket(socket.id);
         });
 
         eventEmitter.on('error', ({error, details}) => {
