@@ -3,8 +3,19 @@ import {File as Attachment, Message, Conversation, User} from '../models';
 import sequelize from "../config/db";
 import { Op } from "sequelize";
 import { eventEmitter } from '../config/events';
+import {ConversationInstance} from "../models/Conversation";
 
-// Function to send a message with possible attachments
+/**
+ * Parameters for the sendMessage function.
+ *
+ * @typedef {Object} SendMessageParams
+ *
+ * @property {string} senderId - The ID of the user sending the message.
+ * @property {number} conversationId - The ID of the conversation the message is part of.
+ * @property {string} text - The text of the message.
+ * @property {string} type - The type of the message ('text' or 'file').
+ * @property {number} [fileId] - The ID of the file attached to the message (if any). This is optional.
+ */
 interface SendMessageParams {
     senderId: string;
     conversationId: number;
@@ -12,6 +23,28 @@ interface SendMessageParams {
     type: string;
     fileId?: number;
 }
+/**
+ * Function to send a message with possible attachments.
+ *
+ * This function does the following:
+ * 1. Validates the input parameters.
+ * 2. Begins a transaction to ensure both Message and File are saved correctly.
+ * 3. Creates a new message in the database with the provided details.
+ * 4. Associates the message with the sender.
+ * 5. If the message type indicates an attachment and a fileId is provided, it associates the file with the message.
+ * 6. Saves the message in the database.
+ * 7. Emits a 'message received' event to the receiver.
+ * 8. Returns the message as the result of the transaction.
+ *
+ * @param {Object} params - The parameters for sending a message.
+ * @param {string} params.senderId - The ID of the user sending the message.
+ * @param {number} params.conversationId - The ID of the conversation the message is part of.
+ * @param {string} params.text - The text of the message.
+ * @param {string} params.type - The type of the message ('text' or 'file').
+ * @param {number} [params.fileId] - The ID of the file attached to the message (if any).
+ *
+ * @throws Will throw an error if there's an issue creating the message, associating the sender or file, or saving the message.
+ */
 export const sendMessage = async ({ senderId, conversationId, text, type, fileId }:SendMessageParams) => {
     if (!conversationId || !text || !type) {
         throw new Error('Conversation ID, text, and type are required.');
@@ -62,7 +95,18 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
     }
 };
 
-// Function to update the status of a message
+/**
+ * Function to update the status of a message to 'queued'.
+ *
+ * This function does the following:
+ * 1. Fetches the message with the given message ID from the database.
+ * 2. If the message exists, it updates the status of the message to 'queued'.
+ * 3. Saves the updated message in the database.
+ *
+ * @param {number} messageId - The ID of the message to be queued.
+ *
+ * @throws Will throw an error if there's an issue fetching the message or updating its status.
+ */
 export const queueMessage = async (messageId: number) => {
     const message = await Message.findOne({ where: { message_id: messageId } });
     if (message) {
@@ -71,7 +115,21 @@ export const queueMessage = async (messageId: number) => {
     }
 };
 
-// Function to deliver queued messages
+/**
+ * Function to deliver queued messages for a user.
+ *
+ * This function does the following:
+ * 1. Fetches all messages with the status 'queued' that belong to conversations involving the user.
+ * 2. For each fetched message, it updates the status of the message to 'delivered'.
+ * 3. Saves the updated message in the database.
+ * 4. Returns the updated messages.
+ *
+ * @param {string} userId - The ID of the user to deliver queued messages to.
+ *
+ * @returns {Promise<MessageInstance[]>} An array of the delivered messages.
+ *
+ * @throws Will throw an error if there's an issue fetching the messages, updating their status, or saving the messages.
+ */
 export const deliverQueuedMessages = async (userId: string) => {
     const messages = await Message.findAll({
         where: {
@@ -92,7 +150,23 @@ export const deliverQueuedMessages = async (userId: string) => {
     return messages;
 };
 
-// Function to retrieve conversations
+/**
+ * Function to retrieve all conversations for a user.
+ *
+ * This function does the following:
+ * 1. Fetches all conversations from the database where the user is either `user1Id` or `user2Id`.
+ * 2. Includes the associated 'User1', 'User2', and 'Messages' in the fetched conversations.
+ * 3. Returns the fetched conversations.
+ *
+ * Note: This function currently fetches all conversations for a user without any limit.
+ * If a user can have a large number of conversations, consider implementing pagination or some form of limit.
+ *
+ * @param {number} userId - The ID of the user whose conversations are to be fetched.
+ *
+ * @returns {Promise<ConversationInstance[]>} An array of the fetched conversations.
+ *
+ * @throws Will throw an error if there's an issue fetching the conversations from the database.
+ */
 export const getConversations = async (userId: number) => {
     try {
         return await Conversation.findAll({
@@ -110,7 +184,20 @@ export const getConversations = async (userId: number) => {
     }
 };
 
-// Function to retrieve a single conversation
+/**
+ * Function to retrieve a single conversation.
+ *
+ * This function does the following:
+ * 1. Fetches a conversation from the database with the given conversation ID.
+ * 2. Includes the associated 'User1', 'User2', 'Messages', and 'Users' in the fetched conversation.
+ * 3. Returns the fetched conversation.
+ *
+ * @param {number} conversationId - The ID of the conversation to be fetched.
+ *
+ * @returns {Promise<ConversationInstance | null>} The fetched conversation, or null if no conversation was found with the given ID.
+ *
+ * @throws Will throw an error if there's an issue fetching the conversation from the database.
+ */
 export const getConversation = async (conversationId: number) => {
     try {
         return await Conversation.findOne({
@@ -127,7 +214,19 @@ export const getConversation = async (conversationId: number) => {
     }
 };
 
-// Function to retrieve a single message for updating the read status
+/**
+ * Function to retrieve a single message. Used for updating the read status of a message.
+ *
+ * This function does the following:
+ * 1. Fetches a message from the database with the given message ID.
+ * 2. Returns the fetched message.
+ *
+ * @param {number} messageId - The ID of the message to be fetched.
+ *
+ * @returns {Promise<MessageInstance | null>} The fetched message, or null if no message was found with the given ID.
+ *
+ * @throws Will throw an error if there's an issue fetching the message from the database.
+ */
 export const getMessage = async (messageId: number) => {
     try {
         // Retrieve the message with the given messageId
@@ -176,16 +275,27 @@ export const getMessages = async (conversationId: number) => {
 // Function to delete a conversation
 export const deleteConversation = async (conversationId: number) => {
     try {
-        // Find the conversation with the given conversationId
-        const conversation = await Conversation.findOne({
-            where: { conversation_id: conversationId }
-        });
+        // Begin a transaction
+        return await sequelize.transaction(async (t) => {
+            // Find the conversation with the given conversationId
+            const conversation = await Conversation.findOne({
+                where: { conversation_id: conversationId }
+            });
 
-        // If the conversation exists, delete it and return the conversation
-        if (conversation) {
-            await conversation.destroy();
-            return conversation;
-        }
+            // If the conversation exists, delete it and its associated messages, then return the conversation
+            if (conversation) {
+                // Delete the messages associated with the conversation
+                await Message.destroy({
+                    where: { conversationId: conversation.conversation_id },
+                    transaction: t
+                });
+
+                // Delete the conversation
+                await conversation.destroy({ transaction: t });
+
+                return conversation;
+            }
+        });
     } catch (error) {
         console.error(error);
         eventEmitter.emit('error', { error: 'Error deleting conversation', details: error });
