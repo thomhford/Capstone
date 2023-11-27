@@ -1,33 +1,48 @@
-// models/User.js
-import {DataTypes} from 'sequelize';
-import sequelize from '../../config/db';
+// models/User.ts
+import {DataTypes, Model, Sequelize} from 'sequelize';
+import { MessageInstance } from './Message';
+import {PostInstance} from "./Post";
 
-const User = sequelize.define('User', {
-    firstName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    lastName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true
+interface UserAttributes {
+    firstName: string;
+    lastName: string;
+    email: string;
+    uid: string;
+}
+
+export interface UserInstance extends Model<UserAttributes>, UserAttributes {
+    // Instance methods for testing associations
+    getPosts: () => Promise<PostInstance[]>;
+    getSentMessages: () => Promise<MessageInstance[]>;
+    getReceivedMessages: () => Promise<MessageInstance[]>;
+}
+
+export const createUserModel = (sequelize: Sequelize) => {
+    return sequelize.define<UserInstance>('User', {
+        firstName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        lastName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: true
+            }
+        },
+        uid: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         }
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    uid: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    }
-});
-
-export default User;
+    }, {
+        timestamps: true,
+        paranoid: true,
+        indexes: [{ fields: ['uid'] }]
+    });
+};
