@@ -49,7 +49,6 @@ class _ChatsPageState extends State<ChatsPage> {
     final theme = Theme.of(context);
     final ScrollController scrollController = ScrollController();
 
-
     // Create sample users
     final ChatUser sender = ChatUser(
       id: '1',
@@ -178,10 +177,7 @@ class _ChatsPageState extends State<ChatsPage> {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(40),
@@ -209,7 +205,6 @@ class _ChatsPageState extends State<ChatsPage> {
           ),
         ),
       );
-    }
-    );
+    });
   }
 }

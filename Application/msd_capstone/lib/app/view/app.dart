@@ -3,6 +3,7 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/app/app.dart';
+import 'package:msd_capstone/chat/bloc/socket_bloc.dart';
 import 'package:msd_capstone/theme.dart';
 
 import '../../nav_bar/bloc/navigation_bloc.dart';
@@ -28,6 +29,9 @@ class App extends StatelessWidget {
           ),
           BlocProvider<NavigationBloc>(
             create: (_) => NavigationBloc(),
+          ),
+          BlocProvider<ChatBloc>(
+            create: (_) => ChatBloc(),
           ),
         ],
         child: const AppView(),
