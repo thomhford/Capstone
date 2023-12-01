@@ -15,6 +15,7 @@ class ChatState with _$ChatState {
   // Server states
   const factory ChatState.messageReceivedFromServer(ChatMessage message) = MessageReceivedFromServer;
   const factory ChatState.conversationsFetched(List<Conversation> conversations) = ConversationsFetched;
+  const factory ChatState.usersFetched(List<ChatUser> users) = UsersFetched;
   const factory ChatState.messageReadFromServer(String messageId) = MessageReadFromServer;
   const factory ChatState.typingStartedFromServer(String senderId) = TypingStartedFromServer;
   const factory ChatState.typingStoppedFromServer(String senderId) = TypingStoppedFromServer;

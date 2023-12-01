@@ -29,6 +29,7 @@ mixin _$ChatEvent {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -50,6 +51,7 @@ mixin _$ChatEvent {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -70,6 +72,7 @@ mixin _$ChatEvent {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -92,6 +95,7 @@ mixin _$ChatEvent {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -115,6 +119,7 @@ mixin _$ChatEvent {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -136,6 +141,7 @@ mixin _$ChatEvent {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -240,6 +246,7 @@ class _$SendMessageImpl implements SendMessage {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -264,6 +271,7 @@ class _$SendMessageImpl implements SendMessage {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -287,6 +295,7 @@ class _$SendMessageImpl implements SendMessage {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -315,6 +324,7 @@ class _$SendMessageImpl implements SendMessage {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -341,6 +351,7 @@ class _$SendMessageImpl implements SendMessage {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -365,6 +376,7 @@ class _$SendMessageImpl implements SendMessage {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -466,6 +478,7 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -490,6 +503,7 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -513,6 +527,7 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -541,6 +556,7 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -567,6 +583,7 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -591,6 +608,7 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -666,6 +684,7 @@ class _$ConnectImpl implements Connect {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -690,6 +709,7 @@ class _$ConnectImpl implements Connect {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -713,6 +733,7 @@ class _$ConnectImpl implements Connect {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -741,6 +762,7 @@ class _$ConnectImpl implements Connect {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -767,6 +789,7 @@ class _$ConnectImpl implements Connect {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -791,6 +814,7 @@ class _$ConnectImpl implements Connect {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -860,6 +884,7 @@ class _$DisconnectImpl implements Disconnect {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -884,6 +909,7 @@ class _$DisconnectImpl implements Disconnect {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -907,6 +933,7 @@ class _$DisconnectImpl implements Disconnect {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -935,6 +962,7 @@ class _$DisconnectImpl implements Disconnect {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -961,6 +989,7 @@ class _$DisconnectImpl implements Disconnect {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -985,6 +1014,7 @@ class _$DisconnectImpl implements Disconnect {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1081,6 +1111,7 @@ class _$ReadMessageImpl implements ReadMessage {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -1105,6 +1136,7 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -1128,6 +1160,7 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -1156,6 +1189,7 @@ class _$ReadMessageImpl implements ReadMessage {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -1182,6 +1216,7 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1206,6 +1241,7 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1307,6 +1343,7 @@ class _$DeleteMessageImpl implements DeleteMessage {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -1331,6 +1368,7 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -1354,6 +1392,7 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -1382,6 +1421,7 @@ class _$DeleteMessageImpl implements DeleteMessage {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -1408,6 +1448,7 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1432,6 +1473,7 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1533,6 +1575,7 @@ class _$StartTypingImpl implements StartTyping {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -1557,6 +1600,7 @@ class _$StartTypingImpl implements StartTyping {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -1580,6 +1624,7 @@ class _$StartTypingImpl implements StartTyping {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -1608,6 +1653,7 @@ class _$StartTypingImpl implements StartTyping {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -1634,6 +1680,7 @@ class _$StartTypingImpl implements StartTyping {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1658,6 +1705,7 @@ class _$StartTypingImpl implements StartTyping {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1759,6 +1807,7 @@ class _$StopTypingImpl implements StopTyping {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -1783,6 +1832,7 @@ class _$StopTypingImpl implements StopTyping {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -1806,6 +1856,7 @@ class _$StopTypingImpl implements StopTyping {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -1834,6 +1885,7 @@ class _$StopTypingImpl implements StopTyping {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -1860,6 +1912,7 @@ class _$StopTypingImpl implements StopTyping {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1884,6 +1937,7 @@ class _$StopTypingImpl implements StopTyping {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -1987,6 +2041,7 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -2011,6 +2066,7 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -2034,6 +2090,7 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -2062,6 +2119,7 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -2088,6 +2146,7 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2112,6 +2171,7 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2222,6 +2282,7 @@ class _$FetchConversationsImpl implements FetchConversations {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -2246,6 +2307,7 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -2269,6 +2331,7 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -2297,6 +2360,7 @@ class _$FetchConversationsImpl implements FetchConversations {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -2323,6 +2387,7 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2347,6 +2412,7 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2370,6 +2436,243 @@ abstract class FetchConversations implements ChatEvent {
   List<Conversation> get conversations;
   @JsonKey(ignore: true)
   _$$FetchConversationsImplCopyWith<_$FetchConversationsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FetchUsersImplCopyWith<$Res> {
+  factory _$$FetchUsersImplCopyWith(
+          _$FetchUsersImpl value, $Res Function(_$FetchUsersImpl) then) =
+      __$$FetchUsersImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<ChatUser> users});
+}
+
+/// @nodoc
+class __$$FetchUsersImplCopyWithImpl<$Res>
+    extends _$ChatEventCopyWithImpl<$Res, _$FetchUsersImpl>
+    implements _$$FetchUsersImplCopyWith<$Res> {
+  __$$FetchUsersImplCopyWithImpl(
+      _$FetchUsersImpl _value, $Res Function(_$FetchUsersImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? users = null,
+  }) {
+    return _then(_$FetchUsersImpl(
+      null == users
+          ? _value._users
+          : users // ignore: cast_nullable_to_non_nullable
+              as List<ChatUser>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FetchUsersImpl implements FetchUsers {
+  const _$FetchUsersImpl(final List<ChatUser> users) : _users = users;
+
+  final List<ChatUser> _users;
+  @override
+  List<ChatUser> get users {
+    if (_users is EqualUnmodifiableListView) return _users;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_users);
+  }
+
+  @override
+  String toString() {
+    return 'ChatEvent.fetchUsers(users: $users)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FetchUsersImpl &&
+            const DeepCollectionEquality().equals(other._users, _users));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_users));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FetchUsersImplCopyWith<_$FetchUsersImpl> get copyWith =>
+      __$$FetchUsersImplCopyWithImpl<_$FetchUsersImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(ChatMessage message) sendMessage,
+    required TResult Function(ChatMessage message) receiveMessage,
+    required TResult Function() connect,
+    required TResult Function() disconnect,
+    required TResult Function(String messageId) readMessage,
+    required TResult Function(String messageId) deleteMessage,
+    required TResult Function(String recipientId) startTyping,
+    required TResult Function(String recipientId) stopTyping,
+    required TResult Function(ChatMessage message) receiveMessageFromServer,
+    required TResult Function(List<Conversation> conversations)
+        fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
+    required TResult Function(String messageId) readMessageFromServer,
+    required TResult Function(String senderId) typingFromServer,
+    required TResult Function(String senderId) stopTypingFromServer,
+    required TResult Function(String messageId) deleteMessageFromServer,
+    required TResult Function(String conversationId)
+        deleteConversationFromServer,
+    required TResult Function(String error) errorFromServer,
+  }) {
+    return fetchUsers(users);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(ChatMessage message)? sendMessage,
+    TResult? Function(ChatMessage message)? receiveMessage,
+    TResult? Function()? connect,
+    TResult? Function()? disconnect,
+    TResult? Function(String messageId)? readMessage,
+    TResult? Function(String messageId)? deleteMessage,
+    TResult? Function(String recipientId)? startTyping,
+    TResult? Function(String recipientId)? stopTyping,
+    TResult? Function(ChatMessage message)? receiveMessageFromServer,
+    TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
+    TResult? Function(String messageId)? readMessageFromServer,
+    TResult? Function(String senderId)? typingFromServer,
+    TResult? Function(String senderId)? stopTypingFromServer,
+    TResult? Function(String messageId)? deleteMessageFromServer,
+    TResult? Function(String conversationId)? deleteConversationFromServer,
+    TResult? Function(String error)? errorFromServer,
+  }) {
+    return fetchUsers?.call(users);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(ChatMessage message)? sendMessage,
+    TResult Function(ChatMessage message)? receiveMessage,
+    TResult Function()? connect,
+    TResult Function()? disconnect,
+    TResult Function(String messageId)? readMessage,
+    TResult Function(String messageId)? deleteMessage,
+    TResult Function(String recipientId)? startTyping,
+    TResult Function(String recipientId)? stopTyping,
+    TResult Function(ChatMessage message)? receiveMessageFromServer,
+    TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
+    TResult Function(String messageId)? readMessageFromServer,
+    TResult Function(String senderId)? typingFromServer,
+    TResult Function(String senderId)? stopTypingFromServer,
+    TResult Function(String messageId)? deleteMessageFromServer,
+    TResult Function(String conversationId)? deleteConversationFromServer,
+    TResult Function(String error)? errorFromServer,
+    required TResult orElse(),
+  }) {
+    if (fetchUsers != null) {
+      return fetchUsers(users);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SendMessage value) sendMessage,
+    required TResult Function(ReceiveMessage value) receiveMessage,
+    required TResult Function(Connect value) connect,
+    required TResult Function(Disconnect value) disconnect,
+    required TResult Function(ReadMessage value) readMessage,
+    required TResult Function(DeleteMessage value) deleteMessage,
+    required TResult Function(StartTyping value) startTyping,
+    required TResult Function(StopTyping value) stopTyping,
+    required TResult Function(ReceiveMessageFromServer value)
+        receiveMessageFromServer,
+    required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
+    required TResult Function(ReadMessageFromServer value)
+        readMessageFromServer,
+    required TResult Function(TypingFromServer value) typingFromServer,
+    required TResult Function(StopTypingFromServer value) stopTypingFromServer,
+    required TResult Function(DeleteMessageFromServer value)
+        deleteMessageFromServer,
+    required TResult Function(DeleteConversationFromServer value)
+        deleteConversationFromServer,
+    required TResult Function(ErrorFromServer value) errorFromServer,
+  }) {
+    return fetchUsers(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SendMessage value)? sendMessage,
+    TResult? Function(ReceiveMessage value)? receiveMessage,
+    TResult? Function(Connect value)? connect,
+    TResult? Function(Disconnect value)? disconnect,
+    TResult? Function(ReadMessage value)? readMessage,
+    TResult? Function(DeleteMessage value)? deleteMessage,
+    TResult? Function(StartTyping value)? startTyping,
+    TResult? Function(StopTyping value)? stopTyping,
+    TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
+    TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
+    TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
+    TResult? Function(TypingFromServer value)? typingFromServer,
+    TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
+    TResult? Function(DeleteMessageFromServer value)? deleteMessageFromServer,
+    TResult? Function(DeleteConversationFromServer value)?
+        deleteConversationFromServer,
+    TResult? Function(ErrorFromServer value)? errorFromServer,
+  }) {
+    return fetchUsers?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SendMessage value)? sendMessage,
+    TResult Function(ReceiveMessage value)? receiveMessage,
+    TResult Function(Connect value)? connect,
+    TResult Function(Disconnect value)? disconnect,
+    TResult Function(ReadMessage value)? readMessage,
+    TResult Function(DeleteMessage value)? deleteMessage,
+    TResult Function(StartTyping value)? startTyping,
+    TResult Function(StopTyping value)? stopTyping,
+    TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
+    TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
+    TResult Function(ReadMessageFromServer value)? readMessageFromServer,
+    TResult Function(TypingFromServer value)? typingFromServer,
+    TResult Function(StopTypingFromServer value)? stopTypingFromServer,
+    TResult Function(DeleteMessageFromServer value)? deleteMessageFromServer,
+    TResult Function(DeleteConversationFromServer value)?
+        deleteConversationFromServer,
+    TResult Function(ErrorFromServer value)? errorFromServer,
+    required TResult orElse(),
+  }) {
+    if (fetchUsers != null) {
+      return fetchUsers(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FetchUsers implements ChatEvent {
+  const factory FetchUsers(final List<ChatUser> users) = _$FetchUsersImpl;
+
+  List<ChatUser> get users;
+  @JsonKey(ignore: true)
+  _$$FetchUsersImplCopyWith<_$FetchUsersImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2451,6 +2754,7 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -2475,6 +2779,7 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -2498,6 +2803,7 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -2526,6 +2832,7 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -2552,6 +2859,7 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2576,6 +2884,7 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2679,6 +2988,7 @@ class _$TypingFromServerImpl implements TypingFromServer {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -2703,6 +3013,7 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -2726,6 +3037,7 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -2754,6 +3066,7 @@ class _$TypingFromServerImpl implements TypingFromServer {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -2780,6 +3093,7 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2804,6 +3118,7 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -2908,6 +3223,7 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -2932,6 +3248,7 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -2955,6 +3272,7 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -2983,6 +3301,7 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -3009,6 +3328,7 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3033,6 +3353,7 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3138,6 +3459,7 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -3162,6 +3484,7 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -3185,6 +3508,7 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -3213,6 +3537,7 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -3239,6 +3564,7 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3263,6 +3589,7 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3370,6 +3697,7 @@ class _$DeleteConversationFromServerImpl
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -3394,6 +3722,7 @@ class _$DeleteConversationFromServerImpl
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -3417,6 +3746,7 @@ class _$DeleteConversationFromServerImpl
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -3445,6 +3775,7 @@ class _$DeleteConversationFromServerImpl
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -3471,6 +3802,7 @@ class _$DeleteConversationFromServerImpl
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3495,6 +3827,7 @@ class _$DeleteConversationFromServerImpl
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3598,6 +3931,7 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     required TResult Function(ChatMessage message) receiveMessageFromServer,
     required TResult Function(List<Conversation> conversations)
         fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
     required TResult Function(String messageId) readMessageFromServer,
     required TResult Function(String senderId) typingFromServer,
     required TResult Function(String senderId) stopTypingFromServer,
@@ -3622,6 +3956,7 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult? Function(String recipientId)? stopTyping,
     TResult? Function(ChatMessage message)? receiveMessageFromServer,
     TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
     TResult? Function(String messageId)? readMessageFromServer,
     TResult? Function(String senderId)? typingFromServer,
     TResult? Function(String senderId)? stopTypingFromServer,
@@ -3645,6 +3980,7 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult Function(String recipientId)? stopTyping,
     TResult Function(ChatMessage message)? receiveMessageFromServer,
     TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
     TResult Function(String messageId)? readMessageFromServer,
     TResult Function(String senderId)? typingFromServer,
     TResult Function(String senderId)? stopTypingFromServer,
@@ -3673,6 +4009,7 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     required TResult Function(ReceiveMessageFromServer value)
         receiveMessageFromServer,
     required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
     required TResult Function(ReadMessageFromServer value)
         readMessageFromServer,
     required TResult Function(TypingFromServer value) typingFromServer,
@@ -3699,6 +4036,7 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult? Function(StopTyping value)? stopTyping,
     TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
     TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult? Function(TypingFromServer value)? typingFromServer,
     TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3723,6 +4061,7 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult Function(StopTyping value)? stopTyping,
     TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
     TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
     TResult Function(ReadMessageFromServer value)? readMessageFromServer,
     TResult Function(TypingFromServer value)? typingFromServer,
     TResult Function(StopTypingFromServer value)? stopTypingFromServer,
@@ -3763,6 +4102,7 @@ mixin _$ChatState {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -3784,6 +4124,7 @@ mixin _$ChatState {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -3804,6 +4145,7 @@ mixin _$ChatState {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -3826,6 +4168,7 @@ mixin _$ChatState {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -3852,6 +4195,7 @@ mixin _$ChatState {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -3874,6 +4218,7 @@ mixin _$ChatState {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -3952,6 +4297,7 @@ class _$ConnectedImpl implements Connected {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -3976,6 +4322,7 @@ class _$ConnectedImpl implements Connected {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -3999,6 +4346,7 @@ class _$ConnectedImpl implements Connected {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -4027,6 +4375,7 @@ class _$ConnectedImpl implements Connected {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -4056,6 +4405,7 @@ class _$ConnectedImpl implements Connected {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4081,6 +4431,7 @@ class _$ConnectedImpl implements Connected {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4150,6 +4501,7 @@ class _$DisconnectedImpl implements Disconnected {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -4174,6 +4526,7 @@ class _$DisconnectedImpl implements Disconnected {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -4197,6 +4550,7 @@ class _$DisconnectedImpl implements Disconnected {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -4225,6 +4579,7 @@ class _$DisconnectedImpl implements Disconnected {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -4254,6 +4609,7 @@ class _$DisconnectedImpl implements Disconnected {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4279,6 +4635,7 @@ class _$DisconnectedImpl implements Disconnected {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4374,6 +4731,7 @@ class _$MessageSentImpl implements MessageSent {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -4398,6 +4756,7 @@ class _$MessageSentImpl implements MessageSent {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -4421,6 +4780,7 @@ class _$MessageSentImpl implements MessageSent {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -4449,6 +4809,7 @@ class _$MessageSentImpl implements MessageSent {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -4478,6 +4839,7 @@ class _$MessageSentImpl implements MessageSent {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4503,6 +4865,7 @@ class _$MessageSentImpl implements MessageSent {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4604,6 +4967,7 @@ class _$MessageReceivedImpl implements MessageReceived {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -4628,6 +4992,7 @@ class _$MessageReceivedImpl implements MessageReceived {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -4651,6 +5016,7 @@ class _$MessageReceivedImpl implements MessageReceived {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -4679,6 +5045,7 @@ class _$MessageReceivedImpl implements MessageReceived {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -4708,6 +5075,7 @@ class _$MessageReceivedImpl implements MessageReceived {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4733,6 +5101,7 @@ class _$MessageReceivedImpl implements MessageReceived {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4835,6 +5204,7 @@ class _$MessageReadImpl implements MessageRead {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -4859,6 +5229,7 @@ class _$MessageReadImpl implements MessageRead {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -4882,6 +5253,7 @@ class _$MessageReadImpl implements MessageRead {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -4910,6 +5282,7 @@ class _$MessageReadImpl implements MessageRead {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -4939,6 +5312,7 @@ class _$MessageReadImpl implements MessageRead {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -4964,6 +5338,7 @@ class _$MessageReadImpl implements MessageRead {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5066,6 +5441,7 @@ class _$MessageDeletedImpl implements MessageDeleted {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -5090,6 +5466,7 @@ class _$MessageDeletedImpl implements MessageDeleted {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -5113,6 +5490,7 @@ class _$MessageDeletedImpl implements MessageDeleted {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -5141,6 +5519,7 @@ class _$MessageDeletedImpl implements MessageDeleted {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -5170,6 +5549,7 @@ class _$MessageDeletedImpl implements MessageDeleted {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5195,6 +5575,7 @@ class _$MessageDeletedImpl implements MessageDeleted {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5296,6 +5677,7 @@ class _$TypingStartedImpl implements TypingStarted {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -5320,6 +5702,7 @@ class _$TypingStartedImpl implements TypingStarted {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -5343,6 +5726,7 @@ class _$TypingStartedImpl implements TypingStarted {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -5371,6 +5755,7 @@ class _$TypingStartedImpl implements TypingStarted {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -5400,6 +5785,7 @@ class _$TypingStartedImpl implements TypingStarted {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5425,6 +5811,7 @@ class _$TypingStartedImpl implements TypingStarted {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5526,6 +5913,7 @@ class _$TypingStoppedImpl implements TypingStopped {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -5550,6 +5938,7 @@ class _$TypingStoppedImpl implements TypingStopped {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -5573,6 +5962,7 @@ class _$TypingStoppedImpl implements TypingStopped {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -5601,6 +5991,7 @@ class _$TypingStoppedImpl implements TypingStopped {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -5630,6 +6021,7 @@ class _$TypingStoppedImpl implements TypingStopped {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5655,6 +6047,7 @@ class _$TypingStoppedImpl implements TypingStopped {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5758,6 +6151,7 @@ class _$MessageReceivedFromServerImpl implements MessageReceivedFromServer {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -5782,6 +6176,7 @@ class _$MessageReceivedFromServerImpl implements MessageReceivedFromServer {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -5805,6 +6200,7 @@ class _$MessageReceivedFromServerImpl implements MessageReceivedFromServer {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -5833,6 +6229,7 @@ class _$MessageReceivedFromServerImpl implements MessageReceivedFromServer {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -5862,6 +6259,7 @@ class _$MessageReceivedFromServerImpl implements MessageReceivedFromServer {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5887,6 +6285,7 @@ class _$MessageReceivedFromServerImpl implements MessageReceivedFromServer {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -5998,6 +6397,7 @@ class _$ConversationsFetchedImpl implements ConversationsFetched {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -6022,6 +6422,7 @@ class _$ConversationsFetchedImpl implements ConversationsFetched {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -6045,6 +6446,7 @@ class _$ConversationsFetchedImpl implements ConversationsFetched {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -6073,6 +6475,7 @@ class _$ConversationsFetchedImpl implements ConversationsFetched {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -6102,6 +6505,7 @@ class _$ConversationsFetchedImpl implements ConversationsFetched {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6127,6 +6531,7 @@ class _$ConversationsFetchedImpl implements ConversationsFetched {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6151,6 +6556,247 @@ abstract class ConversationsFetched implements ChatState {
   @JsonKey(ignore: true)
   _$$ConversationsFetchedImplCopyWith<_$ConversationsFetchedImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UsersFetchedImplCopyWith<$Res> {
+  factory _$$UsersFetchedImplCopyWith(
+          _$UsersFetchedImpl value, $Res Function(_$UsersFetchedImpl) then) =
+      __$$UsersFetchedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<ChatUser> users});
+}
+
+/// @nodoc
+class __$$UsersFetchedImplCopyWithImpl<$Res>
+    extends _$ChatStateCopyWithImpl<$Res, _$UsersFetchedImpl>
+    implements _$$UsersFetchedImplCopyWith<$Res> {
+  __$$UsersFetchedImplCopyWithImpl(
+      _$UsersFetchedImpl _value, $Res Function(_$UsersFetchedImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? users = null,
+  }) {
+    return _then(_$UsersFetchedImpl(
+      null == users
+          ? _value._users
+          : users // ignore: cast_nullable_to_non_nullable
+              as List<ChatUser>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UsersFetchedImpl implements UsersFetched {
+  const _$UsersFetchedImpl(final List<ChatUser> users) : _users = users;
+
+  final List<ChatUser> _users;
+  @override
+  List<ChatUser> get users {
+    if (_users is EqualUnmodifiableListView) return _users;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_users);
+  }
+
+  @override
+  String toString() {
+    return 'ChatState.usersFetched(users: $users)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UsersFetchedImpl &&
+            const DeepCollectionEquality().equals(other._users, _users));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_users));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UsersFetchedImplCopyWith<_$UsersFetchedImpl> get copyWith =>
+      __$$UsersFetchedImplCopyWithImpl<_$UsersFetchedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() connected,
+    required TResult Function() disconnected,
+    required TResult Function(ChatMessage message) messageSent,
+    required TResult Function(ChatMessage message) messageReceived,
+    required TResult Function(String messageId) messageRead,
+    required TResult Function(String messageId) messageDeleted,
+    required TResult Function(String recipientId) typingStarted,
+    required TResult Function(String recipientId) typingStopped,
+    required TResult Function(ChatMessage message) messageReceivedFromServer,
+    required TResult Function(List<Conversation> conversations)
+        conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
+    required TResult Function(String messageId) messageReadFromServer,
+    required TResult Function(String senderId) typingStartedFromServer,
+    required TResult Function(String senderId) typingStoppedFromServer,
+    required TResult Function(String messageId) messageDeletedFromServer,
+    required TResult Function(String conversationId)
+        conversationDeletedFromServer,
+    required TResult Function(String error) errorStateFromServer,
+  }) {
+    return usersFetched(users);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? connected,
+    TResult? Function()? disconnected,
+    TResult? Function(ChatMessage message)? messageSent,
+    TResult? Function(ChatMessage message)? messageReceived,
+    TResult? Function(String messageId)? messageRead,
+    TResult? Function(String messageId)? messageDeleted,
+    TResult? Function(String recipientId)? typingStarted,
+    TResult? Function(String recipientId)? typingStopped,
+    TResult? Function(ChatMessage message)? messageReceivedFromServer,
+    TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
+    TResult? Function(String messageId)? messageReadFromServer,
+    TResult? Function(String senderId)? typingStartedFromServer,
+    TResult? Function(String senderId)? typingStoppedFromServer,
+    TResult? Function(String messageId)? messageDeletedFromServer,
+    TResult? Function(String conversationId)? conversationDeletedFromServer,
+    TResult? Function(String error)? errorStateFromServer,
+  }) {
+    return usersFetched?.call(users);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? connected,
+    TResult Function()? disconnected,
+    TResult Function(ChatMessage message)? messageSent,
+    TResult Function(ChatMessage message)? messageReceived,
+    TResult Function(String messageId)? messageRead,
+    TResult Function(String messageId)? messageDeleted,
+    TResult Function(String recipientId)? typingStarted,
+    TResult Function(String recipientId)? typingStopped,
+    TResult Function(ChatMessage message)? messageReceivedFromServer,
+    TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
+    TResult Function(String messageId)? messageReadFromServer,
+    TResult Function(String senderId)? typingStartedFromServer,
+    TResult Function(String senderId)? typingStoppedFromServer,
+    TResult Function(String messageId)? messageDeletedFromServer,
+    TResult Function(String conversationId)? conversationDeletedFromServer,
+    TResult Function(String error)? errorStateFromServer,
+    required TResult orElse(),
+  }) {
+    if (usersFetched != null) {
+      return usersFetched(users);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Connected value) connected,
+    required TResult Function(Disconnected value) disconnected,
+    required TResult Function(MessageSent value) messageSent,
+    required TResult Function(MessageReceived value) messageReceived,
+    required TResult Function(MessageRead value) messageRead,
+    required TResult Function(MessageDeleted value) messageDeleted,
+    required TResult Function(TypingStarted value) typingStarted,
+    required TResult Function(TypingStopped value) typingStopped,
+    required TResult Function(MessageReceivedFromServer value)
+        messageReceivedFromServer,
+    required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
+    required TResult Function(MessageReadFromServer value)
+        messageReadFromServer,
+    required TResult Function(TypingStartedFromServer value)
+        typingStartedFromServer,
+    required TResult Function(TypingStoppedFromServer value)
+        typingStoppedFromServer,
+    required TResult Function(MessageDeletedFromServer value)
+        messageDeletedFromServer,
+    required TResult Function(ConversationDeletedFromServer value)
+        conversationDeletedFromServer,
+    required TResult Function(ErrorStateFromServer value) errorStateFromServer,
+  }) {
+    return usersFetched(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Connected value)? connected,
+    TResult? Function(Disconnected value)? disconnected,
+    TResult? Function(MessageSent value)? messageSent,
+    TResult? Function(MessageReceived value)? messageReceived,
+    TResult? Function(MessageRead value)? messageRead,
+    TResult? Function(MessageDeleted value)? messageDeleted,
+    TResult? Function(TypingStarted value)? typingStarted,
+    TResult? Function(TypingStopped value)? typingStopped,
+    TResult? Function(MessageReceivedFromServer value)?
+        messageReceivedFromServer,
+    TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
+    TResult? Function(MessageReadFromServer value)? messageReadFromServer,
+    TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
+    TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
+    TResult? Function(MessageDeletedFromServer value)? messageDeletedFromServer,
+    TResult? Function(ConversationDeletedFromServer value)?
+        conversationDeletedFromServer,
+    TResult? Function(ErrorStateFromServer value)? errorStateFromServer,
+  }) {
+    return usersFetched?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Connected value)? connected,
+    TResult Function(Disconnected value)? disconnected,
+    TResult Function(MessageSent value)? messageSent,
+    TResult Function(MessageReceived value)? messageReceived,
+    TResult Function(MessageRead value)? messageRead,
+    TResult Function(MessageDeleted value)? messageDeleted,
+    TResult Function(TypingStarted value)? typingStarted,
+    TResult Function(TypingStopped value)? typingStopped,
+    TResult Function(MessageReceivedFromServer value)?
+        messageReceivedFromServer,
+    TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
+    TResult Function(MessageReadFromServer value)? messageReadFromServer,
+    TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
+    TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
+    TResult Function(MessageDeletedFromServer value)? messageDeletedFromServer,
+    TResult Function(ConversationDeletedFromServer value)?
+        conversationDeletedFromServer,
+    TResult Function(ErrorStateFromServer value)? errorStateFromServer,
+    required TResult orElse(),
+  }) {
+    if (usersFetched != null) {
+      return usersFetched(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UsersFetched implements ChatState {
+  const factory UsersFetched(final List<ChatUser> users) = _$UsersFetchedImpl;
+
+  List<ChatUser> get users;
+  @JsonKey(ignore: true)
+  _$$UsersFetchedImplCopyWith<_$UsersFetchedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -6231,6 +6877,7 @@ class _$MessageReadFromServerImpl implements MessageReadFromServer {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -6255,6 +6902,7 @@ class _$MessageReadFromServerImpl implements MessageReadFromServer {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -6278,6 +6926,7 @@ class _$MessageReadFromServerImpl implements MessageReadFromServer {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -6306,6 +6955,7 @@ class _$MessageReadFromServerImpl implements MessageReadFromServer {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -6335,6 +6985,7 @@ class _$MessageReadFromServerImpl implements MessageReadFromServer {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6360,6 +7011,7 @@ class _$MessageReadFromServerImpl implements MessageReadFromServer {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6465,6 +7117,7 @@ class _$TypingStartedFromServerImpl implements TypingStartedFromServer {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -6489,6 +7142,7 @@ class _$TypingStartedFromServerImpl implements TypingStartedFromServer {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -6512,6 +7166,7 @@ class _$TypingStartedFromServerImpl implements TypingStartedFromServer {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -6540,6 +7195,7 @@ class _$TypingStartedFromServerImpl implements TypingStartedFromServer {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -6569,6 +7225,7 @@ class _$TypingStartedFromServerImpl implements TypingStartedFromServer {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6594,6 +7251,7 @@ class _$TypingStartedFromServerImpl implements TypingStartedFromServer {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6699,6 +7357,7 @@ class _$TypingStoppedFromServerImpl implements TypingStoppedFromServer {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -6723,6 +7382,7 @@ class _$TypingStoppedFromServerImpl implements TypingStoppedFromServer {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -6746,6 +7406,7 @@ class _$TypingStoppedFromServerImpl implements TypingStoppedFromServer {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -6774,6 +7435,7 @@ class _$TypingStoppedFromServerImpl implements TypingStoppedFromServer {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -6803,6 +7465,7 @@ class _$TypingStoppedFromServerImpl implements TypingStoppedFromServer {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6828,6 +7491,7 @@ class _$TypingStoppedFromServerImpl implements TypingStoppedFromServer {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -6933,6 +7597,7 @@ class _$MessageDeletedFromServerImpl implements MessageDeletedFromServer {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -6957,6 +7622,7 @@ class _$MessageDeletedFromServerImpl implements MessageDeletedFromServer {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -6980,6 +7646,7 @@ class _$MessageDeletedFromServerImpl implements MessageDeletedFromServer {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -7008,6 +7675,7 @@ class _$MessageDeletedFromServerImpl implements MessageDeletedFromServer {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -7037,6 +7705,7 @@ class _$MessageDeletedFromServerImpl implements MessageDeletedFromServer {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -7062,6 +7731,7 @@ class _$MessageDeletedFromServerImpl implements MessageDeletedFromServer {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -7169,6 +7839,7 @@ class _$ConversationDeletedFromServerImpl
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -7193,6 +7864,7 @@ class _$ConversationDeletedFromServerImpl
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -7216,6 +7888,7 @@ class _$ConversationDeletedFromServerImpl
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -7244,6 +7917,7 @@ class _$ConversationDeletedFromServerImpl
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -7273,6 +7947,7 @@ class _$ConversationDeletedFromServerImpl
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -7298,6 +7973,7 @@ class _$ConversationDeletedFromServerImpl
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -7402,6 +8078,7 @@ class _$ErrorStateFromServerImpl implements ErrorStateFromServer {
     required TResult Function(ChatMessage message) messageReceivedFromServer,
     required TResult Function(List<Conversation> conversations)
         conversationsFetched,
+    required TResult Function(List<ChatUser> users) usersFetched,
     required TResult Function(String messageId) messageReadFromServer,
     required TResult Function(String senderId) typingStartedFromServer,
     required TResult Function(String senderId) typingStoppedFromServer,
@@ -7426,6 +8103,7 @@ class _$ErrorStateFromServerImpl implements ErrorStateFromServer {
     TResult? Function(String recipientId)? typingStopped,
     TResult? Function(ChatMessage message)? messageReceivedFromServer,
     TResult? Function(List<Conversation> conversations)? conversationsFetched,
+    TResult? Function(List<ChatUser> users)? usersFetched,
     TResult? Function(String messageId)? messageReadFromServer,
     TResult? Function(String senderId)? typingStartedFromServer,
     TResult? Function(String senderId)? typingStoppedFromServer,
@@ -7449,6 +8127,7 @@ class _$ErrorStateFromServerImpl implements ErrorStateFromServer {
     TResult Function(String recipientId)? typingStopped,
     TResult Function(ChatMessage message)? messageReceivedFromServer,
     TResult Function(List<Conversation> conversations)? conversationsFetched,
+    TResult Function(List<ChatUser> users)? usersFetched,
     TResult Function(String messageId)? messageReadFromServer,
     TResult Function(String senderId)? typingStartedFromServer,
     TResult Function(String senderId)? typingStoppedFromServer,
@@ -7477,6 +8156,7 @@ class _$ErrorStateFromServerImpl implements ErrorStateFromServer {
     required TResult Function(MessageReceivedFromServer value)
         messageReceivedFromServer,
     required TResult Function(ConversationsFetched value) conversationsFetched,
+    required TResult Function(UsersFetched value) usersFetched,
     required TResult Function(MessageReadFromServer value)
         messageReadFromServer,
     required TResult Function(TypingStartedFromServer value)
@@ -7506,6 +8186,7 @@ class _$ErrorStateFromServerImpl implements ErrorStateFromServer {
     TResult? Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult? Function(ConversationsFetched value)? conversationsFetched,
+    TResult? Function(UsersFetched value)? usersFetched,
     TResult? Function(MessageReadFromServer value)? messageReadFromServer,
     TResult? Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult? Function(TypingStoppedFromServer value)? typingStoppedFromServer,
@@ -7531,6 +8212,7 @@ class _$ErrorStateFromServerImpl implements ErrorStateFromServer {
     TResult Function(MessageReceivedFromServer value)?
         messageReceivedFromServer,
     TResult Function(ConversationsFetched value)? conversationsFetched,
+    TResult Function(UsersFetched value)? usersFetched,
     TResult Function(MessageReadFromServer value)? messageReadFromServer,
     TResult Function(TypingStartedFromServer value)? typingStartedFromServer,
     TResult Function(TypingStoppedFromServer value)? typingStoppedFromServer,

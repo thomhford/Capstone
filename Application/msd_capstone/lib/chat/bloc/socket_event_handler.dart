@@ -1,10 +1,9 @@
 // socket_event_handler.dart
 
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:msd_capstone/chat/models/models.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-import '../models/chat_message.dart';
-import '../models/conversation.dart';
 import 'socket_bloc.dart';
 
 class SocketEventHandler {
@@ -18,7 +17,7 @@ class SocketEventHandler {
   void setupSocketListeners() {
     _setupConnectionListeners();
     _setupMessageListeners();
-    _setupConversationListeners();
+    _setupGetterListeners();
     _setupTypingListeners();
     _setupErrorListeners();
   }
@@ -52,11 +51,17 @@ class SocketEventHandler {
       logger.i(data);
     });
   }
-  _setupConversationListeners(){
+  _setupGetterListeners(){
     // Listen for the 'conversations fetched' event
     _socket.on('conversations fetched', (data){
       List<Conversation> conversations = data.map((item) => Conversation.fromMap(item)).toList();
       _chatBloc.add(ChatEvent.fetchConversations(conversations));
+      logger.i(data);
+    });
+    // Listen for the 'user list fetched' event
+    _socket.on('user list fetched', (data) {
+      List<ChatUser> users = data.map((item) => ChatUser.fromMap(item)).toList();
+      _chatBloc.add(ChatEvent.fetchUsers(users));
       logger.i(data);
     });
     // Listen for the 'conversation deleted' event
@@ -104,6 +109,11 @@ class SocketEventHandler {
     _chatBloc.on<FetchConversations>((event, emit) {
       logger.i('Fetching conversations');
       emit(ChatState.conversationsFetched(event.conversations));
+    });
+    // Request users on connect
+    _chatBloc.on<FetchUsers>((event, emit) {
+      logger.i('Fetching users');
+      emit(ChatState.usersFetched(event.users));
     });
     _chatBloc.on<ReadMessageFromServer>((event, emit) {
       logger.i('Message marked read: ${event.messageId}');

@@ -15,6 +15,7 @@ class ChatEvent with _$ChatEvent {
   // Server events
   const factory ChatEvent.receiveMessageFromServer(ChatMessage message) = ReceiveMessageFromServer;
   const factory ChatEvent.fetchConversations(List<Conversation> conversations) = FetchConversations;
+  const factory ChatEvent.fetchUsers(List<ChatUser> users) = FetchUsers;
   const factory ChatEvent.readMessageFromServer(String messageId) = ReadMessageFromServer;
   const factory ChatEvent.typingFromServer(String senderId) = TypingFromServer;
   const factory ChatEvent.stopTypingFromServer(String senderId) = StopTypingFromServer;

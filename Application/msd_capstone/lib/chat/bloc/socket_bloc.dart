@@ -6,6 +6,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 import 'package:logger/logger.dart';
 
 import '../models/chat_message.dart';
+import '../models/chat_user.dart';
 import '../models/conversation.dart';
 import 'socket_event_handler.dart';
 
