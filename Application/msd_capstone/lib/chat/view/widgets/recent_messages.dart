@@ -1,31 +1,31 @@
 // recent_messages.dart
 
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../../../app/bloc/app_bloc.dart';
 import '../../models/models.dart';
 import '../conversation_page.dart';
 
 class RecentMessages extends StatelessWidget {
   final List<Conversation> conversations;
   final String searchQuery;
-  final User currentUser;
 
   const RecentMessages({
     super.key,
     required this.conversations,
     required this.searchQuery,
-    required this.currentUser,
   });
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = context.select((AppBloc bloc) => bloc.state.user);
     final List<Conversation> filteredConversations = conversations.where((conversation) {
       final String query = searchQuery.toLowerCase();
       return conversation.messages.any((message) {
         final String messageText = message.message.toLowerCase();
-        final String userName = '${conversation.getRecipientUser(currentUser.id).firstName} ${conversation.getRecipientUser(currentUser.id).firstName}'.toLowerCase();
+        final String userName = '${conversation.getRecipientUser(currentUser.id).firstName} ${conversation.getRecipientUser(currentUser.id).lastName}'.toLowerCase();
         return messageText.contains(query) || userName.contains(query);
       });
     }).toList();
@@ -62,7 +62,6 @@ class RecentMessages extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (_) => ConversationPage(
                     conversation: conversation,
-                    currentUser: currentUser,
                   ),
                 ),
               );

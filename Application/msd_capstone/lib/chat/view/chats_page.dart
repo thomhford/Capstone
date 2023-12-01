@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/chat/bloc/socket_bloc.dart';
-import '../../app/bloc/app_bloc.dart';
 import '../models/models.dart';
 import './widgets/widgets.dart';
 
@@ -49,7 +48,6 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ScrollController scrollController = ScrollController();
-    final currentUser = context.select((AppBloc bloc) => bloc.state.user);
 
     // Create sample users
     final ChatUser sender = ChatUser(
@@ -70,7 +68,7 @@ class _ChatsPageState extends State<ChatsPage> {
     );
 
     // Create a sample message
-    final ChatMessage message = ChatMessage(
+    final ChatMessage firstMessage = ChatMessage(
       messageId: 1,
       message: 'Hey, how\'s it going?',
       read: false,
@@ -78,7 +76,22 @@ class _ChatsPageState extends State<ChatsPage> {
       type: 'text',
       conversationId: 1,
       status: 'sent',
+      createdAt: DateTime.now().add(const Duration(minutes: 1)),
+      authorId: sender.id,
+      recipientId: recipient.id,
+    );
+
+    final ChatMessage secondMessage = ChatMessage(
+      messageId: 2,
+      message: 'Not bad, you?',
+      read: false,
+      isReceived: false,
+      type: 'text',
+      conversationId: 1,
+      status: 'sent',
       createdAt: DateTime.now(),
+      authorId: recipient.id,
+      recipientId: sender.id,
     );
 
     // Create a sample conversation
@@ -86,7 +99,7 @@ class _ChatsPageState extends State<ChatsPage> {
       conversationId: 1,
       user1: sender,
       user2: recipient,
-      messages: [message],
+      messages: [firstMessage, secondMessage],
       createdAt: DateTime.now(),
     );
 
@@ -201,7 +214,6 @@ class _ChatsPageState extends State<ChatsPage> {
                         RecentMessages(
                           conversations: [conversation],
                           searchQuery: _searchQuery,
-                          currentUser: currentUser,
                         ),
                         const SizedBox(
                           height: 25,

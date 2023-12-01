@@ -57,9 +57,14 @@ class Conversation {
     return currentUserId == user1.id ? user2 : user1;
   }
 
-  List<types.Message> toChatMessages(String currentUserId) {
+  List<types.Message> toChatMessages() {
     return messages.map((message) {
-      return message.toChatMessage(getRecipientChatUser(currentUserId) as Map<String, ChatUser>);
+      return types.TextMessage(
+        id: message.messageId.toString(),
+        author: message.authorId == user1.id ? user1.toChatUser() : user2.toChatUser(),
+        text: message.message,
+        createdAt: message.createdAt.millisecondsSinceEpoch,
+      );
     }).toList();
   }
 }

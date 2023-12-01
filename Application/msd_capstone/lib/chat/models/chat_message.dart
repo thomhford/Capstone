@@ -12,6 +12,8 @@ class ChatMessage {
   final int conversationId;
   final String status;
   final DateTime createdAt;
+  final String authorId;
+  final String recipientId;
 
   ChatMessage({
     required this.messageId,
@@ -22,6 +24,8 @@ class ChatMessage {
     required this.conversationId,
     required this.status,
     required this.createdAt,
+    required this.authorId,
+    required this.recipientId,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,8 @@ class ChatMessage {
       conversationId: json['conversationId'],
       status: json['status'],
       createdAt: DateTime.parse(json['createdAt']),
+      authorId: json['senderId'],
+      recipientId: json['receiverId'],
     );
   }
 
@@ -47,6 +53,8 @@ class ChatMessage {
       'conversationId': conversationId,
       'status': status,
       'createdAt': createdAt.toIso8601String(),
+      'senderId': authorId,
+      'receiverId': recipientId,
     };
   }
 
@@ -60,12 +68,14 @@ class ChatMessage {
       conversationId: map['conversationId'],
       status: map['status'],
       createdAt: DateTime.parse(map['createdAt']),
+      authorId: map['senderId'],
+      recipientId: map['receiverId'],
     );
   }
 
   types.Message toChatMessage(Map<String, ChatUser> users) {
     return types.TextMessage(
-      author: users[messageId.toString()]!.toChatUser(),
+      author: users[authorId]!.toChatUser(),
       id: messageId.toString(),
       text: message,
       createdAt: createdAt.millisecondsSinceEpoch,
