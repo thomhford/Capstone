@@ -1,9 +1,13 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:msd_capstone/chat/models/chat_message.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:logger/logger.dart';
+
+import '../models/chat_message.dart';
+import '../models/conversation.dart';
+import 'socket_event_handler.dart';
 
 part 'socket_bloc.freezed.dart';
 part 'socket_event.dart';
@@ -15,9 +19,13 @@ final logger = Logger();
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   late final Socket _socket;
+  late final SocketEventHandler _socketEventHandler;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final AuthenticationRepository _authenticationRepository;
 
-  ChatBloc() : super(ChatState.disconnected()) {
+  ChatBloc({required AuthenticationRepository authenticationRepository})
+    : _authenticationRepository = authenticationRepository,
+      super(const ChatState.disconnected()) {
     _initSocket();
   }
 
@@ -33,51 +41,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           .disableAutoConnect()
           .build(),
     );
-
-    _socket.on('message', (data) => add(ChatEvent.receiveMessage(ChatMessage.fromJson(data))));
-
-    on<Connect>((event, emit) {
-      logger.i('Connected');
-      _socket.connect();
-      _socket.emit('register', _firebaseAuth.currentUser!.uid);
-      emit(ChatState.connected());
-    });
-    on<Disconnect>((event, emit) {
-      logger.i('Disconnected');
-      _socket.disconnect();
-      emit(ChatState.disconnected());
-    });
-    on<SendMessage>((event, emit) {
-      logger.i('Sending message: ${event.message}');
-      _socket.emit('message sent', event.message);
-      emit(ChatState.messageSent(event.message));
-    });
-    on<ReceiveMessage>((event, emit) {
-      logger.i('Received message: ${event.message}');
-      _socket.emit('message received', event.message);
-      emit(ChatState.messageReceived(event.message));
-    });
-    on<ReadMessage>((event, emit) {
-      logger.i('Message marked read: ${event.messageId}');
-      _socket.emit('read', event.messageId);
-      emit(ChatState.messageRead(event.messageId));
-    });
-    on<DeleteMessage>((event, emit) {
-      logger.i('Message deleted: ${event.messageId}');
-      _socket.emit('delete message', event.messageId);
-      emit(ChatState.messageDeleted(event.messageId));
-    });
-    on<StartTyping>((event, emit) {
-      logger.i('${event.recipientId} started typing');
-      _socket.emit('typing', event.recipientId);
-      emit(ChatState.typingStarted(event.recipientId));
-    });
-    on<StopTyping>((event, emit) {
-      logger.i('${event.recipientId} stopped typing');
-      _socket.emit('stop typing', event.recipientId);
-      emit(ChatState.typingStopped(event.recipientId));
-    });
+    _socketEventHandler = SocketEventHandler(_socket, this, _authenticationRepository);
+    _socketEventHandler.setupSocketListeners();
+    _socketEventHandler.setupBlocListeners();
   }
+
 
   @override
   Future<void> close() {
@@ -85,3 +53,4 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     return super.close();
   }
 }
+

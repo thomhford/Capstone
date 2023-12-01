@@ -31,7 +31,9 @@ class App extends StatelessWidget {
             create: (_) => NavigationBloc(),
           ),
           BlocProvider<ChatBloc>(
-            create: (_) => ChatBloc(),
+            create: (_) => ChatBloc(
+              authenticationRepository: _authenticationRepository,
+            ),
           ),
         ],
         child: const AppView(),
