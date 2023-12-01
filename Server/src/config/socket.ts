@@ -14,6 +14,11 @@ import { eventEmitter } from "./events";
 import admin from 'firebase-admin';
 import { createUserSocket, getUserSocket, deleteUserSocket } from "../controllers/userSocketController";
 
+/**
+ * Middleware to authenticate the socket connection.
+ * It verifies the token passed in the handshake query.
+ * If the token is not valid, it throws an authentication error.
+ */
 io.use(async (socket, next) => {
     try {
         const token = socket.handshake.query.token as string;
@@ -34,11 +39,21 @@ io.use(async (socket, next) => {
     }
 });
 
+/**
+ * Event listener for a new socket connection.
+ * It handles various socket events like 'register', 'fetch_conversations', 'read', 'typing', 'stop typing', 'message sent', 'message received', 'delete message', 'delete conversation', and 'disconnect'.
+ */
 io.on('connection',
     (socket) => {
         console.log('a user connected', socket.id);
 
-        // When a user connects, they should emit a 'register' event with their user ID
+        /**
+         * Event listener for 'register' event.
+         * When a user connects, their socket ID is stored in the database.
+         * All the messages in the user's queue are sent.
+         *
+         * When a user connects, they should emit a 'register' event with their user ID
+         */
         socket.on('register', async (userId) => {
             // When a user connects, store their socket ID in the database
             await createUserSocket(userId, socket.id);
@@ -50,7 +65,10 @@ io.on('connection',
             });
         });
 
-        // Handle 'fetch_conversations' event
+        /**
+         * Event listener for 'fetch_conversations' event.
+         * It fetches all the conversations of a user and emits 'conversations fetched' event.
+         */
         socket.on('fetch_conversations', async ({userId}) => {
             try {
                 const conversations = await getConversations(userId);
@@ -62,7 +80,10 @@ io.on('connection',
             }
         });
 
-        // Handle 'read' event
+        /**
+         * Event listener for 'read' event.
+         * It marks a message as read in the database and emits 'read' event to all users in the conversation.
+         */
         socket.on('read', async ({readerId, messageId}) => {
             try {
                 // Fetch the message and its associated conversation from the database
@@ -90,7 +111,10 @@ io.on('connection',
             }
         });
 
-        // Handle 'typing' event
+        /**
+         * Event listener for 'typing' event.
+         * It emits 'typing' event to the recipient.
+         */
         socket.on('typing', async ({senderId, recipientId}) => {
             const recipientSocket = await getUserSocket(recipientId);
             if (recipientSocket) {
@@ -98,7 +122,10 @@ io.on('connection',
             }
         });
 
-        // Handle 'stop typing' event
+        /**
+         * Event listener for 'stop typing' event.
+         * It emits 'stop typing' event to the recipient.
+         */
         socket.on('stop typing', async ({senderId, recipientId}) => {
             const recipientSocket = await getUserSocket(recipientId);
             if (recipientSocket) {
@@ -106,7 +133,10 @@ io.on('connection',
             }
         });
 
-        // Handle 'message sent' event
+        /**
+         * Event listener for 'message sent' event.
+         * It stores the message in the database and emits 'message received' event to all users in the conversation.
+         */
         socket.on('message sent', async ({senderId, conversationId, message, type, fileId}) => {
             try {
                 // Store the message in the database
@@ -207,7 +237,10 @@ io.on('connection',
             }
         });
 
-        // Handle 'delete message' event
+        /**
+         * Event listener for 'delete message' event.
+         * It deletes the message from the database and emits 'message deleted' event to all users in the conversation.
+         */
         socket.on('delete message', async (messageId) => {
             try {
                 // Delete the message from the database and get the deleted message
@@ -232,7 +265,10 @@ io.on('connection',
             }
         });
 
-        // Handle 'delete conversation' event
+        /**
+         * Event listener for 'delete conversation' event.
+         * It deletes the conversation from the database and emits 'conversation deleted' event to all users in the conversation.
+         */
         socket.on('delete conversation', async (conversationId) => {
             try {
                 // Delete the conversation from the database and get the deleted conversation
@@ -254,12 +290,20 @@ io.on('connection',
             }
         });
 
+        /**
+         * Event listener for 'disconnect' event.
+         * It removes the disconnected user from the map.
+         */
         socket.on('disconnect', async () => {
             console.log('user disconnected', socket.id);
             // Remove the disconnected user from the map
             await deleteUserSocket(socket.id);
         });
 
+        /**
+         * Event listener for 'error' event.
+         * It logs the error and emits 'error' event to the client.
+         */
         eventEmitter.on('error', ({error, details}) => {
             console.error(error, details);
             socket.emit('error', error);
