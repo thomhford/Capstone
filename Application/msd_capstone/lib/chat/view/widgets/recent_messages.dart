@@ -1,20 +1,22 @@
 // recent_messages.dart
 
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:msd_capstone/chat/services/chat_service.dart';
 import '../../models/models.dart';
 import '../conversation_page.dart';
 
 class RecentMessages extends StatelessWidget {
   final List<Conversation> conversations;
   final String searchQuery;
+  final User currentUser;
 
   const RecentMessages({
     super.key,
     required this.conversations,
     required this.searchQuery,
+    required this.currentUser,
   });
 
   @override
@@ -23,7 +25,7 @@ class RecentMessages extends StatelessWidget {
       final String query = searchQuery.toLowerCase();
       return conversation.messages.any((message) {
         final String messageText = message.message.toLowerCase();
-        final String userName = conversation.users[message.senderId]!.name.toLowerCase();
+        final String userName = '${conversation.getRecipientUser(currentUser.id).firstName} ${conversation.getRecipientUser(currentUser.id).firstName}'.toLowerCase();
         return messageText.contains(query) || userName.contains(query);
       });
     }).toList();
@@ -47,9 +49,10 @@ class RecentMessages extends StatelessWidget {
     return Column(
       children: filteredConversations.map((conversation) {
         final ChatMessage recentMessage = conversation.messages.reduce((value, element) {
-          return value.timestamp.isAfter(element.timestamp) ? value : element;
+          return value.createdAt.isAfter(element.createdAt) ? value : element;
         });
-        final ChatUser recipient = conversation.users[recentMessage.recipientId]!;
+        final ChatUser recipient = conversation.getRecipientChatUser(currentUser.id);
+
         return Padding(
           padding: const EdgeInsets.only(left: 20, right: 10, top: 25),
           child: GestureDetector(
@@ -59,16 +62,17 @@ class RecentMessages extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (_) => ConversationPage(
                     conversation: conversation,
+                    currentUser: currentUser,
                   ),
                 ),
               );
             },
             child: Row(
               children: [
-                CircleAvatar(
+                CircleAvatar( // TODO: Update this to use Avatar widget
                   radius: 30,
                   backgroundImage:
-                  CachedNetworkImageProvider(recipient.imageUrl),
+                  CachedNetworkImageProvider(recipient.photoUrl!),
                 ),
                 const SizedBox(
                   width: 15,
@@ -81,7 +85,7 @@ class RecentMessages extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: Text(
-                            recipient.name,
+                            '${recipient.firstName} ${recipient.lastName}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 17,
@@ -96,7 +100,7 @@ class RecentMessages extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              formatTimestamp(recentMessage.timestamp),
+                              formatTimestamp(recentMessage.createdAt),
                               style: const TextStyle(
                                 color: Colors.white70,
                                 fontFamily: 'Quicksand',

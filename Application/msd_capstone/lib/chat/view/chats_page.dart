@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/chat/bloc/socket_bloc.dart';
+import '../../app/bloc/app_bloc.dart';
 import '../models/models.dart';
 import './widgets/widgets.dart';
 
@@ -48,37 +49,45 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ScrollController scrollController = ScrollController();
+    final currentUser = context.select((AppBloc bloc) => bloc.state.user);
 
     // Create sample users
     final ChatUser sender = ChatUser(
       id: '1',
-      name: 'John',
-      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'JohnDoe@Test.com',
+      updatedAt: DateTime.now(),
+      photoUrl: 'https://i.imgur.com/TzEia5G.jpeg',
     );
     final ChatUser recipient = ChatUser(
       id: '2',
-      name: 'Jane',
-      imageUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      email: 'JaneDoe@Test.com',
+      updatedAt: DateTime.now(),
+      photoUrl: 'https://i.imgur.com/TzEia5G.jpeg',
     );
 
     // Create a sample message
     final ChatMessage message = ChatMessage(
-      senderId: sender.id,
-      recipientId: recipient.id,
+      messageId: 1,
       message: 'Hey, how\'s it going?',
       read: false,
       isReceived: true,
       type: 'text',
-      timestamp: DateTime.now(),
+      conversationId: 1,
+      status: 'sent',
+      createdAt: DateTime.now(),
     );
 
     // Create a sample conversation
     final Conversation conversation = Conversation(
-      users: {
-        sender.id: sender,
-        recipient.id: recipient,
-      },
+      conversationId: 1,
+      user1: sender,
+      user2: recipient,
       messages: [message],
+      createdAt: DateTime.now(),
     );
 
 
@@ -192,6 +201,7 @@ class _ChatsPageState extends State<ChatsPage> {
                         RecentMessages(
                           conversations: [conversation],
                           searchQuery: _searchQuery,
+                          currentUser: currentUser,
                         ),
                         const SizedBox(
                           height: 25,
