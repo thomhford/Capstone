@@ -34,7 +34,6 @@ class ConversationPage extends StatelessWidget {
               lastName: currentUser.lastName,
               imageUrl: currentUser.photo,
             ),
-
           );
   }
 }

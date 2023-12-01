@@ -22,4 +22,8 @@ class ChatEvent with _$ChatEvent {
   const factory ChatEvent.deleteMessageFromServer(String messageId) = DeleteMessageFromServer;
   const factory ChatEvent.deleteConversationFromServer(String conversationId) = DeleteConversationFromServer;
   const factory ChatEvent.errorFromServer(String error) = ErrorFromServer;
+
+  // Server Requests
+  const factory ChatEvent.requestConversations() = RequestConversations;
+  const factory ChatEvent.requestUsers() = RequestUsers;
 }

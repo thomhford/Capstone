@@ -1,5 +1,7 @@
 // socket_event_handler.dart
 
+import 'dart:math';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:msd_capstone/chat/models/models.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -17,7 +19,8 @@ class SocketEventHandler {
   void setupSocketListeners() {
     _setupConnectionListeners();
     _setupMessageListeners();
-    _setupGetterListeners();
+    _setupConversationListeners();
+    _setupUserListeners();
     _setupTypingListeners();
     _setupErrorListeners();
   }
@@ -51,23 +54,25 @@ class SocketEventHandler {
       logger.i(data);
     });
   }
-  _setupGetterListeners(){
+  _setupConversationListeners(){
     // Listen for the 'conversations fetched' event
     _socket.on('conversations fetched', (data){
       List<Conversation> conversations = data.map((item) => Conversation.fromMap(item)).toList();
       _chatBloc.add(ChatEvent.fetchConversations(conversations));
       logger.i(data);
     });
-    // Listen for the 'user list fetched' event
-    _socket.on('user list fetched', (data) {
-      List<ChatUser> users = data.map((item) => ChatUser.fromMap(item)).toList();
-      _chatBloc.add(ChatEvent.fetchUsers(users));
-      logger.i(data);
-    });
     // Listen for the 'conversation deleted' event
     _socket.on('conversation deleted', (data) {
       String conversationId = data['conversationId'];
       _chatBloc.add(ChatEvent.deleteConversationFromServer(conversationId));
+      logger.i(data);
+    });
+  }
+  _setupUserListeners(){
+    // Listen for the 'user list fetched' event
+    _socket.on('user list fetched', (data) {
+      List<ChatUser> users = data.map((item) => ChatUser.fromMap(item)).toList();
+      _chatBloc.add(ChatEvent.fetchUsers(users));
       logger.i(data);
     });
   }
@@ -143,16 +148,26 @@ class SocketEventHandler {
 
   // ************************ Bloc and Socket events from client to server ************************
   _setupBlocEventsToServer(){
+    String currentUserId = _authenticationRepository.currentUser.id;
+    logger.i('Current user id: $currentUserId');
     _chatBloc.on<Connect>((event, emit) {
       logger.i('Connected');
       _socket.connect();
-      _socket.emit('register', _authenticationRepository.currentUser.id);
+      _socket.emit('register', currentUserId);
       emit(const ChatState.connected());
     });
     _chatBloc.on<Disconnect>((event, emit) {
       logger.i('Disconnected');
       _socket.disconnect();
       emit(const ChatState.disconnected());
+    });
+    _chatBloc.on<RequestConversations>((event, emit) {
+      logger.i('Requesting conversations');
+      _socket.emit('request conversations');
+    });
+    _chatBloc.on<RequestUsers>((event, emit) {
+      logger.i('Requesting users');
+      _socket.emit('request users');
     });
     _chatBloc.on<SendMessage>((event, emit) {
       logger.i('Sending message: ${event.message}');

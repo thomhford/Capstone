@@ -2,7 +2,7 @@ part of 'socket_bloc.dart';
 
 @freezed
 class ChatState with _$ChatState {
-  // Client states
+  // Client set states
   const factory ChatState.connected() = Connected;
   const factory ChatState.disconnected() = Disconnected;
   const factory ChatState.messageSent(ChatMessage message) = MessageSent;
@@ -12,7 +12,7 @@ class ChatState with _$ChatState {
   const factory ChatState.typingStarted(String recipientId) = TypingStarted;
   const factory ChatState.typingStopped(String recipientId) = TypingStopped;
 
-  // Server states
+  // Server set states
   const factory ChatState.messageReceivedFromServer(ChatMessage message) = MessageReceivedFromServer;
   const factory ChatState.conversationsFetched(List<Conversation> conversations) = ConversationsFetched;
   const factory ChatState.usersFetched(List<ChatUser> users) = UsersFetched;

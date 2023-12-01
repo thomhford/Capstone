@@ -22,6 +22,9 @@ class _ChatsPageState extends State<ChatsPage> {
   void initState() {
     super.initState();
     _chatBloc = context.read<ChatBloc>();
+    _chatBloc.add(const ChatEvent.connect());
+    _chatBloc.add(const ChatEvent.requestConversations());
+    _chatBloc.add(const ChatEvent.requestUsers());
   }
 
   String _searchQuery = '';

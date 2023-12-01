@@ -55,7 +55,8 @@ io.on('connection',
          *
          * When a user connects, they should emit a 'register' event with their user ID
          */
-        socket.on('register', async ({userId}) => {
+        socket.on('register', async (userId) => {
+            console.log('register', userId, socket.id);
             // When a user connects, store their socket ID in the database
             await createUserSocket(userId, socket.id);
 
@@ -70,7 +71,8 @@ io.on('connection',
          * Event listener for 'fetch_conversations' event.
          * It fetches all the conversations of a user and emits 'conversations fetched' event.
          */
-        socket.on('fetch_conversations', async ({userId}) => {
+        socket.on('fetch_conversations', async (userId) => {
+            console.log('fetch_conversations', userId);
             try {
                 const conversations = await getConversations(userId);
                 socket.emit('conversations fetched', conversations);
@@ -86,6 +88,7 @@ io.on('connection',
          * It fetches all the users of the application and emits 'user list fetched' event.
          */
         socket.on('fetch_user_list', async ({userId}) => {
+            console.log('fetch_user_list', userId);
             try {
                 const users = await getAvailableUsers(userId);
                 socket.emit('user list fetched', users);

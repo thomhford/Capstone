@@ -37,6 +37,8 @@ mixin _$ChatEvent {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,6 +60,8 @@ mixin _$ChatEvent {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -79,6 +83,8 @@ mixin _$ChatEvent {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -105,6 +111,8 @@ mixin _$ChatEvent {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -127,6 +135,8 @@ mixin _$ChatEvent {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -149,6 +159,8 @@ mixin _$ChatEvent {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -254,6 +266,8 @@ class _$SendMessageImpl implements SendMessage {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return sendMessage(message);
   }
@@ -278,6 +292,8 @@ class _$SendMessageImpl implements SendMessage {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return sendMessage?.call(message);
   }
@@ -302,6 +318,8 @@ class _$SendMessageImpl implements SendMessage {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (sendMessage != null) {
@@ -334,6 +352,8 @@ class _$SendMessageImpl implements SendMessage {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return sendMessage(this);
   }
@@ -359,6 +379,8 @@ class _$SendMessageImpl implements SendMessage {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return sendMessage?.call(this);
   }
@@ -384,6 +406,8 @@ class _$SendMessageImpl implements SendMessage {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (sendMessage != null) {
@@ -486,6 +510,8 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return receiveMessage(message);
   }
@@ -510,6 +536,8 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return receiveMessage?.call(message);
   }
@@ -534,6 +562,8 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (receiveMessage != null) {
@@ -566,6 +596,8 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return receiveMessage(this);
   }
@@ -591,6 +623,8 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return receiveMessage?.call(this);
   }
@@ -616,6 +650,8 @@ class _$ReceiveMessageImpl implements ReceiveMessage {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (receiveMessage != null) {
@@ -692,6 +728,8 @@ class _$ConnectImpl implements Connect {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return connect();
   }
@@ -716,6 +754,8 @@ class _$ConnectImpl implements Connect {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return connect?.call();
   }
@@ -740,6 +780,8 @@ class _$ConnectImpl implements Connect {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (connect != null) {
@@ -772,6 +814,8 @@ class _$ConnectImpl implements Connect {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return connect(this);
   }
@@ -797,6 +841,8 @@ class _$ConnectImpl implements Connect {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return connect?.call(this);
   }
@@ -822,6 +868,8 @@ class _$ConnectImpl implements Connect {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (connect != null) {
@@ -892,6 +940,8 @@ class _$DisconnectImpl implements Disconnect {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return disconnect();
   }
@@ -916,6 +966,8 @@ class _$DisconnectImpl implements Disconnect {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return disconnect?.call();
   }
@@ -940,6 +992,8 @@ class _$DisconnectImpl implements Disconnect {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (disconnect != null) {
@@ -972,6 +1026,8 @@ class _$DisconnectImpl implements Disconnect {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return disconnect(this);
   }
@@ -997,6 +1053,8 @@ class _$DisconnectImpl implements Disconnect {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return disconnect?.call(this);
   }
@@ -1022,6 +1080,8 @@ class _$DisconnectImpl implements Disconnect {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (disconnect != null) {
@@ -1119,6 +1179,8 @@ class _$ReadMessageImpl implements ReadMessage {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return readMessage(messageId);
   }
@@ -1143,6 +1205,8 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return readMessage?.call(messageId);
   }
@@ -1167,6 +1231,8 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (readMessage != null) {
@@ -1199,6 +1265,8 @@ class _$ReadMessageImpl implements ReadMessage {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return readMessage(this);
   }
@@ -1224,6 +1292,8 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return readMessage?.call(this);
   }
@@ -1249,6 +1319,8 @@ class _$ReadMessageImpl implements ReadMessage {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (readMessage != null) {
@@ -1351,6 +1423,8 @@ class _$DeleteMessageImpl implements DeleteMessage {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return deleteMessage(messageId);
   }
@@ -1375,6 +1449,8 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return deleteMessage?.call(messageId);
   }
@@ -1399,6 +1475,8 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (deleteMessage != null) {
@@ -1431,6 +1509,8 @@ class _$DeleteMessageImpl implements DeleteMessage {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return deleteMessage(this);
   }
@@ -1456,6 +1536,8 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return deleteMessage?.call(this);
   }
@@ -1481,6 +1563,8 @@ class _$DeleteMessageImpl implements DeleteMessage {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (deleteMessage != null) {
@@ -1583,6 +1667,8 @@ class _$StartTypingImpl implements StartTyping {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return startTyping(recipientId);
   }
@@ -1607,6 +1693,8 @@ class _$StartTypingImpl implements StartTyping {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return startTyping?.call(recipientId);
   }
@@ -1631,6 +1719,8 @@ class _$StartTypingImpl implements StartTyping {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (startTyping != null) {
@@ -1663,6 +1753,8 @@ class _$StartTypingImpl implements StartTyping {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return startTyping(this);
   }
@@ -1688,6 +1780,8 @@ class _$StartTypingImpl implements StartTyping {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return startTyping?.call(this);
   }
@@ -1713,6 +1807,8 @@ class _$StartTypingImpl implements StartTyping {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (startTyping != null) {
@@ -1815,6 +1911,8 @@ class _$StopTypingImpl implements StopTyping {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return stopTyping(recipientId);
   }
@@ -1839,6 +1937,8 @@ class _$StopTypingImpl implements StopTyping {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return stopTyping?.call(recipientId);
   }
@@ -1863,6 +1963,8 @@ class _$StopTypingImpl implements StopTyping {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (stopTyping != null) {
@@ -1895,6 +1997,8 @@ class _$StopTypingImpl implements StopTyping {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return stopTyping(this);
   }
@@ -1920,6 +2024,8 @@ class _$StopTypingImpl implements StopTyping {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return stopTyping?.call(this);
   }
@@ -1945,6 +2051,8 @@ class _$StopTypingImpl implements StopTyping {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (stopTyping != null) {
@@ -2049,6 +2157,8 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return receiveMessageFromServer(message);
   }
@@ -2073,6 +2183,8 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return receiveMessageFromServer?.call(message);
   }
@@ -2097,6 +2209,8 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (receiveMessageFromServer != null) {
@@ -2129,6 +2243,8 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return receiveMessageFromServer(this);
   }
@@ -2154,6 +2270,8 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return receiveMessageFromServer?.call(this);
   }
@@ -2179,6 +2297,8 @@ class _$ReceiveMessageFromServerImpl implements ReceiveMessageFromServer {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (receiveMessageFromServer != null) {
@@ -2290,6 +2410,8 @@ class _$FetchConversationsImpl implements FetchConversations {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return fetchConversations(conversations);
   }
@@ -2314,6 +2436,8 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return fetchConversations?.call(conversations);
   }
@@ -2338,6 +2462,8 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (fetchConversations != null) {
@@ -2370,6 +2496,8 @@ class _$FetchConversationsImpl implements FetchConversations {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return fetchConversations(this);
   }
@@ -2395,6 +2523,8 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return fetchConversations?.call(this);
   }
@@ -2420,6 +2550,8 @@ class _$FetchConversationsImpl implements FetchConversations {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (fetchConversations != null) {
@@ -2528,6 +2660,8 @@ class _$FetchUsersImpl implements FetchUsers {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return fetchUsers(users);
   }
@@ -2552,6 +2686,8 @@ class _$FetchUsersImpl implements FetchUsers {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return fetchUsers?.call(users);
   }
@@ -2576,6 +2712,8 @@ class _$FetchUsersImpl implements FetchUsers {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (fetchUsers != null) {
@@ -2608,6 +2746,8 @@ class _$FetchUsersImpl implements FetchUsers {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return fetchUsers(this);
   }
@@ -2633,6 +2773,8 @@ class _$FetchUsersImpl implements FetchUsers {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return fetchUsers?.call(this);
   }
@@ -2658,6 +2800,8 @@ class _$FetchUsersImpl implements FetchUsers {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (fetchUsers != null) {
@@ -2762,6 +2906,8 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return readMessageFromServer(messageId);
   }
@@ -2786,6 +2932,8 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return readMessageFromServer?.call(messageId);
   }
@@ -2810,6 +2958,8 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (readMessageFromServer != null) {
@@ -2842,6 +2992,8 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return readMessageFromServer(this);
   }
@@ -2867,6 +3019,8 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return readMessageFromServer?.call(this);
   }
@@ -2892,6 +3046,8 @@ class _$ReadMessageFromServerImpl implements ReadMessageFromServer {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (readMessageFromServer != null) {
@@ -2996,6 +3152,8 @@ class _$TypingFromServerImpl implements TypingFromServer {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return typingFromServer(senderId);
   }
@@ -3020,6 +3178,8 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return typingFromServer?.call(senderId);
   }
@@ -3044,6 +3204,8 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (typingFromServer != null) {
@@ -3076,6 +3238,8 @@ class _$TypingFromServerImpl implements TypingFromServer {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return typingFromServer(this);
   }
@@ -3101,6 +3265,8 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return typingFromServer?.call(this);
   }
@@ -3126,6 +3292,8 @@ class _$TypingFromServerImpl implements TypingFromServer {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (typingFromServer != null) {
@@ -3231,6 +3399,8 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return stopTypingFromServer(senderId);
   }
@@ -3255,6 +3425,8 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return stopTypingFromServer?.call(senderId);
   }
@@ -3279,6 +3451,8 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (stopTypingFromServer != null) {
@@ -3311,6 +3485,8 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return stopTypingFromServer(this);
   }
@@ -3336,6 +3512,8 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return stopTypingFromServer?.call(this);
   }
@@ -3361,6 +3539,8 @@ class _$StopTypingFromServerImpl implements StopTypingFromServer {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (stopTypingFromServer != null) {
@@ -3467,6 +3647,8 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return deleteMessageFromServer(messageId);
   }
@@ -3491,6 +3673,8 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return deleteMessageFromServer?.call(messageId);
   }
@@ -3515,6 +3699,8 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (deleteMessageFromServer != null) {
@@ -3547,6 +3733,8 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return deleteMessageFromServer(this);
   }
@@ -3572,6 +3760,8 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return deleteMessageFromServer?.call(this);
   }
@@ -3597,6 +3787,8 @@ class _$DeleteMessageFromServerImpl implements DeleteMessageFromServer {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (deleteMessageFromServer != null) {
@@ -3705,6 +3897,8 @@ class _$DeleteConversationFromServerImpl
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return deleteConversationFromServer(conversationId);
   }
@@ -3729,6 +3923,8 @@ class _$DeleteConversationFromServerImpl
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return deleteConversationFromServer?.call(conversationId);
   }
@@ -3753,6 +3949,8 @@ class _$DeleteConversationFromServerImpl
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (deleteConversationFromServer != null) {
@@ -3785,6 +3983,8 @@ class _$DeleteConversationFromServerImpl
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return deleteConversationFromServer(this);
   }
@@ -3810,6 +4010,8 @@ class _$DeleteConversationFromServerImpl
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return deleteConversationFromServer?.call(this);
   }
@@ -3835,6 +4037,8 @@ class _$DeleteConversationFromServerImpl
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (deleteConversationFromServer != null) {
@@ -3939,6 +4143,8 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     required TResult Function(String conversationId)
         deleteConversationFromServer,
     required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
   }) {
     return errorFromServer(error);
   }
@@ -3963,6 +4169,8 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult? Function(String messageId)? deleteMessageFromServer,
     TResult? Function(String conversationId)? deleteConversationFromServer,
     TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
   }) {
     return errorFromServer?.call(error);
   }
@@ -3987,6 +4195,8 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult Function(String messageId)? deleteMessageFromServer,
     TResult Function(String conversationId)? deleteConversationFromServer,
     TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
     required TResult orElse(),
   }) {
     if (errorFromServer != null) {
@@ -4019,6 +4229,8 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     required TResult Function(DeleteConversationFromServer value)
         deleteConversationFromServer,
     required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
   }) {
     return errorFromServer(this);
   }
@@ -4044,6 +4256,8 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult? Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
   }) {
     return errorFromServer?.call(this);
   }
@@ -4069,6 +4283,8 @@ class _$ErrorFromServerImpl implements ErrorFromServer {
     TResult Function(DeleteConversationFromServer value)?
         deleteConversationFromServer,
     TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
     required TResult orElse(),
   }) {
     if (errorFromServer != null) {
@@ -4085,6 +4301,431 @@ abstract class ErrorFromServer implements ChatEvent {
   @JsonKey(ignore: true)
   _$$ErrorFromServerImplCopyWith<_$ErrorFromServerImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RequestConversationsImplCopyWith<$Res> {
+  factory _$$RequestConversationsImplCopyWith(_$RequestConversationsImpl value,
+          $Res Function(_$RequestConversationsImpl) then) =
+      __$$RequestConversationsImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RequestConversationsImplCopyWithImpl<$Res>
+    extends _$ChatEventCopyWithImpl<$Res, _$RequestConversationsImpl>
+    implements _$$RequestConversationsImplCopyWith<$Res> {
+  __$$RequestConversationsImplCopyWithImpl(_$RequestConversationsImpl _value,
+      $Res Function(_$RequestConversationsImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$RequestConversationsImpl implements RequestConversations {
+  const _$RequestConversationsImpl();
+
+  @override
+  String toString() {
+    return 'ChatEvent.requestConversations()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RequestConversationsImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(ChatMessage message) sendMessage,
+    required TResult Function(ChatMessage message) receiveMessage,
+    required TResult Function() connect,
+    required TResult Function() disconnect,
+    required TResult Function(String messageId) readMessage,
+    required TResult Function(String messageId) deleteMessage,
+    required TResult Function(String recipientId) startTyping,
+    required TResult Function(String recipientId) stopTyping,
+    required TResult Function(ChatMessage message) receiveMessageFromServer,
+    required TResult Function(List<Conversation> conversations)
+        fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
+    required TResult Function(String messageId) readMessageFromServer,
+    required TResult Function(String senderId) typingFromServer,
+    required TResult Function(String senderId) stopTypingFromServer,
+    required TResult Function(String messageId) deleteMessageFromServer,
+    required TResult Function(String conversationId)
+        deleteConversationFromServer,
+    required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
+  }) {
+    return requestConversations();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(ChatMessage message)? sendMessage,
+    TResult? Function(ChatMessage message)? receiveMessage,
+    TResult? Function()? connect,
+    TResult? Function()? disconnect,
+    TResult? Function(String messageId)? readMessage,
+    TResult? Function(String messageId)? deleteMessage,
+    TResult? Function(String recipientId)? startTyping,
+    TResult? Function(String recipientId)? stopTyping,
+    TResult? Function(ChatMessage message)? receiveMessageFromServer,
+    TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
+    TResult? Function(String messageId)? readMessageFromServer,
+    TResult? Function(String senderId)? typingFromServer,
+    TResult? Function(String senderId)? stopTypingFromServer,
+    TResult? Function(String messageId)? deleteMessageFromServer,
+    TResult? Function(String conversationId)? deleteConversationFromServer,
+    TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
+  }) {
+    return requestConversations?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(ChatMessage message)? sendMessage,
+    TResult Function(ChatMessage message)? receiveMessage,
+    TResult Function()? connect,
+    TResult Function()? disconnect,
+    TResult Function(String messageId)? readMessage,
+    TResult Function(String messageId)? deleteMessage,
+    TResult Function(String recipientId)? startTyping,
+    TResult Function(String recipientId)? stopTyping,
+    TResult Function(ChatMessage message)? receiveMessageFromServer,
+    TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
+    TResult Function(String messageId)? readMessageFromServer,
+    TResult Function(String senderId)? typingFromServer,
+    TResult Function(String senderId)? stopTypingFromServer,
+    TResult Function(String messageId)? deleteMessageFromServer,
+    TResult Function(String conversationId)? deleteConversationFromServer,
+    TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
+    required TResult orElse(),
+  }) {
+    if (requestConversations != null) {
+      return requestConversations();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SendMessage value) sendMessage,
+    required TResult Function(ReceiveMessage value) receiveMessage,
+    required TResult Function(Connect value) connect,
+    required TResult Function(Disconnect value) disconnect,
+    required TResult Function(ReadMessage value) readMessage,
+    required TResult Function(DeleteMessage value) deleteMessage,
+    required TResult Function(StartTyping value) startTyping,
+    required TResult Function(StopTyping value) stopTyping,
+    required TResult Function(ReceiveMessageFromServer value)
+        receiveMessageFromServer,
+    required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
+    required TResult Function(ReadMessageFromServer value)
+        readMessageFromServer,
+    required TResult Function(TypingFromServer value) typingFromServer,
+    required TResult Function(StopTypingFromServer value) stopTypingFromServer,
+    required TResult Function(DeleteMessageFromServer value)
+        deleteMessageFromServer,
+    required TResult Function(DeleteConversationFromServer value)
+        deleteConversationFromServer,
+    required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
+  }) {
+    return requestConversations(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SendMessage value)? sendMessage,
+    TResult? Function(ReceiveMessage value)? receiveMessage,
+    TResult? Function(Connect value)? connect,
+    TResult? Function(Disconnect value)? disconnect,
+    TResult? Function(ReadMessage value)? readMessage,
+    TResult? Function(DeleteMessage value)? deleteMessage,
+    TResult? Function(StartTyping value)? startTyping,
+    TResult? Function(StopTyping value)? stopTyping,
+    TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
+    TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
+    TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
+    TResult? Function(TypingFromServer value)? typingFromServer,
+    TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
+    TResult? Function(DeleteMessageFromServer value)? deleteMessageFromServer,
+    TResult? Function(DeleteConversationFromServer value)?
+        deleteConversationFromServer,
+    TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
+  }) {
+    return requestConversations?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SendMessage value)? sendMessage,
+    TResult Function(ReceiveMessage value)? receiveMessage,
+    TResult Function(Connect value)? connect,
+    TResult Function(Disconnect value)? disconnect,
+    TResult Function(ReadMessage value)? readMessage,
+    TResult Function(DeleteMessage value)? deleteMessage,
+    TResult Function(StartTyping value)? startTyping,
+    TResult Function(StopTyping value)? stopTyping,
+    TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
+    TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
+    TResult Function(ReadMessageFromServer value)? readMessageFromServer,
+    TResult Function(TypingFromServer value)? typingFromServer,
+    TResult Function(StopTypingFromServer value)? stopTypingFromServer,
+    TResult Function(DeleteMessageFromServer value)? deleteMessageFromServer,
+    TResult Function(DeleteConversationFromServer value)?
+        deleteConversationFromServer,
+    TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
+    required TResult orElse(),
+  }) {
+    if (requestConversations != null) {
+      return requestConversations(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RequestConversations implements ChatEvent {
+  const factory RequestConversations() = _$RequestConversationsImpl;
+}
+
+/// @nodoc
+abstract class _$$RequestUsersImplCopyWith<$Res> {
+  factory _$$RequestUsersImplCopyWith(
+          _$RequestUsersImpl value, $Res Function(_$RequestUsersImpl) then) =
+      __$$RequestUsersImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RequestUsersImplCopyWithImpl<$Res>
+    extends _$ChatEventCopyWithImpl<$Res, _$RequestUsersImpl>
+    implements _$$RequestUsersImplCopyWith<$Res> {
+  __$$RequestUsersImplCopyWithImpl(
+      _$RequestUsersImpl _value, $Res Function(_$RequestUsersImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$RequestUsersImpl implements RequestUsers {
+  const _$RequestUsersImpl();
+
+  @override
+  String toString() {
+    return 'ChatEvent.requestUsers()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$RequestUsersImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(ChatMessage message) sendMessage,
+    required TResult Function(ChatMessage message) receiveMessage,
+    required TResult Function() connect,
+    required TResult Function() disconnect,
+    required TResult Function(String messageId) readMessage,
+    required TResult Function(String messageId) deleteMessage,
+    required TResult Function(String recipientId) startTyping,
+    required TResult Function(String recipientId) stopTyping,
+    required TResult Function(ChatMessage message) receiveMessageFromServer,
+    required TResult Function(List<Conversation> conversations)
+        fetchConversations,
+    required TResult Function(List<ChatUser> users) fetchUsers,
+    required TResult Function(String messageId) readMessageFromServer,
+    required TResult Function(String senderId) typingFromServer,
+    required TResult Function(String senderId) stopTypingFromServer,
+    required TResult Function(String messageId) deleteMessageFromServer,
+    required TResult Function(String conversationId)
+        deleteConversationFromServer,
+    required TResult Function(String error) errorFromServer,
+    required TResult Function() requestConversations,
+    required TResult Function() requestUsers,
+  }) {
+    return requestUsers();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(ChatMessage message)? sendMessage,
+    TResult? Function(ChatMessage message)? receiveMessage,
+    TResult? Function()? connect,
+    TResult? Function()? disconnect,
+    TResult? Function(String messageId)? readMessage,
+    TResult? Function(String messageId)? deleteMessage,
+    TResult? Function(String recipientId)? startTyping,
+    TResult? Function(String recipientId)? stopTyping,
+    TResult? Function(ChatMessage message)? receiveMessageFromServer,
+    TResult? Function(List<Conversation> conversations)? fetchConversations,
+    TResult? Function(List<ChatUser> users)? fetchUsers,
+    TResult? Function(String messageId)? readMessageFromServer,
+    TResult? Function(String senderId)? typingFromServer,
+    TResult? Function(String senderId)? stopTypingFromServer,
+    TResult? Function(String messageId)? deleteMessageFromServer,
+    TResult? Function(String conversationId)? deleteConversationFromServer,
+    TResult? Function(String error)? errorFromServer,
+    TResult? Function()? requestConversations,
+    TResult? Function()? requestUsers,
+  }) {
+    return requestUsers?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(ChatMessage message)? sendMessage,
+    TResult Function(ChatMessage message)? receiveMessage,
+    TResult Function()? connect,
+    TResult Function()? disconnect,
+    TResult Function(String messageId)? readMessage,
+    TResult Function(String messageId)? deleteMessage,
+    TResult Function(String recipientId)? startTyping,
+    TResult Function(String recipientId)? stopTyping,
+    TResult Function(ChatMessage message)? receiveMessageFromServer,
+    TResult Function(List<Conversation> conversations)? fetchConversations,
+    TResult Function(List<ChatUser> users)? fetchUsers,
+    TResult Function(String messageId)? readMessageFromServer,
+    TResult Function(String senderId)? typingFromServer,
+    TResult Function(String senderId)? stopTypingFromServer,
+    TResult Function(String messageId)? deleteMessageFromServer,
+    TResult Function(String conversationId)? deleteConversationFromServer,
+    TResult Function(String error)? errorFromServer,
+    TResult Function()? requestConversations,
+    TResult Function()? requestUsers,
+    required TResult orElse(),
+  }) {
+    if (requestUsers != null) {
+      return requestUsers();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SendMessage value) sendMessage,
+    required TResult Function(ReceiveMessage value) receiveMessage,
+    required TResult Function(Connect value) connect,
+    required TResult Function(Disconnect value) disconnect,
+    required TResult Function(ReadMessage value) readMessage,
+    required TResult Function(DeleteMessage value) deleteMessage,
+    required TResult Function(StartTyping value) startTyping,
+    required TResult Function(StopTyping value) stopTyping,
+    required TResult Function(ReceiveMessageFromServer value)
+        receiveMessageFromServer,
+    required TResult Function(FetchConversations value) fetchConversations,
+    required TResult Function(FetchUsers value) fetchUsers,
+    required TResult Function(ReadMessageFromServer value)
+        readMessageFromServer,
+    required TResult Function(TypingFromServer value) typingFromServer,
+    required TResult Function(StopTypingFromServer value) stopTypingFromServer,
+    required TResult Function(DeleteMessageFromServer value)
+        deleteMessageFromServer,
+    required TResult Function(DeleteConversationFromServer value)
+        deleteConversationFromServer,
+    required TResult Function(ErrorFromServer value) errorFromServer,
+    required TResult Function(RequestConversations value) requestConversations,
+    required TResult Function(RequestUsers value) requestUsers,
+  }) {
+    return requestUsers(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SendMessage value)? sendMessage,
+    TResult? Function(ReceiveMessage value)? receiveMessage,
+    TResult? Function(Connect value)? connect,
+    TResult? Function(Disconnect value)? disconnect,
+    TResult? Function(ReadMessage value)? readMessage,
+    TResult? Function(DeleteMessage value)? deleteMessage,
+    TResult? Function(StartTyping value)? startTyping,
+    TResult? Function(StopTyping value)? stopTyping,
+    TResult? Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
+    TResult? Function(FetchConversations value)? fetchConversations,
+    TResult? Function(FetchUsers value)? fetchUsers,
+    TResult? Function(ReadMessageFromServer value)? readMessageFromServer,
+    TResult? Function(TypingFromServer value)? typingFromServer,
+    TResult? Function(StopTypingFromServer value)? stopTypingFromServer,
+    TResult? Function(DeleteMessageFromServer value)? deleteMessageFromServer,
+    TResult? Function(DeleteConversationFromServer value)?
+        deleteConversationFromServer,
+    TResult? Function(ErrorFromServer value)? errorFromServer,
+    TResult? Function(RequestConversations value)? requestConversations,
+    TResult? Function(RequestUsers value)? requestUsers,
+  }) {
+    return requestUsers?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SendMessage value)? sendMessage,
+    TResult Function(ReceiveMessage value)? receiveMessage,
+    TResult Function(Connect value)? connect,
+    TResult Function(Disconnect value)? disconnect,
+    TResult Function(ReadMessage value)? readMessage,
+    TResult Function(DeleteMessage value)? deleteMessage,
+    TResult Function(StartTyping value)? startTyping,
+    TResult Function(StopTyping value)? stopTyping,
+    TResult Function(ReceiveMessageFromServer value)? receiveMessageFromServer,
+    TResult Function(FetchConversations value)? fetchConversations,
+    TResult Function(FetchUsers value)? fetchUsers,
+    TResult Function(ReadMessageFromServer value)? readMessageFromServer,
+    TResult Function(TypingFromServer value)? typingFromServer,
+    TResult Function(StopTypingFromServer value)? stopTypingFromServer,
+    TResult Function(DeleteMessageFromServer value)? deleteMessageFromServer,
+    TResult Function(DeleteConversationFromServer value)?
+        deleteConversationFromServer,
+    TResult Function(ErrorFromServer value)? errorFromServer,
+    TResult Function(RequestConversations value)? requestConversations,
+    TResult Function(RequestUsers value)? requestUsers,
+    required TResult orElse(),
+  }) {
+    if (requestUsers != null) {
+      return requestUsers(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RequestUsers implements ChatEvent {
+  const factory RequestUsers() = _$RequestUsersImpl;
 }
 
 /// @nodoc
