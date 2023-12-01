@@ -3,6 +3,7 @@ import { io } from '../index';
 import {
     sendMessage,
     getConversations,
+    getAvailableUsers,
     deleteMessage,
     getMessage,
     getConversation,
@@ -54,7 +55,7 @@ io.on('connection',
          *
          * When a user connects, they should emit a 'register' event with their user ID
          */
-        socket.on('register', async (userId) => {
+        socket.on('register', async ({userId}) => {
             // When a user connects, store their socket ID in the database
             await createUserSocket(userId, socket.id);
 
@@ -77,6 +78,21 @@ io.on('connection',
                 console.error('Error fetching conversations:', error);
                 // Emit an error event to the client
                 socket.emit('error', 'Error fetching conversations');
+            }
+        });
+
+        /**
+         * Event listener for 'fetch_user_list' event.
+         * It fetches all the users of the application and emits 'user list fetched' event.
+         */
+        socket.on('fetch_user_list', async ({userId}) => {
+            try {
+                const users = await getAvailableUsers(userId);
+                socket.emit('user list fetched', users);
+            } catch (error) {
+                console.error('Error fetching user list:', error);
+                // Emit an error event to the client
+                socket.emit('error', 'Error fetching user list');
             }
         });
 

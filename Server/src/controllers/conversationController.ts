@@ -215,6 +215,42 @@ export const getConversation = async (conversationId: number) => {
 };
 
 /**
+ * Function to retrieve a list of users that can be part of a new conversation.
+ * This excludes the current user and users that are already part of a conversation with the current user.
+ *
+ * This function does the following:
+ * 1. Fetches all users from the database.
+ * 2. Excludes the current user and users that are already part of a conversation with the current user.
+ * 3. Returns the fetched users.
+ *
+ * @param {string} userId - The ID of the current user.
+ *
+ * @returns {Promise<UserInstance[]>} An array of the fetched users.
+ *
+ * @throws Will throw an error if there's an issue fetching the users from the database.
+ */
+export const getAvailableUsers = async (userId: string) => {
+    try {
+        return await User.findAll({
+            where: {
+                [Op.and]: [
+                    {uid: {[Op.ne]: userId}},
+                    {
+                        [Op.or]: [
+                            {uid: {[Op.notIn]: sequelize.literal(`(SELECT user1Id FROM Conversations WHERE user2Id = '${userId}')`)}},
+                            {uid: {[Op.notIn]: sequelize.literal(`(SELECT user2Id FROM Conversations WHERE user1Id = '${userId}')`)}}
+                        ]
+                    }
+                ]
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        eventEmitter.emit('error', { error: 'Error retrieving available users', details: error });
+    }
+}
+
+/**
  * Function to retrieve a single message. Used for updating the read status of a message.
  *
  * This function does the following:
