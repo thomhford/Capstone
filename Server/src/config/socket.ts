@@ -4,12 +4,13 @@ import {
     sendMessage,
     getConversations,
     getAvailableUsers,
+    createConversation,
     deleteMessage,
     getMessage,
     getConversation,
     deleteConversation,
     queueMessage,
-    deliverQueuedMessages
+    deliverQueuedMessages,
 } from '../controllers/conversationController';
 import { eventEmitter } from "./events";
 import admin from 'firebase-admin';
@@ -97,6 +98,37 @@ io.on('connection',
                 console.error('Error fetching user list:', error);
                 // Emit an error event to the client
                 socket.emit('error', 'Error fetching user list');
+            }
+        });
+
+        /**
+         * Event listener for 'create conversation' event.
+         * Creates a new conversation between two users and emits 'conversation created' event to both users.
+         */
+        socket.on('create conversation', async ({ user1Id, user2Id }) => {
+            try {
+                // Call the createConversation method from the conversation controller
+                const conversation = await createConversation(user1Id, user2Id);
+
+                // If the conversation already exists, emit 'error' with the message 'Conversation already exists'
+                if (!conversation) {
+                    socket.emit('error', 'Conversation already exists');
+                    return;
+                }
+
+                // Emit a 'conversation created' event to both users
+                const user1Socket = await getUserSocket(user1Id);
+                const user2Socket = await getUserSocket(user2Id);
+                if (user1Socket) {
+                    socket.to(user1Socket.socketId).emit('conversation created', conversation);
+                }
+                if (user2Socket) {
+                    socket.to(user2Socket.socketId).emit('conversation created', conversation);
+                }
+            } catch (error) {
+                console.error('Error creating conversation:', error);
+                // Emit an error event to the client
+                socket.emit('error', 'Error creating conversation');
             }
         });
 

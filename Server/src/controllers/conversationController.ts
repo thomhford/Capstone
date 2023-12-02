@@ -1,8 +1,8 @@
 // controllers/conversationController.ts
-import {File as Attachment, Message, Conversation, User} from '../models';
+import {Conversation, File as Attachment, Message, User} from '../models';
 import sequelize from "../config/db";
-import { Op } from "sequelize";
-import { eventEmitter } from '../config/events';
+import {Op} from "sequelize";
+import {eventEmitter} from '../config/events';
 import {ConversationInstance} from "../models/Conversation";
 
 /**
@@ -92,6 +92,49 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
     } catch (error) {
         console.error(error);
         eventEmitter.emit('error', { error: 'Error sending message', details: error });
+    }
+};
+
+/**
+ * Function to create a new conversation between two users.
+ *
+ * This function does the following:
+ * 1. Creates a new Conversation instance in the database with the provided details.
+ * 2. Returns the created conversation.
+ *
+ * @param {string} user1Id - The ID of the first user.
+ * @param {string} user2Id - The ID of the second user.
+ *
+ * @returns {Promise<ConversationInstance>} The created conversation.
+ *
+ * @throws Will throw an error if there's an issue creating the conversation.
+ */
+export const createConversation = async (user1Id: string, user2Id: string) => {
+    try {
+        // Check if a conversation between the two users already exists
+        const existingConversation = await Conversation.findOne({
+            where: {
+                [Op.or]: [
+                    { user1Id: user1Id, user2Id: user2Id },
+                    { user1Id: user2Id, user2Id: user1Id }
+                ]
+            }
+        });
+
+        // If a conversation already exists, throw an error
+        if (existingConversation) {
+            console.error('A conversation between these two users already exists.');
+            return null;
+        }
+
+        // If no conversation exists, create a new one
+        return await Conversation.create({
+            user1Id,
+            user2Id
+        });
+    } catch (error) {
+        console.error(error);
+        eventEmitter.emit('error', { error: 'Error creating conversation', details: error });
     }
 };
 

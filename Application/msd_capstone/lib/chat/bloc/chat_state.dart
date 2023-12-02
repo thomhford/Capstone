@@ -10,11 +10,11 @@ class SocketConnected extends ChatState {}
 class SocketDisconnected extends ChatState {}
 
 /// State emitted when the server sends a list of conversations.
-class SocketConversationReceived extends ChatState {
+class SocketConversationsReceived extends ChatState {
   final List<Conversation> conversations;
 
   /// Takes a [List] of [Conversation] objects that represent the current state of conversations.
-  SocketConversationReceived(this.conversations);
+  SocketConversationsReceived(this.conversations);
 }
 
 /// State emitted when the server sends a list of users.
@@ -23,6 +23,22 @@ class SocketUsersReceived extends ChatState {
 
   /// Takes a [List] of [ChatUser] objects that represent the current state of users.
   SocketUsersReceived(this.users);
+}
+
+/// State emitted when the server sends a new conversation.
+class SocketNewConversationReceived extends ChatState {
+  final Conversation conversation;
+
+  /// Takes a [Conversation] object that represents the current state of the conversation.
+  SocketNewConversationReceived(this.conversation);
+}
+
+/// State emitted when a new conversation is created.
+class SocketNewConversation extends ChatState {
+  final String senderId;
+  final String recipientId;
+
+  SocketNewConversation(this.senderId, this.recipientId);
 }
 
 /// State emitted when the server sends a message.

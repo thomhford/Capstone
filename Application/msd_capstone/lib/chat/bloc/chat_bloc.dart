@@ -71,6 +71,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         add(UsersReceivedEvent(users));
       });
 
+      // This sets up an event listener for a custom event named 'conversation created'.
+      // When the server emits this event, it sends a Conversation object as data.
+      // The callback function converts the data to a Conversation object and adds a NewConversationReceivedEvent with this conversation to the ChatBloc.
+      socket.on('conversation created', (data) {
+        Conversation conversation = Conversation.fromMap(data);
+        add(NewConversationReceivedEvent(conversation));
+      });
+
       // This sets up an event listener for a custom event named 'message received'.
       // When the server emits this event, it sends a message as data.
       // The callback function converts the data to a ChatMessage object and adds a MessageReceivedEvent with this message to the ChatBloc.
@@ -133,6 +141,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<DisconnectEvent>(_onDisconnectEvent);
     on<ConversationsReceivedEvent>(_onConversationsReceivedEvent);
     on<UsersReceivedEvent>(_onUsersReceivedEvent);
+    on<NewConversationReceivedEvent>(_onNewConversationReceivedEvent);
+    on<NewConversationEvent>(_onNewConversationEvent);
     on<MessageReceivedEvent>(_onMessageReceivedEvent);
     on<MessageSentEvent>(_onMessageSentEvent);
     on<MessageReadEvent>(_onMessageReadEvent);
@@ -183,10 +193,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   /// Handles the [ConversationsReceivedEvent].
-  /// Emits the [SocketConversationReceived] state with the received conversations.
+  /// Emits the [SocketConversationsReceived] state with the received conversations.
   /// This is triggered when the server sends a list of conversations.
   Future<void> _onConversationsReceivedEvent(ConversationsReceivedEvent event, Emitter<ChatState> emit) async {
-    emit(SocketConversationReceived(event.conversations));
+    emit(SocketConversationsReceived(event.conversations));
   }
 
   /// Handles the [UsersReceivedEvent].
@@ -194,6 +204,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// This is triggered when the server sends a list of users.
   Future<void> _onUsersReceivedEvent(UsersReceivedEvent event, Emitter<ChatState> emit) async {
     emit(SocketUsersReceived(event.users));
+  }
+
+  /// Handles the [NewConversationReceivedEvent].
+  /// Emits the [SocketNewConversationReceived] state with the received conversation.
+  /// This is triggered when the server sends a new conversation.
+  Future<void> _onNewConversationReceivedEvent(NewConversationReceivedEvent event, Emitter<ChatState> emit) async {
+    emit(SocketNewConversationReceived(event.conversation));
+  }
+
+  /// Handles the [NewConversationEvent].
+  /// Emits the [SocketNewConversation] state with the IDs of the sender and recipient.
+  /// It also sends the 'new conversation' event to the server.
+  /// This event is triggered when the user creates a new conversation.
+  Future<void> _onNewConversationEvent(NewConversationEvent event, Emitter<ChatState> emit) async {
+    socket.emit('new conversation', {'senderId': event.senderId, 'recipientId': event.recipientId});
+    emit(SocketNewConversation(event.senderId, event.recipientId));
   }
 
   /// Handles the [MessageReceivedEvent].
