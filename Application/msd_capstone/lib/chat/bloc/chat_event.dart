@@ -15,13 +15,10 @@ final class DisconnectEvent extends ChatEvent {
   const DisconnectEvent();
 }
 
-/// Event triggered when the server sends a list of conversations.
-/// This event is triggered when the socket connects to the server.
-/// It is also triggered when a new conversation is created.
-/// It is also triggered when a conversation is deleted.
+/// Event that is triggered when the server sends a list of conversations.
 final class ConversationsReceivedEvent extends ChatEvent {
   final List<Conversation> conversations;
-
+  /// Takes a [List] of [Conversation] objects that represent the current state of conversations.
   ConversationsReceivedEvent(this.conversations);
 }
 
@@ -29,6 +26,7 @@ final class ConversationsReceivedEvent extends ChatEvent {
 final class UsersReceivedEvent extends ChatEvent {
   final List<ChatUser> users;
 
+  /// Takes a [List] of [ChatUser] objects that represent the current state of users.
   UsersReceivedEvent(this.users);
 }
 
@@ -36,6 +34,7 @@ final class UsersReceivedEvent extends ChatEvent {
 final class MessageReceivedEvent extends ChatEvent {
   final ChatMessage message;
 
+  /// Takes a [ChatMessage] object that represents the current state of the message.
   MessageReceivedEvent(this.message);
 }
 
@@ -118,5 +117,7 @@ final class ConversationDeletedEvent extends ChatEvent {
 
 /// Event triggered when an error occurs.
 final class ErrorEvent extends ChatEvent {
-  const ErrorEvent();
+  final String error;
+
+  ErrorEvent(this.error);
 }

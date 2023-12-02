@@ -30,6 +30,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   /// Creates a new instance of `ChatBloc`.
   /// The [authenticationRepository] is required to get the current user's ID.
+  /// The initial state of the bloc is [SocketDisconnected].
+  /// The constructor also sets up various event listeners for the socket.
+  /// These listeners emit corresponding states when the socket receives events from the server.
+  /// The constructor also sets up bloc listeners for various events.
+  /// These listeners emit corresponding states when the bloc receives events from the UI.
+  /// The constructor also initializes the socket and waits for it to complete before setting up the listeners.
+  /// This is done to ensure that the listeners are set up only after the socket is initialized.
   ChatBloc({required AuthenticationRepository authenticationRepository})
       : _authenticationRepository = authenticationRepository,
         super(SocketDisconnected()) {
@@ -55,11 +62,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         add(ConversationsReceivedEvent(conversations));
       });
 
-      // This sets up an event listener for a custom event named 'users list'.
+      // This sets up an event listener for a custom event named 'user list'.
       // When the server emits this event, it sends a list of users as data.
       // The callback function maps each item in the data to a ChatUser object, creates a list of these objects,
       // and adds a UsersReceivedEvent with this list to the ChatBloc.
-      socket.on('users list', (data) {
+      socket.on('user list', (data) {
         List<ChatUser> users = data.map<ChatUser>((item) => ChatUser.fromMap(item)).toList();
         add(UsersReceivedEvent(users));
       });
@@ -115,7 +122,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // This sets up an event listener for a custom event named 'error'.
       // When the server emits this event, it indicates that an error has occurred.
       // The callback function adds an ErrorEvent to the ChatBloc.
-      socket.on('error', (data) => add(const ErrorEvent()));
+      socket.on('error', (data) {
+        String error = data['error'];
+        add(ErrorEvent(error));
+      });
     });
 
     // This sets up bloc listeners for various events described below.
@@ -174,18 +184,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   /// Handles the [ConversationsReceivedEvent].
   /// Emits the [SocketConversationReceived] state with the received conversations.
+  /// This is triggered when the server sends a list of conversations.
   Future<void> _onConversationsReceivedEvent(ConversationsReceivedEvent event, Emitter<ChatState> emit) async {
     emit(SocketConversationReceived(event.conversations));
   }
 
   /// Handles the [UsersReceivedEvent].
   /// Emits the [SocketUsersReceived] state with the received users.
+  /// This is triggered when the server sends a list of users.
   Future<void> _onUsersReceivedEvent(UsersReceivedEvent event, Emitter<ChatState> emit) async {
     emit(SocketUsersReceived(event.users));
   }
 
   /// Handles the [MessageReceivedEvent].
   /// Emits the [SocketMessageReceived] state with the received message.
+  /// This event is triggered when the server sends a message.
   Future<void> _onMessageReceivedEvent(MessageReceivedEvent event, Emitter<ChatState> emit) async {
     emit(SocketMessageReceived(event.message));
   }
@@ -193,6 +206,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [MessageSentEvent].
   /// Emits the [SocketMessageSent] state with the sent message.
   /// It also sends the message to the server.
+  /// This event is triggered when the user sends a message.
   Future<void> _onMessageSentEvent(MessageSentEvent event, Emitter<ChatState> emit) async {
     socket.emit('message sent', event.message.toJson());
     emit(SocketMessageSent(event.message));
@@ -202,12 +216,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Emits the [SocketMessageRead] state with the ID of the read message.
   /// It also sends the ID of the read message to the server.
   /// This event is triggered when the user opens a conversation.
+  /// It is also triggered when the user opens a conversation with unread messages.
   Future<void> _onMessageReadEvent(MessageReadEvent event, Emitter<ChatState> emit) async {
     socket.emit('message read', event.messageId);
   }
 
   /// Handles the [MessageReadReceiptEvent].
   /// Emits the [SocketMessageReadReceipt] state with the ID of the read message.
+  /// This event is triggered when the server sends a 'message read' event.
   Future<void> _onMessageReadReceiptEvent(MessageReadReceiptEvent event, Emitter<ChatState> emit) async {
     emit(SocketMessageReadReceipt(event.messageId));
   }
@@ -223,6 +239,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   /// Handles the [UserTypingReceiptEvent].
   /// Emits the [SocketUserTypingReceipt] state with the ID of the typing user.
+  /// This event is triggered when the server sends a 'user typing' event.
   Future<void> _onUserTypingReceiptEvent(UserTypingReceiptEvent event, Emitter<ChatState> emit) async {
     emit(SocketUserTypingReceipt(event.userId));
   }
@@ -230,6 +247,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [UserStopTypingEvent].
   /// Emits the [SocketUserStopTyping] state with the ID of the user that stopped typing.
   /// It also sends the 'user stop typing' event to the server.
+  /// This event is triggered when the user stops typing.
   Future<void> _onUserStopTypingEvent(UserStopTypingEvent event, Emitter<ChatState> emit) async {
     socket.emit('user stop typing', event.userId);
     emit(SocketUserStopTyping(event.userId));
@@ -237,12 +255,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   /// Handles the [UserStopTypingReceiptEvent].
   /// Emits the [SocketUserStopTypingReceipt] state with the ID of the user that stopped typing.
+  /// This event is triggered when the server sends a 'user stop typing' event.
   Future<void> _onUserStopTypingReceiptEvent(UserStopTypingReceiptEvent event, Emitter<ChatState> emit) async {
     emit(SocketUserStopTypingReceipt(event.userId));
   }
 
   /// Handles the [MessageDeletedEvent].
   /// Emits the [SocketMessageDeleted] state with the ID of the deleted message.
+  /// This event is triggered when the server sends a 'message deleted' event.
   Future<void> _onMessageDeletedEvent(MessageDeletedEvent event, Emitter<ChatState> emit) async {
     emit(SocketMessageDeleted(event.messageId));
   }
@@ -250,6 +270,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [DeleteMessageEvent].
   /// Emits the [SocketDeleteMessage] state with the ID of the deleted message.
   /// It also sends the 'delete message' event to the server.
+  /// This event is triggered when the user deletes a message.
   Future<void> _onDeleteMessageEvent(DeleteMessageEvent event, Emitter<ChatState> emit) async {
     socket.emit('delete message', event.messageId);
     emit(SocketDeleteMessage(event.messageId));
@@ -257,6 +278,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   /// Handles the [ConversationDeletedEvent].
   /// Emits the [SocketConversationDeleted] state with the ID of the deleted conversation.
+  /// This event is triggered when the server sends a 'conversation deleted' event.
   Future<void> _onConversationDeletedEvent(ConversationDeletedEvent event, Emitter<ChatState> emit) async {
     emit(SocketConversationDeleted(event.conversationId));
   }
@@ -264,14 +286,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [DeleteConversationEvent].
   /// Emits the [SocketDeleteConversation] state with the ID of the deleted conversation.
   /// It also sends the 'delete conversation' event to the server.
+  /// This event is triggered when the user deletes a conversation.
   Future<void> _onDeleteConversationEvent(DeleteConversationEvent event, Emitter<ChatState> emit) async {
     socket.emit('delete conversation', event.conversationId);
     emit(SocketDeleteConversation(event.conversationId));
   }
 
   /// Handles the [ErrorEvent].
-  /// Emits the [SocketError] state.
+  /// Emits the [SocketError] state with the error message.
+  /// This event is triggered when the server sends an 'error' event.
   Future<void> _onErrorEvent(ErrorEvent event, Emitter<ChatState> emit) async {
-    emit(SocketError());
+    emit(SocketError(event.error));
   }
 }
