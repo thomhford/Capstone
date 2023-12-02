@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:msd_capstone/chat/bloc/socket_bloc.dart';
+import 'package:msd_capstone/chat/bloc/chat_bloc.dart';
 import '../models/models.dart';
 import './widgets/widgets.dart';
 
@@ -22,9 +22,9 @@ class _ChatsPageState extends State<ChatsPage> {
   void initState() {
     super.initState();
     _chatBloc = context.read<ChatBloc>();
-    _chatBloc.add(const ChatEvent.connect());
-    _chatBloc.add(const ChatEvent.requestConversations());
-    _chatBloc.add(const ChatEvent.requestUsers());
+    _chatBloc.socketCompleter.future.then((_) {
+      _chatBloc.add(const ConnectEvent());
+    });
   }
 
   String _searchQuery = '';
@@ -43,6 +43,8 @@ class _ChatsPageState extends State<ChatsPage> {
 
   @override
   void dispose() {
+    _chatBloc.add(const DisconnectEvent());
+    _chatBloc.close();
     _searchFocusNode.dispose();
     super.dispose();
   }

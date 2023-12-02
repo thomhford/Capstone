@@ -17,7 +17,7 @@ import { createUserSocket, getUserSocket, deleteUserSocket } from "../controller
 
 /**
  * Middleware to authenticate the socket connection.
- * It verifies the token passed in the handshake query.
+ * Verifies the token passed in the handshake query.
  * If the token is not valid, it throws an authentication error.
  */
 io.use(async (socket, next) => {
@@ -42,7 +42,7 @@ io.use(async (socket, next) => {
 
 /**
  * Event listener for a new socket connection.
- * It handles various socket events like 'register', 'fetch_conversations', 'read', 'typing', 'stop typing', 'message sent', 'message received', 'delete message', 'delete conversation', and 'disconnect'.
+ * Handles various socket events like 'register', 'fetch_conversations', 'read', 'typing', 'stop typing', 'message sent', 'message received', 'delete message', 'delete conversation', and 'disconnect'.
  */
 io.on('connection',
     (socket) => {
@@ -68,14 +68,15 @@ io.on('connection',
         });
 
         /**
-         * Event listener for 'fetch_conversations' event.
-         * It fetches all the conversations of a user and emits 'conversations fetched' event.
+         * Event listener for 'request conversations' event.
+         * Fetches all the conversations of a user and emits 'conversations fetched' event.
          */
-        socket.on('fetch_conversations', async (userId) => {
-            console.log('fetch_conversations', userId);
+        socket.on('request conversations', async (userId) => {
+            console.log('request conversations', userId);
             try {
                 const conversations = await getConversations(userId);
-                socket.emit('conversations fetched', conversations);
+                console.log('conversations fetched', conversations)
+                socket.emit('conversations list', conversations);
             } catch (error) {
                 console.error('Error fetching conversations:', error);
                 // Emit an error event to the client
@@ -85,13 +86,13 @@ io.on('connection',
 
         /**
          * Event listener for 'fetch_user_list' event.
-         * It fetches all the users of the application and emits 'user list fetched' event.
+         * Fetches all the users of the application and emits 'user list fetched' event.
          */
-        socket.on('fetch_user_list', async ({userId}) => {
-            console.log('fetch_user_list', userId);
+        socket.on('request users', async (userId) => {
+            console.log('request users', userId);
             try {
                 const users = await getAvailableUsers(userId);
-                socket.emit('user list fetched', users);
+                socket.emit('user list', users);
             } catch (error) {
                 console.error('Error fetching user list:', error);
                 // Emit an error event to the client
@@ -100,61 +101,8 @@ io.on('connection',
         });
 
         /**
-         * Event listener for 'read' event.
-         * It marks a message as read in the database and emits 'read' event to all users in the conversation.
-         */
-        socket.on('read', async ({readerId, messageId}) => {
-            try {
-                // Fetch the message and its associated conversation from the database
-                const message = await getMessage(messageId);
-                const conversation = message ? await getConversation(message.conversationId) : null;
-
-                // Check if the reader is one of the users in the conversation
-                if (message && conversation && (conversation.user1Id === readerId || conversation.user2Id === readerId)) {
-                    // Mark the message as read in the database
-                    message.read = true;
-                    await message.save();
-
-                    // Emit a 'read' event to all users in the conversation
-                    for (const userId of [conversation.user1Id, conversation.user2Id]) {
-                        const userSocket = await getUserSocket(userId);
-                        if (userSocket) {
-                            socket.to(userSocket.socketId).emit('read', messageId);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Error marking message as read:', error);
-                // Emit an error event to the client
-                socket.emit('error', 'Error marking message as read');
-            }
-        });
-
-        /**
-         * Event listener for 'typing' event.
-         * It emits 'typing' event to the recipient.
-         */
-        socket.on('typing', async ({senderId, recipientId}) => {
-            const recipientSocket = await getUserSocket(recipientId);
-            if (recipientSocket) {
-                socket.to(recipientSocket.socketId).emit('typing', senderId);
-            }
-        });
-
-        /**
-         * Event listener for 'stop typing' event.
-         * It emits 'stop typing' event to the recipient.
-         */
-        socket.on('stop typing', async ({senderId, recipientId}) => {
-            const recipientSocket = await getUserSocket(recipientId);
-            if (recipientSocket) {
-                socket.to(recipientSocket.socketId).emit('stop typing', senderId);
-            }
-        });
-
-        /**
          * Event listener for 'message sent' event.
-         * It stores the message in the database and emits 'message received' event to all users in the conversation.
+         * Stores the message in the database and emits 'message received' event to all users in the conversation.
          */
         socket.on('message sent', async ({senderId, conversationId, message, type, fileId}) => {
             try {
@@ -257,8 +205,61 @@ io.on('connection',
         });
 
         /**
+         * Event listener for 'message read' event.
+         * Marks a message as read in the database and emits 'message read receipt' event to all users in the conversation.
+         */
+        socket.on('message read', async ({readerId, messageId}) => {
+            try {
+                // Fetch the message and its associated conversation from the database
+                const message = await getMessage(messageId);
+                const conversation = message ? await getConversation(message.conversationId) : null;
+
+                // Check if the reader is one of the users in the conversation
+                if (message && conversation && (conversation.user1Id === readerId || conversation.user2Id === readerId)) {
+                    // Mark the message as read in the database
+                    message.read = true;
+                    await message.save();
+
+                    // Emit a 'read' event to all users in the conversation
+                    for (const userId of [conversation.user1Id, conversation.user2Id]) {
+                        const userSocket = await getUserSocket(userId);
+                        if (userSocket) {
+                            socket.to(userSocket.socketId).emit('message read receipt', messageId);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error marking message as read:', error);
+                // Emit an error event to the client
+                socket.emit('error', 'Error marking message as read');
+            }
+        });
+
+        /**
+         * Event listener for 'user typing' event.
+         * Emits 'user typing receipt' event to the recipient.
+         */
+        socket.on('user typing', async ({senderId, recipientId}) => {
+            const recipientSocket = await getUserSocket(recipientId);
+            if (recipientSocket) {
+                socket.to(recipientSocket.socketId).emit('user typing receipt', senderId);
+            }
+        });
+
+        /**
+         * Event listener for 'user stop typing' event.
+         * Emits 'user stop typing receipt' event to the recipient.
+         */
+        socket.on('user stop typing', async ({senderId, recipientId}) => {
+            const recipientSocket = await getUserSocket(recipientId);
+            if (recipientSocket) {
+                socket.to(recipientSocket.socketId).emit('user stop typing receipt', senderId);
+            }
+        });
+
+        /**
          * Event listener for 'delete message' event.
-         * It deletes the message from the database and emits 'message deleted' event to all users in the conversation.
+         * Deletes the message from the database and emits 'message deleted' event to all users in the conversation.
          */
         socket.on('delete message', async (messageId) => {
             try {
@@ -286,7 +287,7 @@ io.on('connection',
 
         /**
          * Event listener for 'delete conversation' event.
-         * It deletes the conversation from the database and emits 'conversation deleted' event to all users in the conversation.
+         * Deletes the conversation from the database and emits 'conversation deleted' event to all users in the conversation.
          */
         socket.on('delete conversation', async (conversationId) => {
             try {
@@ -311,7 +312,7 @@ io.on('connection',
 
         /**
          * Event listener for 'disconnect' event.
-         * It removes the disconnected user from the map.
+         * Removes the disconnected user from the map.
          */
         socket.on('disconnect', async () => {
             console.log('user disconnected', socket.id);
@@ -320,8 +321,8 @@ io.on('connection',
         });
 
         /**
-         * Event listener for 'error' event.
-         * It logs the error and emits 'error' event to the client.
+         * Event listener for 'error' events from various socket related controllers.
+         * Logs the error and emits 'error' event to the client.
          */
         eventEmitter.on('error', ({error, details}) => {
             console.error(error, details);
