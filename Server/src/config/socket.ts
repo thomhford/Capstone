@@ -71,6 +71,7 @@ io.on('connection',
         /**
          * Event listener for 'request conversations' event.
          * Fetches all the conversations of a user and emits 'conversations fetched' event.
+         * If there's an error, it emits 'error' event with the 'Error fetching conversations' message.
          */
         socket.on('request conversations', async (userId) => {
             console.log('request conversations', userId);
@@ -80,8 +81,8 @@ io.on('connection',
                 socket.emit('conversations list', conversations);
             } catch (error) {
                 console.error('Error fetching conversations:', error);
-                // Emit an error event to the client
-                socket.emit('error', 'Error fetching conversations');
+                // Emit an 'error' event to the client
+                socket.emit('error', { message: 'Error fetching conversations', details: error });
             }
         });
 
@@ -97,7 +98,7 @@ io.on('connection',
             } catch (error) {
                 console.error('Error fetching user list:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error fetching user list');
+                socket.emit('error', { message: 'Error fetching user list', details: error });
             }
         });
 
@@ -110,10 +111,9 @@ io.on('connection',
                 // Call the createConversation method from the conversation controller
                 const conversation = await createConversation(user1Id, user2Id);
 
-                // If the conversation already exists, emit 'error' with the message 'Conversation already exists'
+                // If the conversation already exists, throw an error to be emitted to the client
                 if (!conversation) {
-                    socket.emit('error', 'Conversation already exists');
-                    return;
+                    throw new Error('Cannot create conversation that already exists');
                 }
 
                 // Emit a 'conversation created' event to both users
@@ -128,7 +128,7 @@ io.on('connection',
             } catch (error) {
                 console.error('Error creating conversation:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error creating conversation');
+                socket.emit('error', { message: 'Error creating conversation', details: error });
             }
         });
 
@@ -141,22 +141,33 @@ io.on('connection',
                 // Store the message in the database
                 const savedMessage = await sendMessage({senderId, conversationId, text: message, type, fileId});
 
-                // Emit the message to all users in the conversation
-                const conversation = await getConversation(conversationId);
+                // If the message is successfully stored, emit a 'message sent' event to all users in the conversation
+                if (savedMessage) {
+                    // Emit the message to all users in the conversation
+                    const conversation = await getConversation(conversationId);
 
-                // If the conversation exists, emit a 'message received' event to all users in the conversation
-                if (conversation) {
-                    for (const user of conversation.Users) {
-                        const userSocketId = await getUserSocket(user.uid);
-                        if (userSocketId) {
-                            socket.to(userSocketId.socketId).emit('message received', savedMessage);
+                    // If the conversation exists, emit a 'message received' event to all users in the conversation
+                    if (conversation) {
+                        for (const user of conversation.Users) {
+                            const userSocketId = await getUserSocket(user.uid);
+                            if (userSocketId) {
+                                socket.to(userSocketId.socketId).emit('message received', savedMessage);
+                            }
                         }
                     }
+                    else {
+                        // If the conversation does not exist, throw and error to be emitted to the client
+                        throw new Error('Conversation does not exist')
+                    }
+                }
+                else {
+                    // If the message is not successfully stored, throw and error to be emitted to the client
+                    throw new Error('Error storing message in the database')
                 }
             } catch (error) {
                 console.error('Error sending message:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error sending message');
+                socket.emit('error', { message: 'Error sending message', details: error });
             }
         });
 
@@ -191,11 +202,19 @@ io.on('connection',
                             }
                         }
                     }
+                    else {
+                        // If the conversation does not exist, throw and error to be emitted to the client
+                        throw new Error('Conversation does not exist')
+                    }
+                }
+                else {
+                    // If the message does not exist, throw and error to be emitted to the client
+                    throw new Error('Message does not exist')
                 }
             } catch (error) {
                 console.error('Error receiving message:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error receiving message');
+                socket.emit('error', { message: 'Error receiving message', details: error });
             }
         });
 
@@ -229,10 +248,14 @@ io.on('connection',
                         }
                     }
                 }
+                else {
+                    // If the conversation does not exist, throw and error to be emitted to the client
+                    throw new Error('Conversation does not exist')
+                }
             } catch (error) {
                 console.error('Error receiving message:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error receiving message');
+                socket.emit('error', { message: 'Error receiving message', details: error });
             }
         });
 
@@ -260,10 +283,22 @@ io.on('connection',
                         }
                     }
                 }
+                else {
+                    if (!message) {
+                        console.error('Message does not exist');
+                        throw new Error('Message does not exist');
+                    } else if (!conversation) {
+                        console.error('Conversation does not exist');
+                        throw new Error('Conversation does not exist');
+                    } else if (conversation.user1Id !== readerId && conversation.user2Id !== readerId) {
+                        console.error('Reader is not a part of the conversation');
+                        throw new Error('Reader is not a part of the conversation');
+                    }
+                }
             } catch (error) {
                 console.error('Error marking message as read:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error marking message as read');
+                socket.emit('error', { message: 'Error marking message as read', details: error });
             }
         });
 
@@ -272,9 +307,19 @@ io.on('connection',
          * Emits 'user typing receipt' event to the recipient.
          */
         socket.on('user typing', async ({senderId, recipientId}) => {
-            const recipientSocket = await getUserSocket(recipientId);
-            if (recipientSocket) {
-                socket.to(recipientSocket.socketId).emit('user typing receipt', senderId);
+            try {
+                const recipientSocket = await getUserSocket(recipientId);
+                if (recipientSocket) {
+                    socket.to(recipientSocket.socketId).emit('user typing receipt', senderId);
+                }
+                else {
+                    // If the recipient is not connected, emit an error event to the client
+                    throw new Error('Recipient is not connected');
+                }
+            } catch (error) {
+                console.error('Error sending typing receipt:', error);
+                // Emit an error event to the client
+                socket.emit('error', { message: 'Error sending typing receipt', details: error });
             }
         });
 
@@ -283,9 +328,19 @@ io.on('connection',
          * Emits 'user stop typing receipt' event to the recipient.
          */
         socket.on('user stop typing', async ({senderId, recipientId}) => {
-            const recipientSocket = await getUserSocket(recipientId);
-            if (recipientSocket) {
-                socket.to(recipientSocket.socketId).emit('user stop typing receipt', senderId);
+            try {
+                const recipientSocket = await getUserSocket(recipientId);
+                if (recipientSocket) {
+                    socket.to(recipientSocket.socketId).emit('user stop typing receipt', senderId);
+                }
+                else {
+                    // If the recipient is not connected, emit an error event to the client
+                    throw new Error('Recipient is not connected');
+                }
+            } catch (error) {
+                console.error('Error sending stop typing receipt:', error);
+                // Emit an error event to the client
+                socket.emit('error', { message: 'Error sending stop typing receipt', details: error });
             }
         });
 
@@ -310,10 +365,14 @@ io.on('connection',
                         }
                     }
                 }
+                else {
+                    // If the message does not exist, throw and error to be emitted to the client
+                    throw new Error('Message does not exist')
+                }
             } catch (error) {
                 console.error('Error deleting message:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error deleting message');
+                socket.emit('error', { message: 'Error deleting message', details: error });
             }
         });
 
@@ -335,10 +394,14 @@ io.on('connection',
                         }
                     }
                 }
+                else {
+                    // If the conversation does not exist, throw and error to be emitted to the client
+                    throw new Error('Conversation does not exist')
+                }
             } catch (error) {
                 console.error('Error deleting conversation:', error);
                 // Emit an error event to the client
-                socket.emit('error', 'Error deleting conversation');
+                socket.emit('error', { message: 'Error deleting conversation', details: error });
             }
         });
 
@@ -358,7 +421,7 @@ io.on('connection',
          */
         eventEmitter.on('error', ({error, details}) => {
             console.error(error, details);
-            socket.emit('error', error);
+            socket.emit('error', { message: error, details: details });
         });
     });
 

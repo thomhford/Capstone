@@ -22,14 +22,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// A [Completer] that completes when the socket is initialized.
   final socketCompleter = Completer<IO.Socket>();
 
-  /// The [AuthenticationRepository] used to get the current user's ID.
-  final AuthenticationRepository _authenticationRepository;
-
   /// The ID of the current user.
-  String get currentUserId => _authenticationRepository.currentUser.id;
+  final String _currentUserId;
 
   /// Creates a new instance of `ChatBloc`.
-  /// The [authenticationRepository] is required to get the current user's ID.
+  /// The [currentUserId] is required to know which user is currently logged in.
   /// The initial state of the bloc is [SocketDisconnected].
   /// The constructor also sets up various event listeners for the socket.
   /// These listeners emit corresponding states when the socket receives events from the server.
@@ -37,8 +34,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// These listeners emit corresponding states when the bloc receives events from the UI.
   /// The constructor also initializes the socket and waits for it to complete before setting up the listeners.
   /// This is done to ensure that the listeners are set up only after the socket is initialized.
-  ChatBloc({required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
+  ChatBloc({required String currentUserId})
+      : _currentUserId = currentUserId,
         super(SocketDisconnected()) {
     // Initialize the socket when the bloc is created and wait for it to complete before setting up the listeners.
     _initSocket().then((_) {
@@ -130,9 +127,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // This sets up an event listener for a custom event named 'error'.
       // When the server emits this event, it indicates that an error has occurred.
       // The callback function adds an ErrorEvent to the ChatBloc.
+      // Depending on the message of the error, will set the state to the corresponding error state.
       socket.on('error', (data) {
-        String error = data['error'];
-        add(ErrorEvent(error));
+        String message = data['message'];
+        String details = data['details'];
+        add(ErrorEvent(message, details));
       });
     });
 
@@ -179,9 +178,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// It also registers the current user with the server and requests the list of conversations and users.
   Future<void> _onConnectEvent(ConnectEvent event, Emitter<ChatState> emit) async {
     socket.connect();
-    socket.emit('register', currentUserId);
-    socket.emit('request conversations', currentUserId);
-    socket.emit('request users', currentUserId);
+    socket.emit('register', _currentUserId);
+    socket.emit('request conversations', _currentUserId);
+    socket.emit('request users', _currentUserId);
     emit(SocketConnected());
   }
 
@@ -319,9 +318,40 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   /// Handles the [ErrorEvent].
-  /// Emits the [SocketError] state with the error message.
+  /// Emits the [SocketError] state including the details of the error as default
+  /// Emits the [SocketFetchConversationsFailed] state when the server sends an 'Error fetching conversations' event.
+  /// Emits the [SocketFetchUsersFailed] state when the server sends an 'Error fetching user list' event.
+  /// Emits the [SocketCreateConversationFailed] state when the server sends an 'Error creating conversation' event.
+  /// Emits the [SocketSendMessageFailed] state when the server sends an 'Error sending message' event.
+  /// Emits the [SocketReceiveMessageFailed] state when the server sends an 'Error receiving message' event.
+  /// Emits the [SocketDeleteMessageFailed] state when the server sends an 'Error deleting message' event.
+  /// Emits the [SocketDeleteConversationFailed] state when the server sends an 'Error deleting conversation' event.
   /// This event is triggered when the server sends an 'error' event.
   Future<void> _onErrorEvent(ErrorEvent event, Emitter<ChatState> emit) async {
-    emit(SocketError(event.error));
+    switch (event.message) {
+      case 'Error fetching conversations':
+        emit(SocketFetchConversationsFailed(event.details));
+        break;
+      case 'Error fetching user list':
+        emit(SocketFetchUsersFailed(event.details));
+        break;
+      case 'Error creating conversation':
+        emit(SocketCreateConversationFailed(event.details));
+        break;
+      case 'Error sending message':
+        emit(SocketSendMessageFailed(event.details));
+        break;
+      case 'Error receiving message':
+        emit(SocketReceiveMessageFailed(event.details));
+        break;
+      case 'Error deleting message':
+        emit(SocketDeleteMessageFailed(event.details));
+        break;
+      case 'Error deleting conversation':
+        emit(SocketDeleteConversationFailed(event.details));
+        break;
+      default:
+        emit(SocketError(event.message));
+    }
   }
 }

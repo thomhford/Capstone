@@ -17,7 +17,13 @@ class SocketConversationsReceived extends ChatState {
   SocketConversationsReceived(this.conversations);
 }
 
-/// State emitted when the server sends a list of users.
+/// State emitted when the server fails to send a list of conversations.
+class SocketFetchConversationsFailed extends ChatState {
+  final String details;
+  SocketFetchConversationsFailed(this.details);
+}
+
+/// State emitted when a list of users is received from the server.
 class SocketUsersReceived extends ChatState {
   final List<ChatUser> users;
 
@@ -25,7 +31,13 @@ class SocketUsersReceived extends ChatState {
   SocketUsersReceived(this.users);
 }
 
-/// State emitted when the server sends a new conversation.
+/// State emitted when the server fails to send a list of users.
+class SocketFetchUsersFailed extends ChatState {
+  final String details;
+  SocketFetchUsersFailed(this.details);
+}
+
+/// State emitted when a new conversation is received from the server.
 class SocketNewConversationReceived extends ChatState {
   final Conversation conversation;
 
@@ -41,7 +53,13 @@ class SocketNewConversation extends ChatState {
   SocketNewConversation(this.senderId, this.recipientId);
 }
 
-/// State emitted when the server sends a message.
+/// State emitted when a conversation fails to be created.
+class SocketCreateConversationFailed extends ChatState {
+  final String details;
+  SocketCreateConversationFailed(this.details);
+}
+
+/// State emitted when the client has received a message.
 class SocketMessageReceived extends ChatState{
   final ChatMessage message;
 
@@ -49,12 +67,24 @@ class SocketMessageReceived extends ChatState{
   SocketMessageReceived(this.message);
 }
 
-/// State emitted when a message is sent.
+/// State emitted when a message fails to be sent by the server to the client
+class SocketReceiveMessageFailed extends ChatState{
+  final String details;
+  SocketReceiveMessageFailed(this.details);
+}
+
+/// State emitted when the client sends a message to the server.
 class SocketMessageSent extends ChatState{
   final ChatMessage message;
 
   /// Takes a [ChatMessage] object that represents the current state of the sent message.
   SocketMessageSent(this.message);
+}
+
+/// State emitted when a message fails to be sent by the client to the server.
+class SocketSendMessageFailed extends ChatState{
+  final String details;
+  SocketSendMessageFailed(this.details);
 }
 
 /// State emitted when the server confirms that a message has been read.
@@ -105,6 +135,12 @@ class SocketMessageDeleted extends ChatState{
   SocketMessageDeleted(this.messageId);
 }
 
+/// State emitted when the server fails to delete a message.
+class SocketDeleteMessageFailed extends ChatState{
+  final String details;
+  SocketDeleteMessageFailed(this.details);
+}
+
 /// State emitted when a request to delete a message is made.
 class SocketDeleteMessage extends ChatState{
   final String messageId;
@@ -119,6 +155,12 @@ class SocketConversationDeleted extends ChatState{
 
   /// Takes a [String] that represents the ID of the deleted conversation.
   SocketConversationDeleted(this.conversationId);
+}
+
+/// State emitted when the server fails to delete a conversation.
+class SocketDeleteConversationFailed extends ChatState{
+  final String details;
+  SocketDeleteConversationFailed(this.details);
 }
 
 /// State emitted when a request to delete a conversation is made.

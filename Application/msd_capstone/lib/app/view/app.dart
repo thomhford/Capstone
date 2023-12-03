@@ -33,7 +33,7 @@ class App extends StatelessWidget {
           ),
           BlocProvider<ChatBloc>(
             create: (_) => ChatBloc(
-              authenticationRepository: _authenticationRepository,
+              currentUserId: _authenticationRepository.currentUser.id,
             ),
           ),
         ],
