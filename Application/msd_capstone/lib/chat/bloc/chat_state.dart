@@ -4,6 +4,19 @@ part of 'chat_bloc.dart';
 /// Extends [Equatable] for equality comparison in testing.
 abstract class ChatState extends Equatable {}
 
+/// State storing the data of the ChatPage.
+/// This stores the lists of conversations and users.
+class ChatData extends ChatState {
+  final Map<int, Conversation> conversations;
+  final Map<String, ChatUser> users;
+  /// Takes a [Map] of [Conversation] objects that represent the current state of conversations
+  /// Takes a [Map] of [ChatUser] objects that represent the current state of users.
+  ChatData(this.conversations, this.users);
+
+  @override
+  List<Object> get props => [conversations, users];
+}
+
 /// State emitted when the socket successfully connects to the server.
 class SocketConnected extends ChatState {
   @override
@@ -11,19 +24,17 @@ class SocketConnected extends ChatState {
 }
 
 /// State emitted when the socket disconnects from the server.
+/// This is the initial state of the ChatBloc.
 class SocketDisconnected extends ChatState {
   @override
   List<Object> get props => [];
 }
 
-/// State emitted when the server sends a list of conversations.
+/// State emitted when a list of conversations is received from the server.
+/// This should be emitted on connection to server.
 class SocketConversationsReceived extends ChatState {
-  final List<Conversation> conversations;
-  /// Takes a [List] of [Conversation] objects that represent the current state of conversations.
-  SocketConversationsReceived(this.conversations);
-
   @override
-  List<Object> get props => [conversations];
+  List<Object> get props => [];
 }
 
 /// State emitted when the server fails to send a list of conversations.
@@ -36,13 +47,10 @@ class SocketFetchConversationsFailed extends ChatState {
 }
 
 /// State emitted when a list of users is received from the server.
+/// This should be emitted on connection to server.
 class SocketUsersReceived extends ChatState {
-  final List<ChatUser> users;
-  /// Takes a [List] of [ChatUser] objects that represent the current state of users.
-  SocketUsersReceived(this.users);
-
   @override
-  List<Object?> get props => [users];
+  List<Object?> get props => [];
 }
 
 /// State emitted when the server fails to send a list of users.
@@ -124,8 +132,9 @@ class SocketSendMessageFailed extends ChatState{
 /// State emitted when the server confirms that a message has been read.
 class SocketMessageReadReceipt extends ChatState{
   final int messageId;
+  final int conversationId;
   /// Takes a [int] that represents the ID of the read message.
-  SocketMessageReadReceipt(this.messageId);
+  SocketMessageReadReceipt(this.messageId, this.conversationId);
 
   @override
   List<Object?> get props => [messageId];
@@ -174,8 +183,9 @@ class SocketUserStopTypingReceipt extends ChatState{
 /// State emitted when a message is deleted.
 class SocketMessageDeleted extends ChatState{
   final int messageId;
+  final int conversationId;
   /// Takes a [int] that represents the ID of the deleted message.
-  SocketMessageDeleted(this.messageId);
+  SocketMessageDeleted(this.messageId, this.conversationId);
 
   @override
   List<Object?> get props => [messageId];
@@ -202,8 +212,8 @@ class SocketDeleteMessage extends ChatState{
 
 /// State emitted when a conversation is deleted.
 class SocketConversationDeleted extends ChatState{
-  final String conversationId;
-  /// Takes a [String] that represents the ID of the deleted conversation.
+  final int conversationId;
+  /// Takes a [int] that represents the ID of the deleted conversation.
   SocketConversationDeleted(this.conversationId);
 
   @override
@@ -221,8 +231,8 @@ class SocketDeleteConversationFailed extends ChatState{
 
 /// State emitted when a request to delete a conversation is made.
 class SocketDeleteConversation extends ChatState{
-  final String conversationId;
-  /// Takes a [String] that represents the ID of the conversation to be deleted.
+  final int conversationId;
+  /// Takes a [int] that represents the ID of the conversation to be deleted.
   SocketDeleteConversation(this.conversationId);
 
   @override

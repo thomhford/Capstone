@@ -49,6 +49,8 @@ class _ChatsPageState extends State<ChatsPage> {
     super.dispose();
   }
 
+  // TODO: implement better states... Don't need a state for every event...
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -80,7 +82,6 @@ class _ChatsPageState extends State<ChatsPage> {
       isReceived: true,
       type: 'text',
       conversationId: 1,
-      status: 'sent',
       createdAt: DateTime.now().add(const Duration(minutes: 1)),
       authorId: sender.id,
       recipientId: recipient.id,
@@ -93,18 +94,23 @@ class _ChatsPageState extends State<ChatsPage> {
       isReceived: false,
       type: 'text',
       conversationId: 1,
-      status: 'sent',
       createdAt: DateTime.now(),
       authorId: recipient.id,
       recipientId: sender.id,
     );
+
+    // Create a map of messages
+    final Map<int, ChatMessage> messages = {
+      firstMessage.messageId: firstMessage,
+      secondMessage.messageId: secondMessage,
+    };
 
     // Create a sample conversation
     final Conversation conversation = Conversation(
       conversationId: 1,
       user1: sender,
       user2: recipient,
-      messages: [firstMessage, secondMessage],
+      messages: messages,
       createdAt: DateTime.now(),
     );
 

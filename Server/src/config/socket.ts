@@ -106,7 +106,7 @@ io.on('connection',
          * Event listener for 'create conversation' event.
          * Creates a new conversation between two users and emits 'conversation created' event to both users.
          */
-        socket.on('create conversation', async ({ user1Id, user2Id }) => {
+        socket.on('create conversation', async ({ user1Id, user2Id, message }) => {
             try {
                 // Call the createConversation method from the conversation controller
                 const conversation = await createConversation(user1Id, user2Id);
@@ -260,6 +260,33 @@ io.on('connection',
         });
 
         /**
+         * Event listener for 'message delivered' event.
+         *
+         * This event marks the message as delivered in the database.
+         *
+         * @param messageId - The ID of the message that was delivered.
+         *
+         * @throws Will throw an error if there's an issue marking the message as delivered and will notify the client.
+         */
+        socket.on('message delivered', async (messageId) => {
+            try {
+                // Mark the message as delivered in the database
+                const message = await getMessage(messageId);
+                if (message) {
+                    message.status = 'delivered';
+                    await message.save();
+                } else {
+                    // If the message does not exist, throw and error to be emitted to the client
+                    throw new Error('Message does not exist')
+                }
+            } catch (error) {
+                console.error('Error delivering message:', error);
+                // Emit an error event to the client
+                socket.emit('error', {message: 'Error delivering message', details: error});
+            }
+        });
+
+        /**
          * Event listener for 'message read' event.
          * Marks a message as read in the database and emits 'message read receipt' event to all users in the conversation.
          */
@@ -279,7 +306,7 @@ io.on('connection',
                     for (const userId of [conversation.user1Id, conversation.user2Id]) {
                         const userSocket = await getUserSocket(userId);
                         if (userSocket) {
-                            socket.to(userSocket.socketId).emit('message read receipt', messageId);
+                            socket.to(userSocket.socketId).emit('message read receipt', messageId, conversation.conversation_id);
                         }
                     }
                 }
@@ -360,7 +387,7 @@ io.on('connection',
                         for (const user of conversation.Users) {
                             const userSocket =  await getUserSocket(user.uid);
                             if (userSocket) {
-                                socket.to(userSocket.socketId).emit('message deleted', messageId);
+                                socket.to(userSocket.socketId).emit('message deleted', messageId, conversation.conversation_id);
                             }
                         }
                     }

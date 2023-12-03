@@ -51,7 +51,7 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
         allowNull: false,
     },
     status: {
-        type: DataTypes.ENUM('sent', 'queued', 'delivered'),
+        type: DataTypes.ENUM('sent', 'delivered'),
         allowNull: false,
         defaultValue: 'sent', // 'sent', 'queued', 'delivered'
     }

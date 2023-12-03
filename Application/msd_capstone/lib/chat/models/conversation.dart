@@ -8,7 +8,7 @@ class Conversation {
   final int? conversationId;
   final ChatUser user1;
   final ChatUser user2;
-  final List<ChatMessage> messages;
+  final Map<int, ChatMessage> messages;
   final DateTime createdAt;
 
   Conversation({
@@ -20,11 +20,16 @@ class Conversation {
   });
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
+    Map<int, ChatMessage> messages = {};
+    for (var item in (json['Messages'])) {
+      var message = ChatMessage.fromJson(item);
+      messages[message.messageId] = message;
+    }
     return Conversation(
       conversationId: json['conversation_id'],
       user1: ChatUser.fromJson(json['User1']),
       user2: ChatUser.fromJson(json['User2']),
-      messages: (json['Messages'] as List).map((item) => ChatMessage.fromJson(item)).toList(),
+      messages: messages,
       createdAt: DateTime.parse(json['createdAt']),
     );
   }
@@ -34,17 +39,22 @@ class Conversation {
       'conversation_id': conversationId,
       'User1': user1.toJson(),
       'User2': user2.toJson(),
-      'Messages': messages.map((item) => item.toJson()).toList(),
+      'Messages': messages.values.map((message) => message.toJson()).toList(),
       'createdAt': createdAt.toIso8601String(),
     };
   }
 
   factory Conversation.fromMap(Map<String, dynamic> map) {
+    Map<int, ChatMessage> messages = {};
+    for (var item in (map['Messages'])) {
+      var message = ChatMessage.fromMap(item);
+      messages[message.messageId] = message;
+    }
     return Conversation(
       conversationId: map['conversation_id'],
       user1: ChatUser.fromMap(map['User1']),
       user2: ChatUser.fromMap(map['User2']),
-      messages: (map['Messages'] as List).map((item) => ChatMessage.fromMap(item)).toList(),
+      messages: messages,
       createdAt: DateTime.parse(map['createdAt']),
     );
   }
@@ -58,7 +68,7 @@ class Conversation {
   }
 
   List<types.Message> toChatMessages() {
-    return messages.map((message) {
+    return messages.values.map((message) {
       return types.TextMessage(
         id: message.messageId.toString(),
         author: message.authorId == user1.id ? user1.toChatUser() : user2.toChatUser(),

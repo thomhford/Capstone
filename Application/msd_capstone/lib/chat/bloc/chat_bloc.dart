@@ -29,6 +29,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// The [FirebaseAuth] instance used to authenticate the WebSocket connection.
   final FirebaseAuth firebaseAuth;
 
+  /// The current state of the chat feature. It stores the list of conversations and users.
+  /// This is used to access the data in the UI and to update the data when the server sends new data.
+  ChatData _chatData = ChatData({}, {});
+
   /// Creates a new instance of `ChatBloc`.
   /// The [currentUserId] is required to know which user is currently logged in.
   /// The initial state of the bloc is [SocketDisconnected].
@@ -95,7 +99,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // The callback function adds a MessageReadReceiptEvent with this ID to the ChatBloc.
       socket.on('message read receipt', (data) {
         int messageId = data['messageId'];
-        add(MessageReadReceiptEvent(messageId));
+        int conversationId = data['conversationId'];
+        add(MessageReadReceiptEvent(messageId, conversationId));
       });
 
       // This sets up an event listener for a custom event named 'user typing receipt'.
@@ -119,14 +124,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // The callback function adds a MessageDeletedEvent with this ID to the ChatBloc.
       socket.on('message deleted', (data) {
         int messageId = data['messageId'];
-        add(MessageDeletedEvent(messageId));
+        int conversationId = data['conversationId'];
+        add(MessageDeletedEvent(messageId, conversationId));
       });
 
       // This sets up an event listener for a custom event named 'conversation deleted'.
       // When the server emits this event, it sends the ID of the conversation that was deleted as data.
       // The callback function adds a ConversationDeletedEvent with this ID to the ChatBloc.
       socket.on('conversation deleted', (data) {
-        String conversationId = data['conversationId'];
+        int conversationId = data['conversationId'];
         add(ConversationDeletedEvent(conversationId));
       });
 
@@ -185,7 +191,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onConnectEvent(ConnectEvent event, Emitter<ChatState> emit) async {
     socket.connect();
     socket.emit('register', _currentUserId);
-    socket.emit('request conversations', _currentUserId);
+    requestConversations(_currentUserId);
     socket.emit('request users', _currentUserId);
     emit(SocketConnected());
   }
@@ -200,44 +206,68 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [ConversationsReceivedEvent].
   /// Emits the [SocketConversationsReceived] state with the received conversations.
   /// This is triggered when the server sends a list of conversations.
+  /// Updates ChatData with received conversations.
   Future<void> _onConversationsReceivedEvent(ConversationsReceivedEvent event, Emitter<ChatState> emit) async {
-    emit(SocketConversationsReceived(event.conversations));
+    for (var conversation in event.conversations) {
+      _chatData.conversations[conversation.conversationId!] = conversation;
+    }
+    emit(SocketConversationsReceived());
   }
 
   /// Handles the [UsersReceivedEvent].
   /// Emits the [SocketUsersReceived] state with the received users.
   /// This is triggered when the server sends a list of users.
+  /// Updates ChatData with received users.
   Future<void> _onUsersReceivedEvent(UsersReceivedEvent event, Emitter<ChatState> emit) async {
-    emit(SocketUsersReceived(event.users));
+    for (var user in event.users) {
+      _chatData.users[user.id] = user;
+    }
+    emit(SocketUsersReceived());
   }
 
   /// Handles the [NewConversationReceivedEvent].
   /// Emits the [SocketNewConversationReceived] state with the received conversation.
   /// This is triggered when the server sends a new conversation.
+  /// Updates ChatData with the received conversation.
   Future<void> _onNewConversationReceivedEvent(NewConversationReceivedEvent event, Emitter<ChatState> emit) async {
+    _chatData.conversations[event.conversation.conversationId!] = event.conversation;
     emit(SocketNewConversationReceived(event.conversation));
   }
 
   /// Handles the [NewConversationEvent].
-  /// Emits the [SocketNewConversation] state with the IDs of the sender and recipient.
+  /// Emits the [SocketNewConversation] state with the IDs of the sender and recipient and the message.
   /// It also sends the 'new conversation' event to the server.
   /// This event is triggered when the user creates a new conversation.
+  /// The server should respond with a 'conversation created' event which should add the conversation to the list of conversations.
   Future<void> _onNewConversationEvent(NewConversationEvent event, Emitter<ChatState> emit) async {
-    socket.emit('new conversation', {'senderId': event.senderId, 'recipientId': event.recipientId});
+    socket.emit('create conversation', {'senderId': event.senderId, 'recipientId': event.recipientId});
     emit(SocketNewConversation(event.senderId, event.recipientId));
   }
 
   /// Handles the [MessageReceivedEvent].
   /// Emits the [SocketMessageReceived] state with the received message.
-  /// This event is triggered when the server sends a message.
+  /// It also sends the 'message delivered' event to the server.
+  /// This event is triggered when the server sends a message to the client.
+  /// Updates ChatData with the received message.
+  /// If the conversation already exists in ChatData, it adds the message to the conversation.
+  /// If the conversation does not exist in ChatData, it requests a new list of conversations from the server.
   Future<void> _onMessageReceivedEvent(MessageReceivedEvent event, Emitter<ChatState> emit) async {
-    emit(SocketMessageReceived(event.message));
+    if (_chatData.conversations.containsKey(event.message.conversationId)) {
+      _chatData.conversations[event.message.conversationId]!.messages[event
+          .message.messageId] = event.message;
+      emit(SocketMessageReceived(event.message));
+      socket.emit('message delivered', event.message.messageId);
+    } else {
+      requestConversations(_currentUserId);
+      emit(SocketError('Error receiving message', 'Conversation does not exist to add message to...'));
+    }
   }
 
   /// Handles the [MessageSentEvent].
   /// Emits the [SocketMessageSent] state with the sent message.
   /// It also sends the message to the server.
-  /// This event is triggered when the user sends a message.
+  /// This event is triggered when the user sends a message to the server.
+  /// The server should respond with a 'message received' event which should add the message to the conversation.
   Future<void> _onMessageSentEvent(MessageSentEvent event, Emitter<ChatState> emit) async {
     socket.emit('message sent', event.message.toJson());
     emit(SocketMessageSent(event.message));
@@ -246,8 +276,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [MessageReadEvent].
   /// Emits the [SocketMessageRead] state with the ID of the read message.
   /// It also sends the ID of the read message to the server.
-  /// This event is triggered when the user opens a conversation.
-  /// It is also triggered when the user opens a conversation with unread messages.
+  /// This event is triggered when the user opens a conversation with unread messages
+  /// The server should respond with a 'message read' event which should update the status of the message to 'read'.
   Future<void> _onMessageReadEvent(MessageReadEvent event, Emitter<ChatState> emit) async {
     socket.emit('message read', event.messageId);
   }
@@ -255,8 +285,28 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [MessageReadReceiptEvent].
   /// Emits the [SocketMessageReadReceipt] state with the ID of the read message.
   /// This event is triggered when the server sends a 'message read' event.
+  /// Updates ChatData creating a new message with the status set to 'read' and replaces the old message with the new one.
   Future<void> _onMessageReadReceiptEvent(MessageReadReceiptEvent event, Emitter<ChatState> emit) async {
-    emit(SocketMessageReadReceipt(event.messageId));
+    var conversation = _chatData.conversations[event.conversationId];
+
+    if (conversation == null) {
+      requestConversations(_currentUserId);
+      emit(SocketError('Error reading message', 'Conversation does not exist to update message status...'));
+      return;
+    }
+
+    var oldMessage = conversation.messages[event.messageId];
+
+    if (oldMessage == null) {
+      requestConversations(_currentUserId);
+      emit(SocketError('Error reading message', 'Message does not exist to update status...'));
+      return;
+    }
+
+    var newMessage = oldMessage.copyWith(read: true);
+    conversation.messages[event.messageId] = newMessage;
+
+    emit(SocketMessageReadReceipt(event.messageId, event.conversationId));
   }
 
   /// Handles the [UserTypingEvent].
@@ -294,14 +344,28 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [MessageDeletedEvent].
   /// Emits the [SocketMessageDeleted] state with the ID of the deleted message.
   /// This event is triggered when the server sends a 'message deleted' event.
+  /// Updates ChatData by removing the message from the conversation.
   Future<void> _onMessageDeletedEvent(MessageDeletedEvent event, Emitter<ChatState> emit) async {
-    emit(SocketMessageDeleted(event.messageId));
+    if (_chatData.conversations.containsKey(event.conversationId)) {
+      try {
+        _chatData.conversations[event.conversationId]!.messages.remove(
+            event.messageId);
+      } catch (e) {
+        requestConversations(_currentUserId);
+        emit(SocketError('Error deleting message', 'Could not delete message...\n ${e.toString()}'));
+      }
+      emit(SocketMessageDeleted(event.messageId, event.conversationId));
+    } else {
+      requestConversations(_currentUserId);
+      emit(SocketError('Error deleting message', 'Conversation does not exist to delete message from...'));
+    }
   }
 
   /// Handles the [DeleteMessageEvent].
   /// Emits the [SocketDeleteMessage] state with the ID of the deleted message.
   /// It also sends the 'delete message' event to the server.
   /// This event is triggered when the user deletes a message.
+  /// The server should respond with a 'message deleted' event which should remove the message from the conversation.
   Future<void> _onDeleteMessageEvent(DeleteMessageEvent event, Emitter<ChatState> emit) async {
     socket.emit('delete message', event.messageId);
     emit(SocketDeleteMessage(event.messageId));
@@ -310,14 +374,27 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Handles the [ConversationDeletedEvent].
   /// Emits the [SocketConversationDeleted] state with the ID of the deleted conversation.
   /// This event is triggered when the server sends a 'conversation deleted' event.
+  /// Updates ChatData by removing the conversation.
   Future<void> _onConversationDeletedEvent(ConversationDeletedEvent event, Emitter<ChatState> emit) async {
-    emit(SocketConversationDeleted(event.conversationId));
+    if (_chatData.conversations.containsKey(event.conversationId)) {
+      try {
+        _chatData.conversations.remove(event.conversationId);
+      } catch (e) {
+        requestConversations(_currentUserId);
+        emit(SocketError('Error deleting conversation', 'Could not delete conversation...\n ${e.toString()}'));
+      }
+      emit(SocketConversationDeleted(event.conversationId));
+    } else {
+      requestConversations(_currentUserId);
+      emit(SocketError('Error deleting conversation', 'Conversation does not exist to delete...'));
+    }
   }
 
   /// Handles the [DeleteConversationEvent].
   /// Emits the [SocketDeleteConversation] state with the ID of the deleted conversation.
   /// It also sends the 'delete conversation' event to the server.
   /// This event is triggered when the user deletes a conversation.
+  /// The server should respond with a 'conversation deleted' event which should remove the conversation.
   Future<void> _onDeleteConversationEvent(DeleteConversationEvent event, Emitter<ChatState> emit) async {
     socket.emit('delete conversation', event.conversationId);
     emit(SocketDeleteConversation(event.conversationId));
@@ -360,4 +437,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(SocketError(event.message, event.details));
     }
   }
+
+  /// Helper function to request a new list of conversations from the server.
+  void requestConversations(String userId) {
+     socket.emit('request conversations', userId);
+   }
 }

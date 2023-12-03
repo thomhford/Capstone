@@ -14,6 +14,8 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockUser extends Mock implements User {}
 
+class MockChatData extends Mock implements ChatData {}
+
 // Mock users
 ChatUser mockUser1 = ChatUser(
   id: 'user1',
@@ -33,6 +35,13 @@ ChatUser mockUser2 = ChatUser(
   updatedAt: DateTime.now(),
 );
 
+// Mock users map
+Map<String, ChatUser> mockUsers = {
+  mockUser1.id: mockUser1,
+  mockUser2.id: mockUser2,
+};
+
+
 // Mock messages
 ChatMessage mockMessage1 = ChatMessage(
   messageId: 1,
@@ -41,7 +50,6 @@ ChatMessage mockMessage1 = ChatMessage(
   isReceived: false,
   type: 'text',
   conversationId: 1,
-  status: 'sent',
   createdAt: DateTime.now(),
   authorId: mockUser1.id,
   recipientId: mockUser2.id,
@@ -54,24 +62,35 @@ ChatMessage mockMessage2 = ChatMessage(
   isReceived: true,
   type: 'text',
   conversationId: 1,
-  status: 'sent',
   createdAt: DateTime.now(),
   authorId: mockUser2.id,
   recipientId: mockUser1.id,
 );
 
+// Create a map of mockMessages
+final Map<int, ChatMessage> mockMessages = {
+  mockMessage1.messageId: mockMessage1,
+  mockMessage2.messageId: mockMessage2,
+};
+
 // Mock conversation
 Conversation mockConversation = Conversation(
-  conversationId: 1,
+  conversationId: mockMessage1.conversationId,
   user1: mockUser1,
   user2: mockUser2,
-  messages: [mockMessage1, mockMessage2],
+  messages: {},
   createdAt: DateTime.now(),
 );
+
+// Map of conversations
+Map<int, Conversation> mockConversations = {
+  mockConversation.conversationId!: mockConversation,
+};
 
 void main() {
   late MockFirebaseAuth mockFirebaseAuth;
   late MockUser mockUser;
+  late MockChatData mockChatData;
 
   setUpAll(() {
     registerFallbackValue(MockUser());
@@ -80,9 +99,24 @@ void main() {
   setUp(() {
     mockFirebaseAuth = MockFirebaseAuth();
     mockUser = MockUser();
-
     when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
     when(() => mockUser.getIdToken(false)).thenAnswer((_) async => 'mock_token');
+
+    mockChatData = MockChatData();
+    when(() => mockChatData.conversations).thenReturn({
+      1: Conversation(
+        conversationId: 1,
+        user1: ChatUser(id: 'user1', firstName: 'John', lastName: 'Doe', photoUrl: 'http://example.com/profile1.jpg', email: 'user1@test.test', updatedAt: DateTime.now()),
+        user2: ChatUser(id: 'user2', firstName: 'Jane', lastName: 'Doe', photoUrl: 'http://example.com/profile2.jpg', email: 'user2@test.test', updatedAt: DateTime.now()),
+        messages: {},
+        createdAt: DateTime.now(),
+      ),
+    });
+
+    when(() => mockChatData.users).thenReturn({
+      'user1': ChatUser(id: 'user1', firstName: 'John', lastName: 'Doe', photoUrl: 'http://example.com/profile1.jpg', email: 'user1@test.test', updatedAt: DateTime.now()),
+      'user2': ChatUser(id: 'user2', firstName: 'Jane', lastName: 'Doe', photoUrl: 'http://example.com/profile2.jpg', email: 'user2@test.test', updatedAt: DateTime.now()),
+    });
   });
 
   group('ChatBloc', () {
@@ -116,7 +150,7 @@ void main() {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
       act: (bloc) => bloc.add(ConversationsReceivedEvent([])),
-      expect: () => [SocketConversationsReceived([])],
+      expect: () => [SocketConversationsReceived()],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -134,7 +168,7 @@ void main() {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
       act: (bloc) => bloc.add(UsersReceivedEvent([])),
-      expect: () => [SocketUsersReceived([])],
+      expect: () => [SocketUsersReceived()],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -224,7 +258,10 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      seed: () => SocketMessageReceived(mockMessage1),
+      seed: () {
+        SocketMessageReceived(mockMessage1);
+        return ChatData(mockConversations, mockUsers);
+        },
       act: (bloc) => bloc.add(MessageReceivedEvent(mockMessage2)),
       expect: () => [SocketMessageReceived(mockMessage2)],
     );
@@ -234,8 +271,8 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      act: (bloc) => bloc.add(MessageReadReceiptEvent(mockMessage1.messageId)),
-      expect: () => [SocketMessageReadReceipt(mockMessage1.messageId)],
+      act: (bloc) => bloc.add(MessageReadReceiptEvent(mockMessage1.messageId, mockMessage1.conversationId)),
+      expect: () => [SocketMessageReadReceipt(mockMessage1.messageId, mockMessage1.conversationId)],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -243,9 +280,9 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      seed: () => SocketMessageReadReceipt(mockMessage1.messageId),
-      act: (bloc) => bloc.add(MessageReadReceiptEvent(mockMessage2.messageId)),
-      expect: () => [SocketMessageReadReceipt(mockMessage2.messageId)],
+      seed: () => SocketMessageReadReceipt(mockMessage1.messageId, mockMessage1.conversationId),
+      act: (bloc) => bloc.add(MessageReadReceiptEvent(mockMessage2.messageId, mockMessage2.conversationId)),
+      expect: () => [SocketMessageReadReceipt(mockMessage2.messageId, mockMessage2.conversationId)],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -290,8 +327,8 @@ void main() {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
       seed: () => SocketMessageReceived(mockMessage1),
-      act: (bloc) => bloc.add(MessageDeletedEvent(mockMessage1.messageId)),
-      expect: () => [SocketMessageDeleted(mockMessage1.messageId)],
+      act: (bloc) => bloc.add(MessageDeletedEvent(mockMessage1.messageId, mockMessage1.conversationId)),
+      expect: () => [SocketMessageDeleted(mockMessage1.messageId, mockMessage1.conversationId)],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -330,8 +367,8 @@ void main() {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
       seed: () => SocketMessageReceived(mockMessage1),
-      act: (bloc) => bloc.add(ConversationDeletedEvent(mockMessage1.conversationId.toString())),
-      expect: () => [SocketConversationDeleted(mockMessage1.conversationId.toString())],
+      act: (bloc) => bloc.add(ConversationDeletedEvent(mockMessage1.conversationId)),
+      expect: () => [SocketConversationDeleted(mockMessage1.conversationId)],
     );
 
     blocTest<ChatBloc, ChatState>(

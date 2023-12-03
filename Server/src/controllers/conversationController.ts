@@ -162,7 +162,7 @@ export const queueMessage = async (messageId: number) => {
  * Function to deliver queued messages for a user.
  *
  * This function does the following:
- * 1. Fetches all messages with the status 'queued' that belong to conversations involving the user.
+ * 1. Fetches all messages with the status 'sent' that belong to conversations involving the user.
  * 2. For each fetched message, it updates the status of the message to 'delivered'.
  * 3. Saves the updated message in the database.
  * 4. Returns the updated messages.
@@ -176,7 +176,7 @@ export const queueMessage = async (messageId: number) => {
 export const deliverQueuedMessages = async (userId: string) => {
     const messages = await Message.findAll({
         where: {
-            status: 'queued',
+            status: 'sent',
             '$Conversation.user1Id$': userId,
             '$Conversation.user2Id$': userId
         },
@@ -186,10 +186,12 @@ export const deliverQueuedMessages = async (userId: string) => {
             attributes: ['user1Id', 'user2Id']
         }]
     });
-    for (const message of messages) {
-        message.status = 'delivered';
-        await message.save();
-    }
+    // Should not mark messages as delivered here as the client will reply with a 'message received' event when it receives the message
+    // Might need this if I change how I am sending undelivered messages
+    // for (const message of messages) {
+    //     message.status = 'delivered';
+    //     await message.save();
+    // }
     return messages;
 };
 

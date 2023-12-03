@@ -10,7 +10,6 @@ class ChatMessage {
   final bool isReceived;
   final String type;
   final int conversationId;
-  final String status;
   final DateTime createdAt;
   final String authorId;
   final String recipientId;
@@ -22,7 +21,6 @@ class ChatMessage {
     required this.isReceived,
     required this.type,
     required this.conversationId,
-    required this.status,
     required this.createdAt,
     required this.authorId,
     required this.recipientId,
@@ -36,7 +34,6 @@ class ChatMessage {
       isReceived: json['is_received'],
       type: json['type'],
       conversationId: json['conversationId'],
-      status: json['status'],
       createdAt: DateTime.parse(json['createdAt']),
       authorId: json['senderId'],
       recipientId: json['receiverId'],
@@ -51,7 +48,6 @@ class ChatMessage {
       'is_received': isReceived,
       'type': type,
       'conversationId': conversationId,
-      'status': status,
       'createdAt': createdAt.toIso8601String(),
       'senderId': authorId,
       'receiverId': recipientId,
@@ -66,10 +62,34 @@ class ChatMessage {
       isReceived: map['is_received'],
       type: map['type'],
       conversationId: map['conversationId'],
-      status: map['status'],
       createdAt: DateTime.parse(map['createdAt']),
       authorId: map['senderId'],
       recipientId: map['receiverId'],
+    );
+  }
+
+  ChatMessage copyWith({
+    int? messageId,
+    String? message,
+    bool? read,
+    bool? isReceived,
+    String? type,
+    int? conversationId,
+    String? status,
+    DateTime? createdAt,
+    String? authorId,
+    String? recipientId,
+  }) {
+    return ChatMessage(
+      messageId: messageId ?? this.messageId,
+      message: message ?? this.message,
+      read: read ?? this.read,
+      isReceived: isReceived ?? this.isReceived,
+      type: type ?? this.type,
+      conversationId: conversationId ?? this.conversationId,
+      createdAt: createdAt ?? this.createdAt,
+      authorId: authorId ?? this.authorId,
+      recipientId: recipientId ?? this.recipientId,
     );
   }
 

@@ -23,7 +23,7 @@ class RecentMessages extends StatelessWidget {
     final currentUser = context.select((AppBloc bloc) => bloc.state.user);
     final List<Conversation> filteredConversations = conversations.where((conversation) {
       final String query = searchQuery.toLowerCase();
-      return conversation.messages.any((message) {
+      return conversation.messages.values.any((message) {
         final String messageText = message.message.toLowerCase();
         final String userName = '${conversation.getRecipientUser(currentUser.id).firstName} ${conversation.getRecipientUser(currentUser.id).lastName}'.toLowerCase();
         return messageText.contains(query) || userName.contains(query);
@@ -48,7 +48,7 @@ class RecentMessages extends StatelessWidget {
 
     return Column(
       children: filteredConversations.map((conversation) {
-        final ChatMessage recentMessage = conversation.messages.reduce((value, element) {
+        final ChatMessage recentMessage = conversation.messages.values.reduce((value, element) {
           return value.createdAt.isAfter(element.createdAt) ? value : element;
         });
         final ChatUser recipient = conversation.getRecipientChatUser(currentUser.id);
