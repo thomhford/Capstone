@@ -60,15 +60,15 @@ final class MessageSentEvent extends ChatEvent {
 
 /// Event triggered when a message is read by a client.
 final class MessageReadEvent extends ChatEvent {
-  final String messageId;
-  /// Takes a [String] that represents the ID of the read message.
+  final int messageId;
+  /// Takes a [int] that represents the ID of the read message.
   MessageReadEvent(this.messageId);
 }
 
 /// Event triggered when the server notifies the sender that a message has been read.
 final class MessageReadReceiptEvent extends ChatEvent {
-  final String messageId;
-  /// Takes a [String] that represents the ID of the read message.
+  final int messageId;
+  /// Takes a [int] that represents the ID of the read message.
   MessageReadReceiptEvent(this.messageId);
 }
 
@@ -102,15 +102,15 @@ final class UserStopTypingReceiptEvent extends ChatEvent {
 
 /// Event triggered when a message is deleted on the server and 'message deleted' event is received.
 final class MessageDeletedEvent extends ChatEvent {
-  final String messageId;
-  /// Takes a [String] that represents the ID of the deleted message.
+  final int messageId;
+  /// Takes a [int] that represents the ID of the deleted message.
   MessageDeletedEvent(this.messageId);
 }
 
 /// Event triggered when a request to delete a message is made to the server.
 final class DeleteMessageEvent extends ChatEvent {
-  final String messageId;
-  /// Takes a [String] that represents the ID of the message to be deleted.
+  final int messageId;
+  /// Takes a [int] that represents the ID of the message to be deleted.
   DeleteMessageEvent(this.messageId);
 }
 

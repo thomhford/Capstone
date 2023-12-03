@@ -1,13 +1,14 @@
-import 'dart:async';
+// chat/bloc/chat_bloc.dart
 
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:msd_capstone/chat/models/chat_message.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:equatable/equatable.dart';
 
 import '../models/chat_user.dart';
 import '../models/conversation.dart';
+import '../models/chat_message.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -93,7 +94,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // When the server emits this event, it sends the ID of the message that was read as data.
       // The callback function adds a MessageReadReceiptEvent with this ID to the ChatBloc.
       socket.on('message read receipt', (data) {
-        String messageId = data['messageId'];
+        int messageId = data['messageId'];
         add(MessageReadReceiptEvent(messageId));
       });
 
@@ -117,7 +118,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // When the server emits this event, it sends the ID of the message that was deleted as data.
       // The callback function adds a MessageDeletedEvent with this ID to the ChatBloc.
       socket.on('message deleted', (data) {
-        String messageId = data['messageId'];
+        int messageId = data['messageId'];
         add(MessageDeletedEvent(messageId));
       });
 
@@ -356,7 +357,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(SocketDeleteConversationFailed(event.details));
         break;
       default:
-        emit(SocketError(event.message));
+        emit(SocketError(event.message, event.details));
     }
   }
 }

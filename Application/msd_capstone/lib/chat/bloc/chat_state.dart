@@ -123,8 +123,8 @@ class SocketSendMessageFailed extends ChatState{
 
 /// State emitted when the server confirms that a message has been read.
 class SocketMessageReadReceipt extends ChatState{
-  final String messageId;
-  /// Takes a [String] that represents the ID of the read message.
+  final int messageId;
+  /// Takes a [int] that represents the ID of the read message.
   SocketMessageReadReceipt(this.messageId);
 
   @override
@@ -173,8 +173,8 @@ class SocketUserStopTypingReceipt extends ChatState{
 
 /// State emitted when a message is deleted.
 class SocketMessageDeleted extends ChatState{
-  final String messageId;
-  /// Takes a [String] that represents the ID of the deleted message.
+  final int messageId;
+  /// Takes a [int] that represents the ID of the deleted message.
   SocketMessageDeleted(this.messageId);
 
   @override
@@ -192,8 +192,8 @@ class SocketDeleteMessageFailed extends ChatState{
 
 /// State emitted when a request to delete a message is made.
 class SocketDeleteMessage extends ChatState{
-  final String messageId;
-  /// Takes a [String] that represents the ID of the message to be deleted.
+  final int messageId;
+  /// Takes a [int] that represents the ID of the message to be deleted.
   SocketDeleteMessage(this.messageId);
 
   @override
@@ -232,9 +232,10 @@ class SocketDeleteConversation extends ChatState{
 /// State emitted when an error occurs.
 class SocketError extends ChatState {
   final String error;
-  /// Takes a [String] that represents the error message.
-  SocketError(this.error);
+  final String details;
+  /// Takes a [String] that represents the error message and details.
+  SocketError(this.error, this.details);
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [error, details];
 }
