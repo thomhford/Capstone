@@ -10,7 +10,7 @@ import 'package:msd_capstone/theme.dart';
 import '../../nav_bar/bloc/navigation_bloc.dart';
 
 class App extends StatelessWidget {
-  App({
+  const App({
     required AuthenticationRepository authenticationRepository,
     super.key,
   }) : _authenticationRepository = authenticationRepository;
@@ -34,6 +34,7 @@ class App extends StatelessWidget {
           BlocProvider<ChatBloc>(
             create: (_) => ChatBloc(
               currentUserId: _authenticationRepository.currentUser.id,
+              firebaseAuth: FirebaseAuth.instance,
             ),
           ),
         ],

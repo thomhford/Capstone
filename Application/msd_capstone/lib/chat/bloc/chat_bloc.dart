@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:msd_capstone/chat/models/chat_message.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:equatable/equatable.dart';
 
 import '../models/chat_user.dart';
 import '../models/conversation.dart';
@@ -25,6 +25,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// The ID of the current user.
   final String _currentUserId;
 
+  /// The [FirebaseAuth] instance used to authenticate the WebSocket connection.
+  final FirebaseAuth firebaseAuth;
+
   /// Creates a new instance of `ChatBloc`.
   /// The [currentUserId] is required to know which user is currently logged in.
   /// The initial state of the bloc is [SocketDisconnected].
@@ -34,8 +37,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// These listeners emit corresponding states when the bloc receives events from the UI.
   /// The constructor also initializes the socket and waits for it to complete before setting up the listeners.
   /// This is done to ensure that the listeners are set up only after the socket is initialized.
-  ChatBloc({required String currentUserId})
-      : _currentUserId = currentUserId,
+  ChatBloc({
+    required String currentUserId,
+    required this.firebaseAuth,
+  }) : _currentUserId = currentUserId,
         super(SocketDisconnected()) {
     // Initialize the socket when the bloc is created and wait for it to complete before setting up the listeners.
     _initSocket().then((_) {
@@ -159,7 +164,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   /// Initializes the socket.
   Future<void> _initSocket() async {
-    final token = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final token = await firebaseAuth.currentUser!.getIdToken();
     socket = IO.io(
       'http://localhost:3000',
       IO.OptionBuilder()
