@@ -54,6 +54,8 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ScrollController scrollController = ScrollController();
+    final chatBloc = BlocProvider.of<ChatBloc>(context);
+    final chatData = chatBloc.chatData;
 
     // Create sample users
     final ChatUser sender = ChatUser(

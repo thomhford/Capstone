@@ -6,9 +6,10 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:msd_capstone/app/app.dart';
+import 'package:msd_capstone/widgets/widgets.dart';
 
 import '../../services/services.dart';
-import '../profile.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -57,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
             delegate: SliverChildListDelegate(
               [
                 const SizedBox(height: 16),
-                Avatar(photo: user.photo),
+                Avatar(photo: user.photo, name: user.name),
                 const SizedBox(height: 4),
                 Center(
                     child: Text(user.email ?? '', style: textTheme.titleLarge)),
