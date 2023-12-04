@@ -125,13 +125,12 @@ io.on('connection',
                 const user1Socket = await getUserSocket(user1Id);
                 const user2Socket = await getUserSocket(user2Id);
                 if (user1Socket) {
-                    console.log('Emitting to user1 \'conversation created\'', conversation);
                     socket.to(user1Socket.socketId).emit('conversation created', conversation);
                 }
                 if (user2Socket) {
-                    console.log('Emitting to user2 \'conversation created\'', conversation);
                     socket.to(user2Socket.socketId).emit('conversation created', conversation);
                 }
+                socket.emit('conversation created', conversation);
             } catch (error) {
                 console.error('Error creating conversation:', error);
                 // Emit an error event to the client

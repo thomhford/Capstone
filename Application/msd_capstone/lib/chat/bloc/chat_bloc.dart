@@ -1,6 +1,7 @@
 // chat/bloc/chat_bloc.dart
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -81,6 +82,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // When the server emits this event, it sends a Conversation object as data.
       // The callback function converts the data to a Conversation object and adds a NewConversationReceivedEvent with this conversation to the ChatBloc.
       socket.on('conversation created', (data) {
+        print('Conversation created: $data');
         Conversation conversation = Conversation.fromMap(data);
         add(NewConversationReceivedEvent(conversation));
       });
@@ -150,7 +152,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // Depending on the message of the error, will set the state to the corresponding error state.
       socket.on('error', (data) {
         String message = data['message'];
-        String details = data['details'];
+        String details = jsonEncode(data['details']);
         add(ErrorEvent(message, details));
       });
     });
@@ -240,8 +242,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Updates ChatData with the received conversation.
   Future<void> _onNewConversationReceivedEvent(NewConversationReceivedEvent event, Emitter<ChatState> emit) async {
     chatData.conversations[event.conversation.conversationId!] = event.conversation;
-    emit(ConversationsUpdated());
     emit(SocketNewConversationReceived(event.conversation));
+    emit(ConversationsUpdated());
   }
 
   /// Handles the [NewConversationEvent].

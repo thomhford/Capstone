@@ -3,6 +3,9 @@ import {Conversation, File as Attachment, Message, User} from '../models';
 import sequelize from "../config/db";
 import {Op} from "sequelize";
 import {eventEmitter} from '../config/events';
+import {UserInstance} from "../models/User";
+import {MessageInstance} from "../models/Message";
+import {ConversationInstance} from "../models/Conversation";
 
 /**
  * Parameters for the sendMessage function.
@@ -95,6 +98,53 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
 };
 
 /**
+ * Interface for the return value of the getConversations, getConversation and createConversation functions.
+ * Clients store conversations with User objects, not just user IDs, so this interface includes the User objects.
+ * Clients store conversations with Message objects, so this interface also includes the Message objects.
+ *
+ * @typedef {Object} ReturnConversation
+ *
+ * @property {number} conversationId - The ID of the conversation.
+ * @property {UserInstance} user1 - The first user in the conversation.
+ * @property {UserInstance} user2 - The second user in the conversation.
+ * @property {MessageInstance[]} messages - The messages in the conversation.
+ * @property {number} lastMessageId - The ID of the last message in the conversation.
+ * @property {Date} createdAt - The date the conversation was created.
+ */
+interface ReturnConversation {
+    conversationId: number;
+    user1 : UserInstance;
+    user2 : UserInstance;
+    messages : MessageInstance[];
+    lastMessageId? : number;
+    createdAt : Date;
+}
+
+/**
+ * Function to populate a ReturnConversation object with the User objects and Message objects.
+ * @param conversation
+ *
+ * @returns {Promise<ReturnConversation>} The populated ReturnConversation object.
+ *
+ * @throws Will throw an error if there's an issue populating the ReturnConversation object.
+ */
+async function populateReturnConversation(conversation: ConversationInstance): Promise<ReturnConversation> {
+    const user1 = conversation.Users[0];
+    const user2 = conversation.Users[1];
+    const messages = conversation.Messages;
+    const lastMessage = messages[messages.length - 1];
+
+    return {
+        conversationId: conversation.conversation_id || -1,
+        user1: user1,
+        user2: user2,
+        messages: messages,
+        lastMessageId: lastMessage ? lastMessage.message_id : undefined,
+        createdAt: conversation.createdAt
+    };
+}
+
+/**
  * Function to create a new conversation between two users.
  *
  * This function does the following:
@@ -118,7 +168,12 @@ export const createConversation = async (user1Id: string, user2Id: string) => {
                     { user1Id: user1Id, user2Id: user2Id },
                     { user1Id: user2Id, user2Id: user1Id }
                 ]
-            }
+            },
+            include: ['User1', 'User2', 'Messages', {
+                model: User,
+                as: 'Users',
+                through: {attributes: []}
+            }]
         });
 
         // If a conversation already exists, throw an error
@@ -182,7 +237,7 @@ export const deliverQueuedMessages = async (userId: string) => {
     try {
         const messages = await Message.findAll({
             where: {
-                status: 'sent',
+                status: 'queued',
                 '$Conversation.user1Id$': userId,
                 '$Conversation.user2Id$': userId
             },
@@ -229,7 +284,11 @@ export const getConversations = async (userId: number) => {
                     {user2Id: userId}
                 ]
             },
-            include: ['User1', 'User2', 'Messages']
+            include: ['User1', 'User2', 'Messages', {
+                model: User,
+                as: 'Users',
+                through: {attributes: []}
+            }]
         });
     } catch (error) {
         console.error('Get Conversations Error:', error);
@@ -258,7 +317,7 @@ export const getConversation = async (conversationId: number) => {
             include: ['User1', 'User2', 'Messages', {
                 model: User,
                 as: 'Users',
-                through: {attributes: []} // This will exclude the attributes of the join table
+                through: {attributes: []}
             }]
         });
     } catch (error) {
