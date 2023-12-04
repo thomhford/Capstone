@@ -16,6 +16,7 @@ export interface UserInstance extends Model<UserAttributes>, UserAttributes {
     getPosts: () => Promise<PostInstance[]>;
     getSentMessages: () => Promise<MessageInstance[]>;
     getReceivedMessages: () => Promise<MessageInstance[]>;
+    updatedAt: Date;
 }
 
 export const createUserModel = (sequelize: Sequelize) => {

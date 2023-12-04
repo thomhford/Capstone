@@ -18,6 +18,21 @@ class UserList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Listen for the new conversation
+    BlocListener<ChatBloc, ChatState>(
+      listener: (context, state) {
+        if (state is SocketNewConversationReceived) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ConversationPage(
+                  conversation: state.conversation),
+            ),
+          );
+        }
+      },
+      child: const Center(child: CircularProgressIndicator()),
+    );
     final List<ChatUser> filteredUserList = users.where((user) {
       final String query = searchQuery.toLowerCase();
       return user.firstName.toLowerCase().contains(query) ||
@@ -115,22 +130,6 @@ class UserList extends StatelessWidget {
                 // Create new conversation
                 chatBloc.add(
                   NewConversationEvent(currentUser, user.id),
-                );
-
-                // Listen for the new conversation
-                BlocListener<ChatBloc, ChatState>(
-                  listener: (context, state) {
-                    if (state is SocketNewConversationReceived) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ConversationPage(
-                              conversation: state.conversation),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Center(child: CircularProgressIndicator()),
                 );
               } else {
                 // Open existing conversation

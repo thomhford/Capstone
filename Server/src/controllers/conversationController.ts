@@ -98,53 +98,6 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
 };
 
 /**
- * Interface for the return value of the getConversations, getConversation and createConversation functions.
- * Clients store conversations with User objects, not just user IDs, so this interface includes the User objects.
- * Clients store conversations with Message objects, so this interface also includes the Message objects.
- *
- * @typedef {Object} ReturnConversation
- *
- * @property {number} conversationId - The ID of the conversation.
- * @property {UserInstance} user1 - The first user in the conversation.
- * @property {UserInstance} user2 - The second user in the conversation.
- * @property {MessageInstance[]} messages - The messages in the conversation.
- * @property {number} lastMessageId - The ID of the last message in the conversation.
- * @property {Date} createdAt - The date the conversation was created.
- */
-interface ReturnConversation {
-    conversationId: number;
-    user1 : UserInstance;
-    user2 : UserInstance;
-    messages : MessageInstance[];
-    lastMessageId? : number;
-    createdAt : Date;
-}
-
-/**
- * Function to populate a ReturnConversation object with the User objects and Message objects.
- * @param conversation
- *
- * @returns {Promise<ReturnConversation>} The populated ReturnConversation object.
- *
- * @throws Will throw an error if there's an issue populating the ReturnConversation object.
- */
-async function populateReturnConversation(conversation: ConversationInstance): Promise<ReturnConversation> {
-    const user1 = conversation.Users[0];
-    const user2 = conversation.Users[1];
-    const messages = conversation.Messages;
-    const lastMessage = messages[messages.length - 1];
-
-    return {
-        conversationId: conversation.conversation_id || -1,
-        user1: user1,
-        user2: user2,
-        messages: messages,
-        lastMessageId: lastMessage ? lastMessage.message_id : undefined,
-        createdAt: conversation.createdAt
-    };
-}
-
-/**
  * Function to create a new conversation between two users.
  *
  * This function does the following:
@@ -160,7 +113,6 @@ async function populateReturnConversation(conversation: ConversationInstance): P
  */
 export const createConversation = async (user1Id: string, user2Id: string) => {
     try {
-        console.log('Creating conversation between', user1Id, 'and', user2Id);
         // Check if a conversation between the two users already exists
         const existingConversation = await Conversation.findOne({
             where: {
@@ -168,25 +120,38 @@ export const createConversation = async (user1Id: string, user2Id: string) => {
                     { user1Id: user1Id, user2Id: user2Id },
                     { user1Id: user2Id, user2Id: user1Id }
                 ]
-            },
-            include: ['User1', 'User2', 'Messages', {
-                model: User,
-                as: 'Users',
-                through: {attributes: []}
-            }]
+            }
         });
 
-        // If a conversation already exists, throw an error
+        // If a conversation already exists, throw error
         if (existingConversation) {
-            console.error('A conversation between these two users already exists.');
-            return null;
+            console.log('A conversation between these two users already exists.');
+            throw Error('A conversation between these two users already exists.');
         }
 
-        // If no conversation exists, create a new one
-        return await Conversation.create({
+        // If a conversation doesn't exist, create one and return it
+        console.log('Creating conversation between', user1Id, 'and', user2Id);
+        const newConversation = await Conversation.create({
             user1Id,
             user2Id
         });
+
+        return await Conversation.findOne({
+            where: {conversation_id: newConversation.conversation_id},
+            include: [
+                {
+                    model: User,
+                    as: 'User1',
+                    attributes: ['uid', 'firstName', 'lastName', 'email', 'photoUrl', 'updatedAt']
+                },
+                {
+                    model: User,
+                    as: 'User2',
+                    attributes: ['uid', 'firstName', 'lastName', 'email', 'photoUrl', 'updatedAt']
+                },
+            ],
+        });
+
     } catch (error) {
         console.error('Create Conversation Error:', error);
         eventEmitter.emit('error', { error: 'Error creating conversation', details: error });
@@ -284,11 +249,7 @@ export const getConversations = async (userId: number) => {
                     {user2Id: userId}
                 ]
             },
-            include: ['User1', 'User2', 'Messages', {
-                model: User,
-                as: 'Users',
-                through: {attributes: []}
-            }]
+            include: ['User1', 'User2', 'Messages']
         });
     } catch (error) {
         console.error('Get Conversations Error:', error);

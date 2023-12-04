@@ -79,7 +79,6 @@ io.on('connection',
             console.log('request conversations', userId);
             try {
                 const conversations = await getConversations(userId);
-                console.log('conversations fetched', conversations)
                 socket.emit('conversations list', conversations);
             } catch (error) {
                 console.error('Error fetching conversations:', error);
@@ -97,7 +96,6 @@ io.on('connection',
             try {
                 const users = await getAvailableUsers(userId);
                 socket.emit('user list', users);
-                console.log('user list fetched', users)
             } catch (error) {
                 console.error('Error fetching user list:', error);
                 // Emit an error event to the client
