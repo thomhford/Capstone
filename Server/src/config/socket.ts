@@ -63,9 +63,11 @@ io.on('connection',
 
             // Send all the messages in the user's queue
             const queue = await deliverQueuedMessages(userId);
-            queue.forEach((message) => {
-                socket.emit('message received', message);
-            });
+            if (queue) {
+                queue.forEach((message) => {
+                    socket.emit('message received', message);
+                });
+            }
         });
 
         /**
@@ -112,8 +114,10 @@ io.on('connection',
                 // Call the createConversation method from the conversation controller
                 const conversation = await createConversation(user1Id, user2Id);
 
-                // If the conversation already exists, throw an error to be emitted to the client
+                // If the conversation already exists, it should not be created again and will not be returned by the controller.
+                // Throw an error to be emitted to the client
                 if (!conversation) {
+                    console.error('Cannot create conversation that already exists');
                     throw new Error('Cannot create conversation that already exists');
                 }
 
@@ -121,9 +125,11 @@ io.on('connection',
                 const user1Socket = await getUserSocket(user1Id);
                 const user2Socket = await getUserSocket(user2Id);
                 if (user1Socket) {
+                    console.log('Emitting to user1 \'conversation created\'', conversation);
                     socket.to(user1Socket.socketId).emit('conversation created', conversation);
                 }
                 if (user2Socket) {
+                    console.log('Emitting to user2 \'conversation created\'', conversation);
                     socket.to(user2Socket.socketId).emit('conversation created', conversation);
                 }
             } catch (error) {

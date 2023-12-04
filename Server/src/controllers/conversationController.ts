@@ -3,7 +3,6 @@ import {Conversation, File as Attachment, Message, User} from '../models';
 import sequelize from "../config/db";
 import {Op} from "sequelize";
 import {eventEmitter} from '../config/events';
-import {ConversationInstance} from "../models/Conversation";
 
 /**
  * Parameters for the sendMessage function.
@@ -90,7 +89,7 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
         });
 
     } catch (error) {
-        console.error(error);
+        console.error('Send Message Error', error);
         eventEmitter.emit('error', { error: 'Error sending message', details: error });
     }
 };
@@ -111,6 +110,7 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
  */
 export const createConversation = async (user1Id: string, user2Id: string) => {
     try {
+        console.log('Creating conversation between', user1Id, 'and', user2Id);
         // Check if a conversation between the two users already exists
         const existingConversation = await Conversation.findOne({
             where: {
@@ -133,7 +133,7 @@ export const createConversation = async (user1Id: string, user2Id: string) => {
             user2Id
         });
     } catch (error) {
-        console.error(error);
+        console.error('Create Conversation Error:', error);
         eventEmitter.emit('error', { error: 'Error creating conversation', details: error });
     }
 };
@@ -151,10 +151,15 @@ export const createConversation = async (user1Id: string, user2Id: string) => {
  * @throws Will throw an error if there's an issue fetching the message or updating its status.
  */
 export const queueMessage = async (messageId: number) => {
-    const message = await Message.findOne({ where: { message_id: messageId } });
-    if (message) {
-        message.status = 'queued';
-        await message.save();
+    try {
+        const message = await Message.findOne({where: {message_id: messageId}});
+        if (message) {
+            message.status = 'queued';
+            await message.save();
+        }
+    } catch (error) {
+        console.error('Queue Message Error:', error);
+        eventEmitter.emit('error', { error: 'Error queuing message', details: error });
     }
 };
 
@@ -174,23 +179,28 @@ export const queueMessage = async (messageId: number) => {
  * @throws Will throw an error if there's an issue fetching the messages, updating their status, or saving the messages.
  */
 export const deliverQueuedMessages = async (userId: string) => {
-    const messages = await Message.findAll({
-        where: {
-            status: 'sent',
-            '$Conversation.user1Id$': userId,
-            '$Conversation.user2Id$': userId
-        },
-        include: [{
-            model: Conversation,
-            as: 'Conversation',
-            attributes: ['user1Id', 'user2Id']
-        }]
-    });
-    for (const message of messages) {
-        message.status = 'delivered';
-        await message.save();
+    try {
+        const messages = await Message.findAll({
+            where: {
+                status: 'sent',
+                '$Conversation.user1Id$': userId,
+                '$Conversation.user2Id$': userId
+            },
+            include: [{
+                model: Conversation,
+                as: 'Conversation',
+                attributes: ['user1Id', 'user2Id']
+            }]
+        });
+        for (const message of messages) {
+            message.status = 'delivered';
+            await message.save();
+        }
+        return messages;
+    } catch (error) {
+        console.error('Deliver Queued Messages Error:', error);
+        eventEmitter.emit('error', { error: 'Error delivering queued messages', details: error });
     }
-    return messages;
 };
 
 /**
@@ -222,7 +232,7 @@ export const getConversations = async (userId: number) => {
             include: ['User1', 'User2', 'Messages']
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Conversations Error:', error);
         eventEmitter.emit('error', { error: 'Error retrieving conversations', details: error });
     }
 };
@@ -252,18 +262,18 @@ export const getConversation = async (conversationId: number) => {
             }]
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Conversation Error:', error,);
         eventEmitter.emit('error', { error: 'Error retrieving conversation', details: error });
     }
 };
 
 /**
  * Function to retrieve a list of users that can be part of a new conversation.
- * This excludes the current user and users that are already part of a conversation with the current user.
+ * This excludes the current user.
  *
  * This function does the following:
  * 1. Fetches all users from the database.
- * 2. Excludes the current user and users that are already part of a conversation with the current user.
+ * 2. Excludes the current user.
  * 3. Returns the fetched users.
  *
  * @param {string} userId - The ID of the current user.
@@ -276,22 +286,16 @@ export const getAvailableUsers = async (userId: string) => {
     try {
         return await User.findAll({
             where: {
-                [Op.and]: [
-                    {uid: {[Op.ne]: userId}},
-                    {
-                        [Op.or]: [
-                            {uid: {[Op.notIn]: sequelize.literal(`(SELECT user1Id FROM Conversations WHERE user2Id = '${userId}')`)}},
-                            {uid: {[Op.notIn]: sequelize.literal(`(SELECT user2Id FROM Conversations WHERE user1Id = '${userId}')`)}}
-                        ]
-                    }
-                ]
+                uid: {
+                    [Op.ne]: userId
+                }
             }
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Available Users Error:', error);
         eventEmitter.emit('error', { error: 'Error retrieving available users', details: error });
     }
-}
+};
 
 /**
  * Function to retrieve a single message. Used for updating the read status of a message.
@@ -313,7 +317,7 @@ export const getMessage = async (messageId: number) => {
             where: {message_id: messageId}
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Message Error:', error);
         eventEmitter.emit('error', { error: 'Error retrieving message', details: error });
     }
 };
@@ -332,7 +336,7 @@ export const deleteMessage = async (messageId: number) => {
             return message;
         }
     } catch (error) {
-        console.error(error);
+        console.error('Delete Message Error:', error);
         eventEmitter.emit('error', { error: 'Error deleting message', details: error });
     }
 };
@@ -346,7 +350,7 @@ export const getMessages = async (conversationId: number) => {
             include: ['Sender', 'Attachments']
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Messages Error:', error);
         eventEmitter.emit('error', { error: 'Error retrieving messages', details: error });
     }
 };
@@ -376,7 +380,7 @@ export const deleteConversation = async (conversationId: number) => {
             }
         });
     } catch (error) {
-        console.error(error);
+        console.error('Delete Conversation Error:', error);
         eventEmitter.emit('error', { error: 'Error deleting conversation', details: error });
     }
 };

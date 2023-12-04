@@ -38,10 +38,10 @@ final class NewConversationReceivedEvent extends ChatEvent {
 
 /// Event triggered when a new conversation is created.
 final class NewConversationEvent extends ChatEvent {
-  final String senderId;
-  final String recipientId;
-  /// Takes the [senderId] and [recipientId] of the new conversation.
-  NewConversationEvent(this.senderId, this.recipientId);
+  final String user1Id;
+  final String user2Id;
+  /// Takes the [user1Id] and [user2Id] of the new conversation.
+  NewConversationEvent(this.user1Id, this.user2Id);
 }
 
 /// Event triggered when the server sends a message.

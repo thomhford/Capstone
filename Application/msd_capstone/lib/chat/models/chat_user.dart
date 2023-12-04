@@ -4,7 +4,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatUser {
   final String firstName;
-  final String? lastName;
+  final String lastName;
   final String email;
   final String id;
   final String? photoUrl;

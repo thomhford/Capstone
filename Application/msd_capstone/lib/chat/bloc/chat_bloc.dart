@@ -250,8 +250,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// This event is triggered when the user creates a new conversation.
   /// The server should respond with a 'conversation created' event which should add the conversation to the list of conversations.
   Future<void> _onNewConversationEvent(NewConversationEvent event, Emitter<ChatState> emit) async {
-    socket.emit('create conversation', {'senderId': event.senderId, 'recipientId': event.recipientId});
-    emit(SocketNewConversation(event.senderId, event.recipientId));
+    socket.emit('create conversation', {'user1Id': event.user1Id, 'user2Id': event.user2Id});
+    emit(SocketNewConversation(event.user1Id, event.user2Id));
   }
 
   /// Handles the [NewMessageEvent].
