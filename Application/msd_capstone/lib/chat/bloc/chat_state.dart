@@ -62,7 +62,7 @@ class SocketFetchConversationsFailed extends ChatState {
 /// This should be emitted on connection to server.
 class SocketUsersReceived extends ChatState {
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [];
 }
 
 /// State emitted when the server fails to send a list of users.
@@ -71,7 +71,7 @@ class SocketFetchUsersFailed extends ChatState {
   SocketFetchUsersFailed(this.details);
 
   @override
-  List<Object?> get props => [details];
+  List<Object> get props => [details];
 }
 
 /// State emitted when a new conversation is received from the server.
@@ -81,7 +81,7 @@ class SocketNewConversationReceived extends ChatState {
   SocketNewConversationReceived(this.conversation);
 
   @override
-  List<Object?> get props => [conversation];
+  List<Object> get props => [conversation];
 }
 
 /// State emitted when a new conversation is created.
@@ -91,7 +91,7 @@ class SocketNewConversation extends ChatState {
   SocketNewConversation(this.senderId, this.recipientId);
 
   @override
-  List<Object?> get props => [senderId, recipientId];
+  List<Object> get props => [senderId, recipientId];
 }
 
 /// State emitted when a conversation fails to be created.
@@ -100,7 +100,7 @@ class SocketCreateConversationFailed extends ChatState {
   SocketCreateConversationFailed(this.details);
 
   @override
-  List<Object?> get props => [details];
+  List<Object> get props => [details];
 }
 
 /// State emitted when the client has received a message from the server.
@@ -110,7 +110,7 @@ class SocketNewMessage extends ChatState{
   SocketNewMessage(this.message);
 
   @override
-  List<Object?> get props => [message];
+  List<Object> get props => [message];
 }
 
 /// State emitted when a message has been marked as received in the server.
@@ -122,7 +122,7 @@ class SocketMessageReceived extends ChatState{
   SocketMessageReceived(this.messageId, this.conversationId);
 
   @override
-  List<Object?> get props => [messageId];
+  List<Object> get props => [messageId];
 }
 
 /// State emitted when a message fails to be sent by the server to the client
@@ -131,7 +131,7 @@ class SocketNewMessageFailed extends ChatState{
   SocketNewMessageFailed(this.details);
 
   @override
-  List<Object?> get props => [details];
+  List<Object> get props => [details];
 }
 
 /// State emitted when the client sends a message to the server.
@@ -141,7 +141,7 @@ class SocketMessageSent extends ChatState{
   SocketMessageSent(this.message);
 
   @override
-  List<Object?> get props => [message];
+  List<Object> get props => [message];
 }
 
 /// State emitted when a message fails to be sent by the client to the server.
@@ -150,7 +150,7 @@ class SocketSendMessageFailed extends ChatState{
   SocketSendMessageFailed(this.details);
 
   @override
-  List<Object?> get props => [details];
+  List<Object> get props => [details];
 }
 
 /// State emitted when the server confirms that a message has been read.
@@ -161,7 +161,7 @@ class SocketMessageReadReceipt extends ChatState{
   SocketMessageReadReceipt(this.messageId, this.conversationId);
 
   @override
-  List<Object?> get props => [messageId];
+  List<Object> get props => [messageId];
 }
 
 /// State emitted when a user starts typing.
@@ -171,7 +171,7 @@ class SocketUserTyping extends ChatState{
   SocketUserTyping(this.userId);
 
   @override
-  List<Object?> get props => [userId];
+  List<Object> get props => [userId];
 }
 
 /// State emitted when the server confirms that a user is typing.
@@ -181,7 +181,7 @@ class SocketUserTypingReceipt extends ChatState{
   SocketUserTypingReceipt(this.userId);
 
   @override
-  List<Object?> get props => [userId];
+  List<Object> get props => [userId];
 }
 
 /// State emitted when a user stops typing.
@@ -191,7 +191,7 @@ class SocketUserStopTyping extends ChatState{
   SocketUserStopTyping(this.userId);
 
   @override
-  List<Object?> get props => [userId];
+  List<Object> get props => [userId];
 }
 
 /// State emitted when the server confirms that a user has stopped typing.
@@ -201,7 +201,7 @@ class SocketUserStopTypingReceipt extends ChatState{
   SocketUserStopTypingReceipt(this.userId);
 
   @override
-  List<Object?> get props => [userId];
+  List<Object> get props => [userId];
 }
 
 /// State emitted when a message is deleted.
@@ -212,7 +212,7 @@ class SocketMessageDeleted extends ChatState{
   SocketMessageDeleted(this.messageId, this.conversationId);
 
   @override
-  List<Object?> get props => [messageId];
+  List<Object> get props => [messageId];
 }
 
 /// State emitted when the server fails to delete a message.
@@ -221,7 +221,7 @@ class SocketDeleteMessageFailed extends ChatState{
   SocketDeleteMessageFailed(this.details);
 
   @override
-  List<Object?> get props => [details];
+  List<Object> get props => [details];
 }
 
 /// State emitted when a request to delete a message is made.
@@ -231,7 +231,7 @@ class SocketDeleteMessage extends ChatState{
   SocketDeleteMessage(this.messageId);
 
   @override
-  List<Object?> get props => [messageId];
+  List<Object> get props => [messageId];
 }
 
 /// State emitted when a conversation is deleted.
@@ -241,7 +241,7 @@ class SocketConversationDeleted extends ChatState{
   SocketConversationDeleted(this.conversationId);
 
   @override
-  List<Object?> get props => [conversationId];
+  List<Object> get props => [conversationId];
 }
 
 /// State emitted when the server fails to delete a conversation.
@@ -250,7 +250,7 @@ class SocketDeleteConversationFailed extends ChatState{
   SocketDeleteConversationFailed(this.details);
 
   @override
-  List<Object?> get props => [details];
+  List<Object> get props => [details];
 }
 
 /// State emitted when a request to delete a conversation is made.
@@ -260,7 +260,7 @@ class SocketDeleteConversation extends ChatState{
   SocketDeleteConversation(this.conversationId);
 
   @override
-  List<Object?> get props => [conversationId];
+  List<Object> get props => [conversationId];
 }
 
 /// State emitted when an error occurs.
@@ -271,5 +271,5 @@ class SocketError extends ChatState {
   SocketError(this.error, this.details);
 
   @override
-  List<Object?> get props => [error, details];
+  List<Object> get props => [error, details];
 }

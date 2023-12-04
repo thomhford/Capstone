@@ -1,2 +1,2 @@
 export 'recent_messages.dart';
-export 'new_chat.dart';
+export 'search_widget.dart';

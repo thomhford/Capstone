@@ -1,9 +1,9 @@
 // recent_messages.dart
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:msd_capstone/widgets/widgets.dart';
 import '../../../app/bloc/app_bloc.dart';
 import '../../models/models.dart';
 import '../conversation_page.dart';
@@ -21,11 +21,14 @@ class RecentMessages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser = context.select((AppBloc bloc) => bloc.state.user);
-    final List<Conversation> filteredConversations = conversations.where((conversation) {
+    final List<Conversation> filteredConversations =
+        conversations.where((conversation) {
       final String query = searchQuery.toLowerCase();
       return conversation.messages.values.any((message) {
         final String messageText = message.message.toLowerCase();
-        final String userName = '${conversation.getRecipientUser(currentUser.id).firstName} ${conversation.getRecipientUser(currentUser.id).lastName}'.toLowerCase();
+        final String userName =
+            '${conversation.getRecipientUser(currentUser.id).firstName} ${conversation.getRecipientUser(currentUser.id).lastName}'
+                .toLowerCase();
         return messageText.contains(query) || userName.contains(query);
       });
     }).toList();
@@ -48,10 +51,12 @@ class RecentMessages extends StatelessWidget {
 
     return Column(
       children: filteredConversations.map((conversation) {
-        final ChatMessage recentMessage = conversation.messages.values.reduce((value, element) {
+        final ChatMessage recentMessage =
+            conversation.messages.values.reduce((value, element) {
           return value.createdAt.isAfter(element.createdAt) ? value : element;
         });
-        final ChatUser recipient = conversation.getRecipientChatUser(currentUser.id);
+        final ChatUser recipient =
+            conversation.getRecipientChatUser(currentUser.id);
 
         return Padding(
           padding: const EdgeInsets.only(left: 20, right: 10, top: 25),
@@ -68,10 +73,10 @@ class RecentMessages extends StatelessWidget {
             },
             child: Row(
               children: [
-                CircleAvatar( // TODO: Update this to use Avatar widget
-                  radius: 30,
-                  backgroundImage:
-                  CachedNetworkImageProvider(recipient.photoUrl!),
+                Avatar(
+                  photo: recipient.photoUrl,
+                  name: '${recipient.firstName} ${recipient.lastName}',
+                  avatarSize: 30,
                 ),
                 const SizedBox(
                   width: 15,

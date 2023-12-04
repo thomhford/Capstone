@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/chat/bloc/chat_bloc.dart';
-import 'package:msd_capstone/chat/view/widgets/user_list.dart';
+import 'package:msd_capstone/chat/view/user_list_page.dart';
 import '../models/models.dart';
 import './widgets/widgets.dart';
 
@@ -15,8 +15,8 @@ class ChatsPage extends StatefulWidget {
 }
 
 class _ChatsPageState extends State<ChatsPage> {
-  final TextEditingController _searchController = TextEditingController();
-  final FocusNode _searchFocusNode = FocusNode();
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
   late ChatBloc _chatBloc;
 
   @override
@@ -30,15 +30,15 @@ class _ChatsPageState extends State<ChatsPage> {
 
   String _searchQuery = '';
 
-  void _updateSearchQuery(String newQuery) {
+  void updateSearchQuery(String newQuery) {
     setState(() {
       _searchQuery = newQuery;
     });
   }
 
-  void _clearSearch() {
-    _searchController.clear();
-    _updateSearchQuery('');
+  void clearSearch() {
+    searchController.clear();
+    updateSearchQuery('');
     FocusScope.of(context).unfocus();
   }
 
@@ -46,7 +46,7 @@ class _ChatsPageState extends State<ChatsPage> {
   void dispose() {
     _chatBloc.add(const DisconnectEvent());
     _chatBloc.close();
-    _searchFocusNode.dispose();
+    searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -115,10 +115,7 @@ class _ChatsPageState extends State<ChatsPage> {
       createdAt: DateTime.now(),
     );
 
-
-    return BlocBuilder<ChatBloc, ChatState>(
-      builder: (context, state)
-    {
+    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       return Scaffold(
         backgroundColor: theme.colorScheme.primary,
         body: SafeArea(
@@ -153,7 +150,7 @@ class _ChatsPageState extends State<ChatsPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => UserList(),
+                                    builder: (context) => const UserListPage(),
                                   ),
                                 );
                               },
@@ -168,46 +165,12 @@ class _ChatsPageState extends State<ChatsPage> {
                       const SizedBox(
                         height: 5,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: theme.colorScheme.secondary,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _searchController,
-                                  focusNode: _searchFocusNode,
-                                  onChanged: _updateSearchQuery,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Search',
-                                    hintStyle: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 17,
-                                      fontFamily: 'Quicksand',
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                      color: Colors.white70,
-                                      size: 25,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // Only show the cancel button if the TextField is focused
-                              if (_searchFocusNode.hasFocus)
-                                IconButton(
-                                  icon: const Icon(Icons.cancel),
-                                  onPressed: _clearSearch,
-                                ),
-                            ],
-                          ),
-                        ),
+                      SearchWidget(
+                          searchFocusNode: searchFocusNode,
+                          searchController: searchController,
+                          updateSearchQuery: updateSearchQuery,
+                          clearSearch: clearSearch,
+                          theme: theme
                       ),
                       const SizedBox(
                         height: 10,
