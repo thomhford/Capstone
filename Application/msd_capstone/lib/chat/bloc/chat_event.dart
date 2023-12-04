@@ -45,10 +45,18 @@ final class NewConversationEvent extends ChatEvent {
 }
 
 /// Event triggered when the server sends a message.
-final class MessageReceivedEvent extends ChatEvent {
+final class NewMessageEvent extends ChatEvent {
   final ChatMessage message;
   /// Takes a [ChatMessage] object that represents the current state of the message.
-  MessageReceivedEvent(this.message);
+  NewMessageEvent(this.message);
+}
+
+/// Event triggered when a message has been marked as received.
+final class MessageReceivedEvent extends ChatEvent {
+  final int messageId;
+  final int conversationId;
+  /// Takes a [int] that represents the ID of the received message.
+  MessageReceivedEvent(this.messageId, this.conversationId);
 }
 
 /// Event triggered when a client sends a message.

@@ -106,7 +106,7 @@ io.on('connection',
          * Event listener for 'create conversation' event.
          * Creates a new conversation between two users and emits 'conversation created' event to both users.
          */
-        socket.on('create conversation', async ({ user1Id, user2Id, message }) => {
+        socket.on('create conversation', async ({ user1Id, user2Id }) => {
             try {
                 // Call the createConversation method from the conversation controller
                 const conversation = await createConversation(user1Id, user2Id);
@@ -151,7 +151,7 @@ io.on('connection',
                         for (const user of conversation.Users) {
                             const userSocketId = await getUserSocket(user.uid);
                             if (userSocketId) {
-                                socket.to(userSocketId.socketId).emit('message received', savedMessage);
+                                socket.to(userSocketId.socketId).emit('new message', savedMessage);
                             }
                         }
                     }
@@ -172,7 +172,7 @@ io.on('connection',
         });
 
         /**
-         * Event Handler for 'message received'
+         * Event Handler for 'message delivered'
          *
          * This event is triggered when a message is received from a user. The handler does the following:
          *
@@ -184,7 +184,7 @@ io.on('connection',
          *
          * @throws Will throw an error if there's an issue marking the message as received or fetching the conversation and will notify the client.
          */
-        socket.on('message received', async (messageId) => {
+        socket.on('message delivered', async (messageId) => {
             try {
                 // Mark the message as received in the database
                 const message = await getMessage(messageId);
@@ -224,7 +224,7 @@ io.on('connection',
          * This event is triggered by the controller when a message is received from a user. The handler does the following:
          *
          * 1. Fetches the conversation associated with the message.
-         * 2. If the conversation exists, it emits a 'message received' event to all users in the conversation.
+         * 2. If the conversation exists, it emits a 'new message' event to all users in the conversation.
          * 3. If the user is not connected, it adds the message to their queue.
          *
          * @param message - The message that was received.
@@ -241,7 +241,7 @@ io.on('connection',
                     for (const user of conversation.Users) {
                         const userSocket = await getUserSocket(user.uid);
                         if (userSocket) {
-                            socket.to(userSocket.socketId).emit('message received', message);
+                            socket.to(userSocket.socketId).emit('new message', message);
                         } else {
                             // If the user is not connected, add the message to their queue
                             await queueMessage(message);
@@ -256,33 +256,6 @@ io.on('connection',
                 console.error('Error receiving message:', error);
                 // Emit an error event to the client
                 socket.emit('error', { message: 'Error receiving message', details: error });
-            }
-        });
-
-        /**
-         * Event listener for 'message delivered' event.
-         *
-         * This event marks the message as delivered in the database.
-         *
-         * @param messageId - The ID of the message that was delivered.
-         *
-         * @throws Will throw an error if there's an issue marking the message as delivered and will notify the client.
-         */
-        socket.on('message delivered', async (messageId) => {
-            try {
-                // Mark the message as delivered in the database
-                const message = await getMessage(messageId);
-                if (message) {
-                    message.status = 'delivered';
-                    await message.save();
-                } else {
-                    // If the message does not exist, throw and error to be emitted to the client
-                    throw new Error('Message does not exist')
-                }
-            } catch (error) {
-                console.error('Error delivering message:', error);
-                // Emit an error event to the client
-                socket.emit('error', {message: 'Error delivering message', details: error});
             }
         });
 

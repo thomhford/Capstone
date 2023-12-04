@@ -212,8 +212,8 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      act: (bloc) => bloc.add(MessageReceivedEvent(mockMessage1)),
-      expect: () => [SocketMessageReceived(mockMessage1)],
+      act: (bloc) => bloc.add(NewMessageEvent(mockMessage1)),
+      expect: () => [SocketNewMessage(mockMessage1)],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -231,7 +231,7 @@ void main() {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
       act: (bloc) => bloc.add(ErrorEvent('Error receiving message', '123')),
-      expect: () => [SocketReceiveMessageFailed('123')],
+      expect: () => [SocketNewMessageFailed('123')],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -259,11 +259,11 @@ void main() {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
       seed: () {
-        SocketMessageReceived(mockMessage1);
+        SocketNewMessage(mockMessage1);
         return ChatData(mockConversations, mockUsers);
         },
-      act: (bloc) => bloc.add(MessageReceivedEvent(mockMessage2)),
-      expect: () => [SocketMessageReceived(mockMessage2)],
+      act: (bloc) => bloc.add(NewMessageEvent(mockMessage2)),
+      expect: () => [SocketNewMessage(mockMessage2)],
     );
 
     blocTest<ChatBloc, ChatState>(
@@ -326,7 +326,7 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      seed: () => SocketMessageReceived(mockMessage1),
+      seed: () => SocketNewMessage(mockMessage1),
       act: (bloc) => bloc.add(MessageDeletedEvent(mockMessage1.messageId, mockMessage1.conversationId)),
       expect: () => [SocketMessageDeleted(mockMessage1.messageId, mockMessage1.conversationId)],
     );
@@ -336,7 +336,7 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      seed: () => SocketMessageReceived(mockMessage1),
+      seed: () => SocketNewMessage(mockMessage1),
       act: (bloc) => bloc.add(ErrorEvent('Error deleting message', '123')),
       expect: () => [SocketDeleteMessageFailed('123')],
     );
@@ -346,7 +346,7 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      seed: () => SocketMessageReceived(mockMessage1),
+      seed: () => SocketNewMessage(mockMessage1),
       act: (bloc) => bloc.add(DeleteMessageEvent(mockMessage1.messageId)),
       expect: () => [SocketDeleteMessage(mockMessage1.messageId)],
     );
@@ -356,7 +356,7 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      seed: () => SocketMessageReceived(mockMessage1),
+      seed: () => SocketNewMessage(mockMessage1),
       act: (bloc) => bloc.add(ErrorEvent('Error deleting conversation', '123')),
       expect: () => [SocketDeleteConversationFailed('123')],
     );
@@ -366,7 +366,7 @@ void main() {
       build: () {
         return ChatBloc(firebaseAuth: mockFirebaseAuth, currentUserId: currentUserId);
       },
-      seed: () => SocketMessageReceived(mockMessage1),
+      seed: () => SocketNewMessage(mockMessage1),
       act: (bloc) => bloc.add(ConversationDeletedEvent(mockMessage1.conversationId)),
       expect: () => [SocketConversationDeleted(mockMessage1.conversationId)],
     );

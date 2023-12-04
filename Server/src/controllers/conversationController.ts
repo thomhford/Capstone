@@ -186,12 +186,10 @@ export const deliverQueuedMessages = async (userId: string) => {
             attributes: ['user1Id', 'user2Id']
         }]
     });
-    // Should not mark messages as delivered here as the client will reply with a 'message received' event when it receives the message
-    // Might need this if I change how I am sending undelivered messages
-    // for (const message of messages) {
-    //     message.status = 'delivered';
-    //     await message.save();
-    // }
+    for (const message of messages) {
+        message.status = 'delivered';
+        await message.save();
+    }
     return messages;
 };
 

@@ -86,12 +86,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         add(NewConversationReceivedEvent(conversation));
       });
 
-      // This sets up an event listener for a custom event named 'message received'.
+      // This sets up an event listener for a custom event named 'new message'.
       // When the server emits this event, it sends a message as data.
       // The callback function converts the data to a ChatMessage object and adds a MessageReceivedEvent with this message to the ChatBloc.
-      socket.on('message received', (data) {
+      socket.on('new message', (data) {
         ChatMessage message = ChatMessage.fromJson(data);
-        add(MessageReceivedEvent(message));
+        add(NewMessageEvent(message));
+      });
+
+      // This sets up an event listener for a custom event named 'message received'.
+      // When the server emits this event, it sends the ID of the message and the ID of the conversation that was received as data.
+      // The callback function adds a MessageReceivedEvent with this ID to the ChatBloc.
+      socket.on('message received', (data) {
+        int messageId = data['messageId'];
+        int conversationId = data['conversationId'];
+        add(MessageReceivedEvent(messageId, conversationId));
       });
 
       // This sets up an event listener for a custom event named 'message read receipt'.
@@ -154,6 +163,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<UsersReceivedEvent>(_onUsersReceivedEvent);
     on<NewConversationReceivedEvent>(_onNewConversationReceivedEvent);
     on<NewConversationEvent>(_onNewConversationEvent);
+    on<NewMessageEvent>(_onNewMessageEvent);
     on<MessageReceivedEvent>(_onMessageReceivedEvent);
     on<MessageSentEvent>(_onMessageSentEvent);
     on<MessageReadEvent>(_onMessageReadEvent);
@@ -244,23 +254,49 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(SocketNewConversation(event.senderId, event.recipientId));
   }
 
-  /// Handles the [MessageReceivedEvent].
-  /// Emits the [SocketMessageReceived] state with the received message.
+  /// Handles the [NewMessageEvent].
+  /// Emits the [SocketNewMessage] state with the received message.
   /// It also sends the 'message delivered' event to the server.
   /// This event is triggered when the server sends a message to the client.
   /// Updates ChatData with the received message.
   /// If the conversation already exists in ChatData, it adds the message to the conversation.
   /// If the conversation does not exist in ChatData, it requests a new list of conversations from the server.
-  Future<void> _onMessageReceivedEvent(MessageReceivedEvent event, Emitter<ChatState> emit) async {
+  Future<void> _onNewMessageEvent(NewMessageEvent event, Emitter<ChatState> emit) async {
     if (_chatData.conversations.containsKey(event.message.conversationId)) {
       _chatData.conversations[event.message.conversationId]!.messages[event
           .message.messageId] = event.message;
-      emit(SocketMessageReceived(event.message));
+      emit(SocketNewMessage(event.message));
       socket.emit('message delivered', event.message.messageId);
     } else {
       requestConversations(_currentUserId);
       emit(SocketError('Error receiving message', 'Conversation does not exist to add message to...'));
     }
+  }
+
+  /// Handles the [MessageReceivedEvent].
+  /// Emits the [SocketMessageReceived] state with the ID of the received message.
+  /// This event is triggered when a message is marked as received in the server.
+  /// Updates ChatData by updating the status of the message to 'isReceived' to true.
+  Future<void> _onMessageReceivedEvent(MessageReceivedEvent event, Emitter<ChatState> emit) async {
+    var conversation = _chatData.conversations[event.conversationId];
+
+    if (conversation == null) {
+      requestConversations(_currentUserId);
+      emit(SocketError('Error receiving message', 'Conversation does not exist to update message status...'));
+      return;
+    }
+
+    var oldMessage = conversation.messages[event.messageId];
+
+    if (oldMessage == null) {
+      requestConversations(_currentUserId);
+      emit(SocketError('Error receiving message', 'Message does not exist to update status...'));
+      return;
+    }
+
+    var newMessage = oldMessage.copyWith(isReceived: true);
+    conversation.messages[event.messageId] = newMessage;
+    emit(SocketMessageReceived(event.messageId, event.conversationId));
   }
 
   /// Handles the [MessageSentEvent].
@@ -406,7 +442,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Emits the [SocketFetchUsersFailed] state when the server sends an 'Error fetching user list' event.
   /// Emits the [SocketCreateConversationFailed] state when the server sends an 'Error creating conversation' event.
   /// Emits the [SocketSendMessageFailed] state when the server sends an 'Error sending message' event.
-  /// Emits the [SocketReceiveMessageFailed] state when the server sends an 'Error receiving message' event.
+  /// Emits the [SocketNewMessageFailed] state when the server sends an 'Error receiving message' event.
   /// Emits the [SocketDeleteMessageFailed] state when the server sends an 'Error deleting message' event.
   /// Emits the [SocketDeleteConversationFailed] state when the server sends an 'Error deleting conversation' event.
   /// This event is triggered when the server sends an 'error' event.
@@ -425,7 +461,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(SocketSendMessageFailed(event.details));
         break;
       case 'Error receiving message':
-        emit(SocketReceiveMessageFailed(event.details));
+        emit(SocketNewMessageFailed(event.details));
         break;
       case 'Error deleting message':
         emit(SocketDeleteMessageFailed(event.details));

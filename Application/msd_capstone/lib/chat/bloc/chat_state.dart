@@ -91,20 +91,32 @@ class SocketCreateConversationFailed extends ChatState {
   List<Object?> get props => [details];
 }
 
-/// State emitted when the client has received a message.
-class SocketMessageReceived extends ChatState{
+/// State emitted when the client has received a message from the server.
+class SocketNewMessage extends ChatState{
   final ChatMessage message;
   /// Takes a [ChatMessage] object that represents the current state of the message.
-  SocketMessageReceived(this.message);
+  SocketNewMessage(this.message);
 
   @override
   List<Object?> get props => [message];
 }
 
+/// State emitted when a message has been marked as received in the server.
+class SocketMessageReceived extends ChatState{
+  final int messageId;
+  final int conversationId;
+  /// Takes a [int] that represents the ID of the received message.
+  /// Takes a [int] that represents the ID of the conversation that the message belongs to.
+  SocketMessageReceived(this.messageId, this.conversationId);
+
+  @override
+  List<Object?> get props => [messageId];
+}
+
 /// State emitted when a message fails to be sent by the server to the client
-class SocketReceiveMessageFailed extends ChatState{
+class SocketNewMessageFailed extends ChatState{
   final String details;
-  SocketReceiveMessageFailed(this.details);
+  SocketNewMessageFailed(this.details);
 
   @override
   List<Object?> get props => [details];
