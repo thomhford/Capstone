@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/chat/bloc/chat_bloc.dart';
+import 'package:msd_capstone/chat/view/widgets/user_list.dart';
 import '../models/models.dart';
 import './widgets/widgets.dart';
 
@@ -48,8 +49,6 @@ class _ChatsPageState extends State<ChatsPage> {
     _searchFocusNode.dispose();
     super.dispose();
   }
-
-  // TODO: implement better states... Don't need a state for every event...
 
   @override
   Widget build(BuildContext context) {
@@ -148,8 +147,14 @@ class _ChatsPageState extends State<ChatsPage> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
-                              // TODO: implement new message button
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserList(),
+                                  ),
+                                );
+                              },
                               icon: const Icon(
                                 Icons.create,
                                 color: Colors.white,

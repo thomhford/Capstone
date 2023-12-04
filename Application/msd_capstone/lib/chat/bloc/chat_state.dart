@@ -17,6 +17,18 @@ class ChatData extends ChatState {
   List<Object> get props => [conversations, users];
 }
 
+/// State emitted when the list of conversations is updated.
+class ConversationsUpdated extends ChatState{
+  @override
+  List<Object> get props => [];
+}
+
+/// State emitted when the list of users is updated.
+class UsersUpdated extends ChatState{
+  @override
+  List<Object> get props => [];
+}
+
 /// State emitted when the socket successfully connects to the server.
 class SocketConnected extends ChatState {
   @override
