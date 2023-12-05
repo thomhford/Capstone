@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class ClickableAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final String? subtitle;
   final VoidCallback onTap;
   final List<Widget>? actions;
 
@@ -12,6 +13,7 @@ class ClickableAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     required this.onTap,
     this.actions,
+    this.subtitle,
   });
 
   @override
@@ -25,14 +27,28 @@ class ClickableAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         elevation: 0.0,
         backgroundColor: theme.colorScheme.background,
-        title: Text(
-          title,
-          style: TextStyle(
-            color: theme.colorScheme.onBackground,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Quicksand',
-          ),
+        title: Column(
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: theme.colorScheme.onBackground,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Quicksand',
+              ),
+            ),
+            if (subtitle != null)
+              Text(
+                subtitle!,
+                style: TextStyle(
+                  color: theme.colorScheme.onBackground,
+                  fontSize: 16,
+                  fontFamily: 'Quicksand',
+                ),
+              ),
+            const SizedBox(height: 4.0)
+          ],
         ),
         centerTitle: false,
         actions: actions,

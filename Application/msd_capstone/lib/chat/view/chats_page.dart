@@ -57,7 +57,6 @@ class _ChatsPageState extends State<ChatsPage> {
     final theme = Theme.of(context);
     final List<Conversation> conversations =
         _chatBloc.chatData.conversations.values.toList();
-    print('Number of conversations: ${conversations.length}');
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       return Scaffold(
         appBar: ClickableAppBar(

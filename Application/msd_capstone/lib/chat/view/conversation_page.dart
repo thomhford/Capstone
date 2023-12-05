@@ -7,6 +7,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../app/bloc/app_bloc.dart';
 import '../../widgets/widgets.dart';
+import '../bloc/chat_bloc.dart' as chat_bloc;
 import '../models/models.dart';
 
 class ConversationPage extends StatelessWidget {
@@ -25,6 +26,7 @@ class ConversationPage extends StatelessWidget {
     return Scaffold(
       appBar: ClickableAppBar(
         title: '${recipient.firstName} ${recipient.lastName}',
+        subtitle: recipient.email,
         onTap: () {
           _scrollController.animateTo(
             0.0,
@@ -34,23 +36,24 @@ class ConversationPage extends StatelessWidget {
         },
       ),
       body: SafeArea(
-        child: Chat(
-          scrollController: _scrollController,
-          messages: conversation.toChatMessages(),
-          showUserAvatars: true,
-          showUserNames: true,
-          onAttachmentPressed: () {
-            print('Attachment pressed!');
+        child: BlocBuilder<chat_bloc.ChatBloc, chat_bloc.ChatState>(
+          builder: (context, state) {
+            return Chat(
+              scrollController: _scrollController,
+              messages: conversation.toChatMessages(),
+              showUserAvatars: true,
+              showUserNames: true,
+              onSendPressed: (message) {
+                print('Message: ${message.text}');
+              },
+              user: User(
+                id: currentUser.id,
+                firstName: currentUser.firstName,
+                lastName: currentUser.lastName,
+                imageUrl: currentUser.photo,
+              ),
+            );
           },
-          onSendPressed: (message) {
-            print('Message: ${message.text}');
-          },
-          user: User(
-            id: currentUser.id,
-            firstName: currentUser.firstName,
-            lastName: currentUser.lastName,
-            imageUrl: currentUser.photo,
-          ),
         ),
       ),
     );

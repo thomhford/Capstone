@@ -20,7 +20,6 @@ class RecentMessages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Number of conversations in recent: ${conversations.length}');
     final theme = Theme.of(context);
     final currentUser = context.select((AppBloc bloc) => bloc.state.user);
     final List<Conversation> filteredConversations = searchQuery.isEmpty
@@ -36,7 +35,7 @@ class RecentMessages extends StatelessWidget {
               return messageText.contains(query) || userName.contains(query);
             });
           }).toList();
-    print('Number of filtered conversations: ${filteredConversations.length}');
+
     if (filteredConversations.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 25),
