@@ -18,6 +18,7 @@ class ChatsPage extends StatefulWidget {
 class _ChatsPageState extends State<ChatsPage> {
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
+  final ScrollController scrollController = ScrollController();
   late ChatBloc _chatBloc;
 
   @override
@@ -54,135 +55,59 @@ class _ChatsPageState extends State<ChatsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final ScrollController scrollController = ScrollController();
-    final chatBloc = BlocProvider.of<ChatBloc>(context);
-    final chatData = chatBloc.chatData;
-
-    // Create sample users
-    final ChatUser sender = ChatUser(
-      id: '1',
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'JohnDoe@Test.com',
-      updatedAt: DateTime.now(),
-      photoUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-    );
-    final ChatUser recipient = ChatUser(
-      id: '2',
-      firstName: 'Jane',
-      lastName: 'Doe',
-      email: 'JaneDoe@Test.com',
-      updatedAt: DateTime.now(),
-      photoUrl: 'https://i.imgur.com/TzEia5G.jpeg',
-    );
-
-    // Create a sample message
-    final ChatMessage firstMessage = ChatMessage(
-      messageId: 1,
-      message: 'Hey, how\'s it going?',
-      read: false,
-      isReceived: true,
-      type: 'text',
-      conversationId: 1,
-      createdAt: DateTime.now().add(const Duration(minutes: 1)),
-      authorId: sender.id,
-      recipientId: recipient.id,
-    );
-
-    final ChatMessage secondMessage = ChatMessage(
-      messageId: 2,
-      message: 'Not bad, you?',
-      read: false,
-      isReceived: false,
-      type: 'text',
-      conversationId: 1,
-      createdAt: DateTime.now(),
-      authorId: recipient.id,
-      recipientId: sender.id,
-    );
-
-    // Create a map of messages
-    final Map<int, ChatMessage> messages = {
-      firstMessage.messageId: firstMessage,
-      secondMessage.messageId: secondMessage,
-    };
-
-    // Create a sample conversation
-    final Conversation conversation = Conversation(
-      conversationId: 1,
-      user1: sender,
-      user2: recipient,
-      messages: messages,
-      createdAt: DateTime.now(),
-    );
-
+    final List<Conversation> conversations =
+        _chatBloc.chatData.conversations.values.toList();
+    print('Number of conversations: ${conversations.length}');
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       return Scaffold(
+        appBar: ClickableAppBar(
+          title: 'Messages',
+          onTap: () {
+            scrollController.animateTo(
+              0.0,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeOut,
+            );
+          },
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserListPage(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.create,
+                color: theme.colorScheme.onBackground,
+              ),
+            ),
+          ],
+        ),
         backgroundColor: theme.colorScheme.background,
         body: SafeArea(
-          child: Scrollbar(
-            controller: scrollController,
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                             Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Text(
-                                'Messages',
-                                style: TextStyle(
-                                  color: theme.colorScheme.onBackground,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand',
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const UserListPage(),
-                                  ),
-                                );
-                              },
-                              icon: Icon(
-                                Icons.create,
-                                color: theme.colorScheme.onBackground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SearchWidget(
-                          searchFocusNode: searchFocusNode,
-                          searchController: searchController,
-                          updateSearchQuery: updateSearchQuery,
-                          clearSearch: clearSearch,
-                          theme: theme
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
-                ),
-                SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SearchWidget(
+                  searchFocusNode: searchFocusNode,
+                  searchController: searchController,
+                  updateSearchQuery: updateSearchQuery,
+                  clearSearch: clearSearch,
+                  theme: theme),
+              const SizedBox(
+                height: 10,
+              ),
+              Scrollbar(
+                controller: scrollController,
+                child: BlocListener<ChatBloc, ChatState>(
+                  listener: (context, state) {
+                    if (state is ConversationsUpdated) {
+                      setState(() {});
+                    }
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -197,7 +122,7 @@ class _ChatsPageState extends State<ChatsPage> {
                     child: Column(
                       children: [
                         RecentMessages(
-                          conversations: [conversation],
+                          conversations: conversations,
                           searchQuery: _searchQuery,
                         ),
                         const SizedBox(
@@ -207,11 +132,72 @@ class _ChatsPageState extends State<ChatsPage> {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
     });
   }
 }
+
+// Sample Conversation
+// {
+// Create sample users
+// final ChatUser sender = ChatUser(
+//   id: '1',
+//   firstName: 'John',
+//   lastName: 'Doe',
+//   email: 'JohnDoe@Test.com',
+//   updatedAt: DateTime.now(),
+//   photoUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+// );
+// final ChatUser recipient = ChatUser(
+//   id: '2',
+//   firstName: 'Jane',
+//   lastName: 'Doe',
+//   email: 'JaneDoe@Test.com',
+//   updatedAt: DateTime.now(),
+//   photoUrl: 'https://i.imgur.com/TzEia5G.jpeg',
+// );
+//
+// // Create a sample message
+// final ChatMessage firstMessage = ChatMessage(
+//   messageId: 1,
+//   message: 'Hey, how\'s it going?',
+//   read: false,
+//   isReceived: true,
+//   type: 'text',
+//   conversationId: 1,
+//   createdAt: DateTime.now().add(const Duration(minutes: 1)),
+//   authorId: sender.id,
+//   recipientId: recipient.id,
+// );
+//
+// final ChatMessage secondMessage = ChatMessage(
+//   messageId: 2,
+//   message: 'Not bad, you?',
+//   read: false,
+//   isReceived: false,
+//   type: 'text',
+//   conversationId: 1,
+//   createdAt: DateTime.now(),
+//   authorId: recipient.id,
+//   recipientId: sender.id,
+// );
+//
+// // Create a map of messages
+// final Map<int, ChatMessage> messages = {
+//   firstMessage.messageId: firstMessage,
+//   secondMessage.messageId: secondMessage,
+// };
+//
+// // Create a sample conversation
+// final Conversation conversation = Conversation(
+//   conversationId: 1,
+//   user1: sender,
+//   user2: recipient,
+//   messages: messages,
+//   createdAt: DateTime.now(),
+// );
+// }

@@ -12,9 +12,21 @@ class SearchPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(post.title),
+        elevation: 0.0,
+        backgroundColor: theme.colorScheme.background,
+        title: Text(
+          post.title,
+          style: TextStyle(
+            color: theme.colorScheme.onBackground,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Quicksand',
+          ),
+        ),
+        centerTitle: false,
       ),
       body: PostCard(post: post),
     );

@@ -20,20 +20,23 @@ class RecentMessages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Number of conversations in recent: ${conversations.length}');
     final theme = Theme.of(context);
     final currentUser = context.select((AppBloc bloc) => bloc.state.user);
-    final List<Conversation> filteredConversations =
-        conversations.where((conversation) {
-      final String query = searchQuery.toLowerCase();
-      return conversation.messages.values.any((message) {
-        final String messageText = message.message.toLowerCase();
-        final String userName =
-            '${conversation.getRecipientUser(currentUser.id).firstName} ${conversation.getRecipientUser(currentUser.id).lastName}'
-                .toLowerCase();
-        return messageText.contains(query) || userName.contains(query);
-      });
-    }).toList();
-
+    final List<Conversation> filteredConversations = searchQuery.isEmpty
+        ? conversations
+        : conversations.where((conversation) {
+            final String query = searchQuery.toLowerCase();
+            return conversation.messages.values.any((message) {
+              final recipient =
+                  conversation.getRecipientChatUser(currentUser.id);
+              final String messageText = message.message.toLowerCase();
+              final String userName =
+                  '${recipient.firstName} ${recipient.lastName}'.toLowerCase();
+              return messageText.contains(query) || userName.contains(query);
+            });
+          }).toList();
+    print('Number of filtered conversations: ${filteredConversations.length}');
     if (filteredConversations.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 25),
@@ -53,9 +56,24 @@ class RecentMessages extends StatelessWidget {
     return Column(
       children: filteredConversations.map((conversation) {
         final ChatMessage recentMessage =
-            conversation.messages.values.reduce((value, element) {
-          return value.createdAt.isAfter(element.createdAt) ? value : element;
-        });
+            conversation.messages.values.isNotEmpty
+                ? conversation.messages.values.reduce((value, element) {
+                    return value.createdAt.isAfter(element.createdAt)
+                        ? value
+                        : element;
+                  })
+                : ChatMessage(
+                    messageId: -1,
+                    message: 'No messages here yet',
+                    read: false,
+                    isReceived: false,
+                    type: 'text',
+                    conversationId: -1,
+                    createdAt: DateTime.now(),
+                    authorId: '',
+                    recipientId: '',
+                  );
+
         final ChatUser recipient =
             conversation.getRecipientChatUser(currentUser.id);
 
@@ -100,19 +118,21 @@ class RecentMessages extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              formatTimestamp(recentMessage.createdAt),
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                                fontFamily: 'Quicksand',
-                              ),
-                            ),
-                          ),
-                        ),
+                        recentMessage.messageId != -1
+                            ? SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    formatTimestamp(recentMessage.createdAt),
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      fontFamily: 'Quicksand',
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                     const SizedBox(

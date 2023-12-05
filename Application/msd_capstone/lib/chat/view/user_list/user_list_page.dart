@@ -20,6 +20,7 @@ class _UserListPageState extends State<UserListPage> {
   late ChatBloc _chatBloc;
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -52,19 +53,15 @@ class _UserListPageState extends State<UserListPage> {
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: theme.colorScheme.background,
-        title: Text(
-          'User List',
-          style: TextStyle(
-            color: theme.colorScheme.onBackground,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Quicksand',
-          ),
-        ),
-        centerTitle: false,
+      appBar: ClickableAppBar(
+        title: 'User List',
+        onTap: () {
+          scrollController.animateTo(
+            0.0,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.easeOut,
+          );
+        },
       ),
       body: SafeArea(
         child: Column(
@@ -81,6 +78,7 @@ class _UserListPageState extends State<UserListPage> {
             ),
             Expanded(
               child: Scrollbar(
+                controller: scrollController,
                 child: BlocListener<ChatBloc, ChatState>(
                   listener: (context, state) {
                     if (state is UsersUpdated) {

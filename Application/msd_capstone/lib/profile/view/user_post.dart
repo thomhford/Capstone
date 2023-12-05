@@ -17,7 +17,18 @@ class UserPost extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        title: Text(post.title),
+        elevation: 0.0,
+        backgroundColor: theme.colorScheme.background,
+        title: Text(
+          post.title,
+          style: TextStyle(
+            color: theme.colorScheme.onBackground,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Quicksand',
+          ),
+        ),
+        centerTitle: false,
       ),
       body: Column(
         children: [
