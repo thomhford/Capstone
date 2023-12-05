@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/app/app.dart';
+import 'package:msd_capstone/profile/view/user_post.dart';
 import 'package:msd_capstone/widgets/widgets.dart';
 
 import '../../services/services.dart';
@@ -137,7 +138,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         } else {
                           // If data is available, display it in a MasonryGridView
                           return MediaWidget(
-                            onTap: () {},
+                            onTap: (post) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserPost(post: post),
+                                ),
+                              );
+                            },
                             files: snapshot.data!,
                           );
                         }

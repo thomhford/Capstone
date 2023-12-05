@@ -2,9 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:msd_capstone/widgets/widgets.dart';
-import '../../global/global.dart';
-import '../../services/services.dart';
-import 'widgets/widgets.dart';
+import 'package:msd_capstone/global/global.dart';
+import 'package:msd_capstone/services/services.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:msd_capstone/widgets/widgets.dart';
 import '../../global/global.dart';
 import '../../services/services.dart';
+import 'search_post.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -141,7 +142,14 @@ class _SearchPageState extends State<SearchPage> {
                           );
                         }
                         return MediaWidget(
-                          onTap: () {},
+                          onTap: (post) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchPost(post: post),
+                              ),
+                            );
+                          },
                           files: filteredFiles,
                           scrollController: _scrollController,
                         );

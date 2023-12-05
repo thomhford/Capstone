@@ -4,12 +4,14 @@ import './file.dart';
 import './post_user.dart';
 
 class Post {
+  final int id;
   final String title;
   final String content;
   final List<FileMetadata> files;
   final PostUser user;
 
   Post({
+    required this.id,
     required this.title,
     required this.content,
     required this.files,
@@ -21,6 +23,7 @@ class Post {
     List<FileMetadata> fileList = fileListJson.map((i) => FileMetadata.fromJson(i)).toList();
 
     return Post(
+      id: json['id'],
       title: json['title'],
       content: json['content'],
       files: fileList,

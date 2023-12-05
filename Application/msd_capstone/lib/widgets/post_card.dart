@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:msd_capstone/services/services.dart';
-import 'package:msd_capstone/widgets/avatar.dart';
+import 'package:msd_capstone/widgets/widgets.dart';
 
 class PostCard extends StatelessWidget {
   const PostCard({super.key, required this.post});

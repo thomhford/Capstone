@@ -9,12 +9,12 @@ import '../../services/services.dart';
 class MediaWidget extends StatelessWidget {
   const MediaWidget({
     super.key,
-    required this.onTap(),
+    required this.onTap,
     required this.files,
     this.scrollController,
   });
 
-  final VoidCallback onTap;
+  final Function(Post) onTap;
   final List<Post> files;
   final ScrollController? scrollController;
 
@@ -31,7 +31,7 @@ class MediaWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final post = files[index];
         return GestureDetector(
-          onTap: onTap,
+          onTap: () => onTap(post),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(2.0),
