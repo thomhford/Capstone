@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:msd_capstone/app/app.dart';
 import 'package:msd_capstone/widgets/widgets.dart';
@@ -76,26 +74,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 Avatar(photo: user.photo, name: user.name),
                 const SizedBox(height: 4),
                 Center(
-                  child: Text(
-                    user.name ?? '',
-                    style: TextStyle(
-                      color: theme.colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Quicksand',
-                      fontSize: 20,
-                    )
-                  ),
+                  child: Text(user.name ?? '',
+                      style: TextStyle(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Quicksand',
+                        fontSize: 20,
+                      )),
                 ),
                 const SizedBox(height: 4),
                 Center(
-                  child: Text(
-                    user.email ?? '',
-                    style: TextStyle(
-                      color: theme.colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Quicksand',
-                    )
-                  ),
+                  child: Text(user.email ?? '',
+                      style: TextStyle(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Quicksand',
+                      )),
                 ),
               ],
             ),
@@ -138,27 +132,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   childCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     final post = snapshot.data![index];
-                    return Card(
-                      child: Column(
-                        children: <Widget>[
-                          Text(post.title,
-                              style: Theme.of(context).textTheme.titleLarge),
-                          Text(post.content),
-                          Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
-                                  '/${post.files[0].filePath}',
-                              // TODO: Update this to use all files(If multiple files are uploaded)
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
-                          ),
-                        ],
-                      ),
+                    return MediaWidget(
+                      post: post,
+                      onTap: () {
+                        print('Tapped on Post in Profile Page');
+                      },
                     );
                   },
                 );

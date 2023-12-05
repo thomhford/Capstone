@@ -1,4 +1,4 @@
-// services/get_posts/models/post.dart
+// services/get_posts/models/media_widget.dart
 
 import './file.dart';
 import './post_user.dart';

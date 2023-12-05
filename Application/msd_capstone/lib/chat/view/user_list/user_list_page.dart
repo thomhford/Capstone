@@ -6,7 +6,6 @@ import 'package:msd_capstone/widgets/widgets.dart';
 import '../../models/chat_user.dart';
 import '../../models/conversation.dart';
 import '../conversation_page.dart';
-import '../widgets/widgets.dart';
 
 part 'user_list.dart';
 
@@ -71,11 +70,12 @@ class _UserListPageState extends State<UserListPage> {
         child: Column(
           children: [
             SearchWidget(
-                searchFocusNode: searchFocusNode,
-                searchController: searchController,
-                updateSearchQuery: updateSearchQuery,
-                clearSearch: clearSearch,
-                theme: theme),
+              searchFocusNode: searchFocusNode,
+              searchController: searchController,
+              updateSearchQuery: updateSearchQuery,
+              clearSearch: clearSearch,
+              theme: theme,
+            ),
             const SizedBox(
               height: 10,
             ),

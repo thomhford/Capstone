@@ -3,20 +3,18 @@
 import 'package:flutter/material.dart';
 
 class SearchWidget extends StatelessWidget {
-  const SearchWidget({
-    super.key,
-    required this.searchFocusNode,
-    required this.searchController,
-    required this.updateSearchQuery,
-    required this.clearSearch,
-    required this.theme
-  });
+  const SearchWidget(
+      {super.key,
+      required this.searchFocusNode,
+      required this.searchController,
+      required this.updateSearchQuery,
+      required this.clearSearch,
+      required this.theme});
   final FocusNode searchFocusNode;
   final TextEditingController searchController;
   final updateSearchQuery;
   final clearSearch;
   final ThemeData theme;
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +33,10 @@ class SearchWidget extends StatelessWidget {
                 controller: searchController,
                 focusNode: searchFocusNode,
                 onChanged: updateSearchQuery,
+                style: TextStyle(
+                  color: theme.colorScheme.primary,
+                  fontFamily: 'Quicksand',
+                ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Search',
@@ -54,7 +56,10 @@ class SearchWidget extends StatelessWidget {
             // Only show the cancel button if the TextField is focused
             if (searchFocusNode.hasFocus)
               IconButton(
-                icon: const Icon(Icons.cancel),
+                icon: Icon(
+                  Icons.cancel,
+                  color: theme.colorScheme.primary,
+                ),
                 onPressed: clearSearch,
               ),
           ],

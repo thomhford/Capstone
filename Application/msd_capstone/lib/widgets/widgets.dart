@@ -1,2 +1,4 @@
 export 'avatar.dart';
-export 'post.dart';
+export 'media_widget.dart';
+export 'post_grid.dart';
+export 'search_widget.dart';

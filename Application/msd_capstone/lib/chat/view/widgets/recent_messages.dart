@@ -41,7 +41,7 @@ class RecentMessages extends StatelessWidget {
           child: Text(
             'No conversations found',
             style: TextStyle(
-              color: theme.colorScheme.onPrimary,
+              color: theme.colorScheme.primary,
               fontSize: 20,
               fontFamily: 'Quicksand',
             ),

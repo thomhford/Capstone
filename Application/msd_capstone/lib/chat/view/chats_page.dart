@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/chat/bloc/chat_bloc.dart';
 import 'package:msd_capstone/chat/view/user_list/user_list_page.dart';
+import 'package:msd_capstone/widgets/widgets.dart';
 import '../models/models.dart';
 import './widgets/widgets.dart';
 
