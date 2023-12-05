@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:msd_capstone/app/app.dart';
 import 'package:msd_capstone/widgets/widgets.dart';
@@ -17,6 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late Future<List<Post>> posts;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -38,19 +38,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: theme.colorScheme.background,
-        title: Text(
-          'Profile',
-          style: TextStyle(
-            color: theme.colorScheme.onBackground,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Quicksand',
-          ),
-        ),
-        centerTitle: false,
+      appBar: ClickableAppBar(
+        title: 'Profile',
+        onTap: () {
+          _scrollController.animateTo(
+            0.0,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.easeOut,
+          );
+        },
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -65,85 +61,86 @@ class _ProfilePageState extends State<ProfilePage> {
           )
         ],
       ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const SizedBox(height: 16),
-                Avatar(photo: user.photo, name: user.name),
-                const SizedBox(height: 4),
-                Center(
-                  child: Text(user.name ?? '',
-                      style: TextStyle(
-                        color: theme.colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Quicksand',
-                        fontSize: 20,
-                      )),
-                ),
-                const SizedBox(height: 4),
-                Center(
-                  child: Text(user.email ?? '',
-                      style: TextStyle(
-                        color: theme.colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Quicksand',
-                      )),
-                ),
-              ],
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Divider(
-              color: theme.colorScheme.onPrimary,
-            ),
-          ),
-          FutureBuilder<List<Post>>(
-            future: posts,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              } else if (snapshot.hasError) {
-                return const SliverFillRemaining(
-                  child:
-                      Center(child: Text('Error: Cannot connect to server.')),
-                );
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: Text(
-                      'No files available.',
-                      style: TextStyle(
-                        color: theme.colorScheme.onBackground,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Quicksand',
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              posts = PostService(
+                auth: FirebaseAuth.instance,
+                client: http.Client(),
+              ).fetchUserPosts();
+            });
+          },
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    const SizedBox(height: 16),
+                    Avatar(photo: user.photo, name: user.name),
+                    const SizedBox(height: 4),
+                    Center(
+                      child: Text(user.name ?? '',
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Quicksand',
+                            fontSize: 20,
+                          )),
+                    ),
+                    const SizedBox(height: 4),
+                    Center(
+                      child: Text(
+                        user.email ?? '',
+                        style: TextStyle(
+                          color: theme.colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Quicksand',
+                        ),
                       ),
                     ),
-                  ),
-                );
-              } else {
-                return SliverMasonryGrid.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                  childCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final post = snapshot.data![index];
-                    return MediaWidget(
-                      post: post,
-                      onTap: () {
-                        print('Tapped on Post in Profile Page');
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return FutureBuilder<List<Post>>(
+                      future: posts,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          // While data is loading
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          // If there's an error
+                          return const Center(
+                            child: Text('Error: Cannot connect to server.'),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          // If there's no data
+                          return const Center(
+                            child: Text('No files available.'),
+                          );
+                        } else {
+                          // If data is available, display it in a MasonryGridView
+                          return MediaWidget(
+                            onTap: () {},
+                            files: snapshot.data!,
+                          );
+                        }
                       },
                     );
                   },
-                );
-              }
-            },
+                  childCount: 1, // you can change this as per your requirement
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
