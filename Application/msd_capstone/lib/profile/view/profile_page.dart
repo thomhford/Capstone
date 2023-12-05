@@ -1,11 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// profile_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:msd_capstone/app/app.dart';
 import 'package:msd_capstone/widgets/widgets.dart';
 
 import '../../services/services.dart';
+import '../../global/global.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -22,10 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     try {
-      posts = PostService(
-        auth: FirebaseAuth.instance,
-        client: http.Client(),
-      ).fetchUserPosts();
+      posts = postService.fetchUserPosts();
     } catch (e) {
       logger.e("Failed to initialize user images: $e");
     }
@@ -65,10 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: RefreshIndicator(
           onRefresh: () async {
             setState(() {
-              posts = PostService(
-                auth: FirebaseAuth.instance,
-                client: http.Client(),
-              ).fetchUserPosts();
+              posts = postService.fetchUserPosts();
             });
           },
           child: CustomScrollView(
@@ -81,13 +76,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     Avatar(photo: user.photo, name: user.name),
                     const SizedBox(height: 4),
                     Center(
-                      child: Text(user.name ?? '',
-                          style: TextStyle(
-                            color: theme.colorScheme.onPrimary,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Quicksand',
-                            fontSize: 20,
-                          )),
+                      child: Text(
+                        user.name ?? '',
+                        style: TextStyle(
+                          color: theme.colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Quicksand',
+                          fontSize: 20,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Center(
@@ -116,14 +113,26 @@ class _ProfilePageState extends State<ProfilePage> {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           // If there's an error
-                          return const Center(
-                            child: Text('Error: Cannot connect to server.'),
+                          return Center(
+                            child: Text('Error: Cannot connect to server.',
+                                style: TextStyle(
+                                  color: theme.colorScheme.onBackground,
+                                  fontSize: 20,
+                                  fontFamily: 'Quicksand',
+                                )),
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.isEmpty) {
                           // If there's no data
-                          return const Center(
-                            child: Text('No files available.'),
+                          return Center(
+                            child: Text(
+                              'No files available.',
+                              style: TextStyle(
+                                color: theme.colorScheme.onBackground,
+                                fontSize: 20,
+                                fontFamily: 'Quicksand',
+                              ),
+                            ),
                           );
                         } else {
                           // If data is available, display it in a MasonryGridView

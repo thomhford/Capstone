@@ -9,7 +9,7 @@ import '../../services/services.dart';
 class MediaWidget extends StatelessWidget {
   const MediaWidget({
     super.key,
-    required this.onTap,
+    required this.onTap(),
     required this.files,
     this.scrollController,
   });

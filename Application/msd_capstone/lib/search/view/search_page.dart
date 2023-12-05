@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
+// search_page.dart
+
 import 'package:flutter/material.dart';
-import '../../services/services.dart';
 import 'package:msd_capstone/widgets/widgets.dart';
+import '../../global/global.dart';
+import '../../services/services.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -23,10 +24,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     try {
-      files = PostService(
-        auth: FirebaseAuth.instance,
-        client: http.Client(),
-      ).fetchAllPosts();
+      files = postService.fetchAllPosts();
     } catch (e) {
       logger.e("Failed to initialize search: $e");
     }
@@ -82,10 +80,7 @@ class _SearchPageState extends State<SearchPage> {
               child: RefreshIndicator(
                 onRefresh: () async {
                   setState(() {
-                    files = PostService(
-                      auth: FirebaseAuth.instance,
-                      client: http.Client(),
-                    ).fetchAllPosts();
+                    files = postService.fetchAllPosts();
                   });
                 },
                 child: Scrollbar(
@@ -98,13 +93,27 @@ class _SearchPageState extends State<SearchPage> {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasError) {
                         // If there's an error
-                        return const Center(
-                          child: Text('Error: Cannot connect to server.'),
+                        return Center(
+                          child: Text(
+                            'Error: Cannot connect to server.',
+                            style: TextStyle(
+                              color: theme.colorScheme.onBackground,
+                              fontSize: 20,
+                              fontFamily: 'Quicksand',
+                            ),
+                          ),
                         );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         // If there's no data
-                        return const Center(
-                          child: Text('No files available.'),
+                        return Center(
+                          child: Text(
+                            'No files available.',
+                            style: TextStyle(
+                              color: theme.colorScheme.onBackground,
+                              fontSize: 20,
+                              fontFamily: 'Quicksand',
+                            ),
+                          ),
                         );
                       } else {
                         // If data is available, filter the data and display it in a MasonryGridView
@@ -148,5 +157,3 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
-
-

@@ -1,31 +1,86 @@
 // home_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:msd_capstone/widgets/widgets.dart';
+import '../../global/global.dart';
+import '../../services/services.dart';
+import 'widgets/widgets.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late Future<List<Post>> posts;
+  final ScrollController _scrollController = ScrollController();
+
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      posts = postService.fetchAllPosts();
+    } catch (e) {
+      logger.e("Failed to initialize search: $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: theme.colorScheme.background,
-        title: Text(
-          'Home',
-          style: TextStyle(
-            color: theme.colorScheme.onBackground,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Quicksand',
-          ),
-        ),
-        centerTitle: false,
+      appBar: ClickableAppBar(
+        title: 'Home',
+        onTap: () {
+          _scrollController.animateTo(
+            0.0,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.easeOut,
+          );
+        },
       ),
-      body: const Center(
-        child: Text('Home Page'),
+      body: FutureBuilder<List<Post>>(
+        future: posts,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  posts = postService.fetchAllPosts();
+                });
+              },
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final post = snapshot.data![index];
+                  return PostCard(post: post);
+                },
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Failed to load posts: ${snapshot.error}',
+                style: TextStyle(
+                  color: theme.colorScheme.onBackground,
+                  fontSize: 20,
+                  fontFamily: 'Quicksand',
+                ),
+              ),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
