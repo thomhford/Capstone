@@ -33,12 +33,27 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        title: const Text('Search Page'),
+        elevation: 0.0,
+        backgroundColor: theme.colorScheme.background,
+        title: Text(
+          'Search',
+          style: TextStyle(
+            color: theme.colorScheme.onBackground,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Quicksand',
+          ),
+        ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(
+              Icons.search,
+              color: theme.colorScheme.onBackground,
+            ),
             onPressed: () async {
               final posts = await files;
               showSearch(
@@ -48,6 +63,7 @@ class _SearchPageState extends State<SearchPage> {
             },
           ),
         ],
+        centerTitle: false,
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -78,30 +94,29 @@ class _SearchPageState extends State<SearchPage> {
               // If data is available, display it in a MasonryGridView
               return MasonryGridView.builder(
                 controller: _scrollController,
-                gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
+                gridDelegate:
+                    const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
                 cacheExtent: 1000,
                 itemBuilder: (BuildContext context, int index) {
                   final post = snapshot.data![index];
                   return Card(
                     child: Column(
                       children: <Widget>[
-                        Text(post.title, style: Theme
-                            .of(context)
-                            .textTheme
-                            .titleLarge),
+                        Text(post.title,
+                            style: Theme.of(context).textTheme.titleLarge),
                         Text(post.content),
                         Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: CachedNetworkImage(
-                            imageUrl: 'http://${dotenv.env['API_URL'] ??
-                                "localhost:3000"}'
+                            imageUrl:
+                                'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
                                 '/${post.files[0].filePath}',
                             // TODO: Update this to use all files(If multiple files are uploaded)
-                            placeholder: (context,
-                                url) => const CircularProgressIndicator(),
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
                             errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                                const Icon(Icons.error),
                           ),
                         ),
                       ],

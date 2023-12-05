@@ -52,14 +52,14 @@ class _UserListPageState extends State<UserListPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: theme.colorScheme.primary,
-        title: const Text(
+        backgroundColor: theme.colorScheme.background,
+        title: Text(
           'User List',
           style: TextStyle(
-            color: Colors.white,
+            color: theme.colorScheme.onBackground,
             fontSize: 30,
             fontWeight: FontWeight.bold,
             fontFamily: 'Quicksand',
@@ -75,8 +75,7 @@ class _UserListPageState extends State<UserListPage> {
                 searchController: searchController,
                 updateSearchQuery: updateSearchQuery,
                 clearSearch: clearSearch,
-                theme: theme
-            ),
+                theme: theme),
             const SizedBox(
               height: 10,
             ),
@@ -92,11 +91,11 @@ class _UserListPageState extends State<UserListPage> {
                     builder: (context, state) {
                       final users = _chatBloc.chatData.users.values.toList();
                       if (users.isEmpty) {
-                        return const Center(
+                        return Center(
                           child: Text(
                             "No users found",
                             style: TextStyle(
-                              color: Colors.white70,
+                              color: theme.colorScheme.onBackground,
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Quicksand',
@@ -104,7 +103,12 @@ class _UserListPageState extends State<UserListPage> {
                           ),
                         );
                       }
-                      return UserList(users: users, searchQuery: _searchQuery,theme: theme, chatBloc: _chatBloc);
+                      return UserList(
+                        users: users,
+                        searchQuery: _searchQuery,
+                        theme: theme,
+                        chatBloc: _chatBloc,
+                      );
                     },
                   ),
                 ),

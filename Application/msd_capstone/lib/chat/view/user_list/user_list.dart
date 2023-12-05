@@ -25,17 +25,17 @@ class UserList extends StatelessWidget {
           user.email.toLowerCase().contains(query);
     }).toList();
 
-    // Sort users by last updated if needed...
+    // Sort users by last updated if needed... probably unnecessary...
     // filteredUserList.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
     if (filteredUserList.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 25),
+      return Padding(
+        padding: const EdgeInsets.only(top: 25),
         child: Center(
           child: Text(
             'No users found',
             style: TextStyle(
-              color: Colors.white70,
+              color: theme.colorScheme.onBackground,
               fontSize: 20,
               fontFamily: 'Quicksand',
             ),
@@ -76,13 +76,13 @@ class UserList extends StatelessWidget {
                 bottomLeft: Radius.circular(40),
                 bottomRight: Radius.circular(40),
               ),
-              color: theme.colorScheme.secondary,
+              color: theme.colorScheme.secondaryContainer,
             ),
             child: ListTile(
               title: Text(
                 '${user.firstName} ${user.lastName}',
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: theme.colorScheme.primary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Quicksand',
@@ -95,8 +95,8 @@ class UserList extends StatelessWidget {
               ),
               subtitle: Text(
                 user.email,
-                style: const TextStyle(
-                  color: Colors.white70,
+                style: TextStyle(
+                  color: theme.colorScheme.primary,
                   fontSize: 15,
                   fontFamily: 'Quicksand',
                 ),

@@ -1,7 +1,6 @@
 // navbar.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../camera/camera.dart';
 import '../../chat/chat.dart';
@@ -19,6 +18,7 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<NavigationBloc, int>(builder: (context, state) {
       return Scaffold(
         body: IndexedStack(
@@ -32,13 +32,12 @@ class NavBar extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: NavigationBar(
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           selectedIndex: state,
           onDestinationSelected: (int index) {
             context.read<NavigationBloc>().add(index);
           },
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          indicatorColor: Theme.of(context).colorScheme.onPrimary,
+          backgroundColor: theme.colorScheme.background,
+          indicatorColor: theme.colorScheme.primaryContainer,
           destinations: destinations(state),
         ),
       );
@@ -46,12 +45,12 @@ class NavBar extends StatelessWidget {
   }
 
   List<Widget> destinations(int state) => <Widget>[
-        NavigationDestination(
-          icon: SvgPicture.asset('assets/images/icons/Home.svg'),
+        const NavigationDestination(
+          icon: Icon(Icons.home_outlined),
           label: 'Home',
         ),
-        NavigationDestination(
-          icon: SvgPicture.asset('assets/images/icons/Search.svg'),
+        const NavigationDestination(
+          icon: Icon(Icons.search),
           label: 'Search',
         ),
         UploadNavButton(
@@ -59,12 +58,12 @@ class NavBar extends StatelessWidget {
           label: 'Upload',
           isSelected: state == 2,
         ),
-        NavigationDestination(
-          icon: SvgPicture.asset('assets/images/icons/Chats.svg'),
+        const NavigationDestination(
+          icon: Icon(Icons.chat_bubble_outline_rounded),
           label: 'Chats',
         ),
-        NavigationDestination(
-          icon: SvgPicture.asset('assets/images/icons/Profile.svg'),
+        const NavigationDestination(
+          icon: Icon(Icons.person_outline_rounded),
           label: 'Profile',
         ),
       ];

@@ -26,7 +26,7 @@ class SearchWidget extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theme.colorScheme.secondary,
+          color: theme.colorScheme.secondaryContainer,
         ),
         child: Row(
           children: [
@@ -35,17 +35,17 @@ class SearchWidget extends StatelessWidget {
                 controller: searchController,
                 focusNode: searchFocusNode,
                 onChanged: updateSearchQuery,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Search',
                   hintStyle: TextStyle(
-                    color: Colors.white70,
+                    color: theme.colorScheme.primary,
                     fontSize: 17,
                     fontFamily: 'Quicksand',
                   ),
                   prefixIcon: Icon(
                     Icons.search,
-                    color: Colors.white70,
+                    color: theme.colorScheme.primary,
                     size: 25,
                   ),
                 ),

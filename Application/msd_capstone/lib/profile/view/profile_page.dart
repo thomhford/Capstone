@@ -10,7 +10,6 @@ import 'package:msd_capstone/widgets/widgets.dart';
 
 import '../../services/services.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -36,19 +35,35 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
     final user = context.select((AppBloc bloc) => bloc.state.user);
 
     return Scaffold(
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        title: const Text('Profile Page'),
+        elevation: 0.0,
+        backgroundColor: theme.colorScheme.background,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            color: theme.colorScheme.onBackground,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Quicksand',
+          ),
+        ),
+        centerTitle: false,
         actions: <Widget>[
-          IconButton(
-            key: const Key('profilePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              context.read<AppBloc>().add(const AppLogoutRequested());
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: TextButton(
+              key: const Key('profilePage_logout_iconButton'),
+              child: Text('Logout',
+                  style: TextStyle(color: theme.colorScheme.onBackground)),
+              onPressed: () {
+                context.read<AppBloc>().add(const AppLogoutRequested());
+              },
+            ),
           )
         ],
       ),
@@ -61,12 +76,33 @@ class _ProfilePageState extends State<ProfilePage> {
                 Avatar(photo: user.photo, name: user.name),
                 const SizedBox(height: 4),
                 Center(
-                    child: Text(user.email ?? '', style: textTheme.titleLarge)),
+                  child: Text(
+                    user.name ?? '',
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Quicksand',
+                      fontSize: 20,
+                    )
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Center(
-                    child:
-                        Text(user.name ?? '', style: textTheme.headlineSmall)),
+                  child: Text(
+                    user.email ?? '',
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Quicksand',
+                    )
+                  ),
+                ),
               ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Divider(
+              color: theme.colorScheme.onPrimary,
             ),
           ),
           FutureBuilder<List<Post>>(
@@ -82,8 +118,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       Center(child: Text('Error: Cannot connect to server.')),
                 );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const SliverFillRemaining(
-                  child: Center(child: Text('No files available.')),
+                return SliverFillRemaining(
+                  child: Center(
+                    child: Text(
+                      'No files available.',
+                      style: TextStyle(
+                        color: theme.colorScheme.onBackground,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Quicksand',
+                      ),
+                    ),
+                  ),
                 );
               } else {
                 return SliverMasonryGrid.count(
@@ -96,16 +141,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     return Card(
                       child: Column(
                         children: <Widget>[
-                          Text(post.title, style: Theme.of(context).textTheme.titleLarge),
+                          Text(post.title,
+                              style: Theme.of(context).textTheme.titleLarge),
                           Text(post.content),
                           Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: CachedNetworkImage(
-                              imageUrl: 'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
+                              imageUrl:
+                                  'http://${dotenv.env['API_URL'] ?? "localhost:3000"}'
                                   '/${post.files[0].filePath}',
                               // TODO: Update this to use all files(If multiple files are uploaded)
-                              placeholder: (context, url) => const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
                           ),
                         ],

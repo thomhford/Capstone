@@ -8,6 +8,7 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSuccess) {
@@ -29,7 +30,7 @@ class SignUpForm extends StatelessWidget {
               Icon(
                 Icons.account_circle,
                 size: 100,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: theme.colorScheme.onPrimary,
               ),
               const SizedBox(height: 20),
               Text(
@@ -37,7 +38,7 @@ class SignUpForm extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: theme.colorScheme.onPrimary,
                 ),
               ),
               const SizedBox(height: 40),
@@ -57,6 +58,7 @@ class SignUpForm extends StatelessWidget {
 class _FirstNameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.firstName != current.firstName,
       builder: (context, state) {
@@ -77,26 +79,26 @@ class _FirstNameInput extends StatelessWidget {
                     : null,
                 enabledBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                      BorderSide(color: theme.colorScheme.outline),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant),
+                      color: theme.colorScheme.outlineVariant,),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
-                fillColor: Theme.of(context).colorScheme.primary,
+                fillColor: theme.colorScheme.primary,
                 filled: true,
                 hintStyle:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                    TextStyle(color: theme.colorScheme.onPrimary),
               ),
-              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              cursorColor: theme.colorScheme.outlineVariant,
               textInputAction: TextInputAction.next,
             ),
           ),
@@ -109,6 +111,7 @@ class _FirstNameInput extends StatelessWidget {
 class _LastNameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.lastName != current.lastName,
       builder: (context, state) {
@@ -129,26 +132,26 @@ class _LastNameInput extends StatelessWidget {
                     : null,
                 enabledBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                      BorderSide(color: theme.colorScheme.outline),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant),
+                      color: theme.colorScheme.outlineVariant),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
-                fillColor: Theme.of(context).colorScheme.primary,
+                fillColor: theme.colorScheme.primary,
                 filled: true,
                 hintStyle:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                    TextStyle(color: theme.colorScheme.onPrimary),
               ),
-              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              cursorColor: theme.colorScheme.outlineVariant,
               textInputAction: TextInputAction.next,
             ),
           ),
@@ -161,6 +164,7 @@ class _LastNameInput extends StatelessWidget {
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
@@ -180,26 +184,26 @@ class _EmailInput extends StatelessWidget {
                     state.email.displayError != null ? 'Invalid Email' : null,
                 enabledBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                      BorderSide(color: theme.colorScheme.outline),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant),
+                      color: theme.colorScheme.outlineVariant),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
-                fillColor: Theme.of(context).colorScheme.primary,
+                fillColor: theme.colorScheme.primary,
                 filled: true,
                 hintStyle:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                    TextStyle(color: theme.colorScheme.onPrimary),
               ),
-              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              cursorColor: theme.colorScheme.outlineVariant,
               textInputAction: TextInputAction.next,
             ),
           ),
@@ -218,6 +222,7 @@ class _PasswordInputState extends State<_PasswordInput> {
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         BlocBuilder<SignUpCubit, SignUpState>(
@@ -242,7 +247,7 @@ class _PasswordInputState extends State<_PasswordInput> {
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText ? Icons.visibility : Icons.visibility_off,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: theme.colorScheme.onPrimary,
                       ),
                       onPressed: () {
                         setState(() {
@@ -252,26 +257,26 @@ class _PasswordInputState extends State<_PasswordInput> {
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.outline),
+                          color: theme.colorScheme.outline),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.outlineVariant),
+                          color: theme.colorScheme.outlineVariant),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.error),
+                          color: theme.colorScheme.error),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.error),
+                          color: theme.colorScheme.error),
                     ),
-                    fillColor: Theme.of(context).colorScheme.primary,
+                    fillColor: theme.colorScheme.primary,
                     filled: true,
                     hintStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
+                        color: theme.colorScheme.onPrimary),
                   ),
-                  cursorColor: Theme.of(context).colorScheme.outlineVariant,
+                  cursorColor: theme.colorScheme.outlineVariant,
                   textInputAction: TextInputAction.next,
                 ),
               ),
@@ -300,26 +305,26 @@ class _PasswordInputState extends State<_PasswordInput> {
                       : null,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.outline),
+                        color: theme.colorScheme.outline),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.outlineVariant),
+                        color: theme.colorScheme.outlineVariant),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Theme.of(context).colorScheme.error),
+                        BorderSide(color: theme.colorScheme.error),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Theme.of(context).colorScheme.error),
+                        BorderSide(color: theme.colorScheme.error),
                   ),
-                  fillColor: Theme.of(context).colorScheme.primary,
+                  fillColor: theme.colorScheme.primary,
                   filled: true,
                   hintStyle:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                      TextStyle(color: theme.colorScheme.onPrimary),
                 ),
-                cursorColor: Theme.of(context).colorScheme.outlineVariant,
+                cursorColor: theme.colorScheme.outlineVariant,
                 textInputAction: TextInputAction.done,
               ),
             );
@@ -348,15 +353,17 @@ class _SignUpButton extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 25),
                   decoration: BoxDecoration(
                     color: state.isValid
-                        ? theme.colorScheme.secondary
-                        : theme.colorScheme.secondary.withOpacity(0.5),
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.primary.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
                     child: Text(
                       'SIGN UP',
                       style: TextStyle(
-                        color: theme.colorScheme.onSecondary,
+                        color: state.isValid
+                            ? theme.colorScheme.onPrimary
+                            : theme.colorScheme.onPrimary.withOpacity(0.2),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),

@@ -12,17 +12,23 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final photo = this.photo;
     final name = this.name;
     final avatarSize = this.avatarSize ?? _defaultAvatarSize;
     return CircleAvatar(
       radius: avatarSize,
+      backgroundColor: theme.colorScheme.primaryContainer,
       backgroundImage: photo != null ? CachedNetworkImageProvider(photo) : null,
       child: photo == null
           ? (name != null && name.isNotEmpty
               ? Text(
                   name.split(' ').map((l) => l[0]).take(2).join(),
-                  style: TextStyle(fontSize: avatarSize * 0.75),
+                  style: TextStyle(
+                      fontSize: avatarSize * 0.75,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimary
+                  ),
                 )
               : Icon(Icons.person_outline, size: avatarSize))
           : null,

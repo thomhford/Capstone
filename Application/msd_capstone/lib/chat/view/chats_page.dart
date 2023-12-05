@@ -117,7 +117,7 @@ class _ChatsPageState extends State<ChatsPage> {
 
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       return Scaffold(
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: theme.colorScheme.background,
         body: SafeArea(
           child: Scrollbar(
             controller: scrollController,
@@ -136,13 +136,16 @@ class _ChatsPageState extends State<ChatsPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Messages',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Quicksand',
+                             Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                'Messages',
+                                style: TextStyle(
+                                  color: theme.colorScheme.onBackground,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Quicksand',
+                                ),
                               ),
                             ),
                             IconButton(
@@ -154,16 +157,16 @@ class _ChatsPageState extends State<ChatsPage> {
                                   ),
                                 );
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.create,
-                                color: Colors.white,
+                                color: theme.colorScheme.onBackground,
                               ),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 15,
                       ),
                       SearchWidget(
                           searchFocusNode: searchFocusNode,
@@ -188,7 +191,7 @@ class _ChatsPageState extends State<ChatsPage> {
                         bottomLeft: Radius.circular(40),
                         bottomRight: Radius.circular(40),
                       ),
-                      color: theme.colorScheme.secondary,
+                      color: theme.colorScheme.secondaryContainer,
                     ),
                     child: Column(
                       children: [

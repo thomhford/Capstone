@@ -20,6 +20,7 @@ class RecentMessages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final currentUser = context.select((AppBloc bloc) => bloc.state.user);
     final List<Conversation> filteredConversations =
         conversations.where((conversation) {
@@ -34,13 +35,13 @@ class RecentMessages extends StatelessWidget {
     }).toList();
 
     if (filteredConversations.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 25),
+      return Padding(
+        padding: const EdgeInsets.only(top: 25),
         child: Center(
           child: Text(
             'No conversations found',
             style: TextStyle(
-              color: Colors.white70,
+              color: theme.colorScheme.onPrimary,
               fontSize: 20,
               fontFamily: 'Quicksand',
             ),
@@ -90,8 +91,8 @@ class RecentMessages extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: Text(
                             '${recipient.firstName} ${recipient.lastName}',
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: theme.colorScheme.primary,
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Quicksand',
@@ -105,8 +106,8 @@ class RecentMessages extends StatelessWidget {
                             alignment: Alignment.centerRight,
                             child: Text(
                               formatTimestamp(recentMessage.createdAt),
-                              style: const TextStyle(
-                                color: Colors.white70,
+                              style: TextStyle(
+                                color: theme.colorScheme.primary,
                                 fontFamily: 'Quicksand',
                               ),
                             ),
@@ -121,8 +122,8 @@ class RecentMessages extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         recentMessage.message,
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
                           fontFamily: 'Quicksand',
                         ),
                         overflow: TextOverflow.fade,
