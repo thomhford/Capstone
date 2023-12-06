@@ -10,19 +10,32 @@ import '../../widgets/widgets.dart';
 import '../bloc/chat_bloc.dart' as chat_bloc;
 import '../models/models.dart';
 
-class ConversationPage extends StatelessWidget {
+class ConversationPage extends StatefulWidget {
   final Conversation conversation;
-  final AutoScrollController _scrollController = AutoScrollController();
 
-  ConversationPage({
+  const ConversationPage({
     super.key,
     required this.conversation,
   });
 
   @override
+  State<ConversationPage> createState() => _ConversationPageState();
+}
+
+class _ConversationPageState extends State<ConversationPage> {
+  final AutoScrollController _scrollController = AutoScrollController();
+  late chat_bloc.ChatBloc _chatBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _chatBloc = context.read<chat_bloc.ChatBloc>();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final currentUser = context.select((AppBloc bloc) => bloc.state.user);
-    final recipient = conversation.getRecipientChatUser(currentUser.id);
+    final recipient = widget.conversation.getRecipientChatUser(currentUser.id);
     return Scaffold(
       appBar: ClickableAppBar(
         title: '${recipient.firstName} ${recipient.lastName}',
@@ -36,65 +49,38 @@ class ConversationPage extends StatelessWidget {
         },
       ),
       body: SafeArea(
-        child: BlocBuilder<chat_bloc.ChatBloc, chat_bloc.ChatState>(
-          builder: (context, state) {
-            if ( state is chat_bloc.SocketMessageSent
-              || state is chat_bloc.SocketMessageReceived) {
-              // When a new message is received, update the messages in the Chat widget
-              return Chat(
-                scrollController: _scrollController,
-                messages: conversation.toChatMessages(),
-                showUserAvatars: true,
-                showUserNames: true,
-                onSendPressed: (message) {
-                  // Create a new ChatMessage object
-                  final newMessage = ChatMessage(
-                    message: message.text,
-                    read: false,
-                    isReceived: false,
-                    type: 'text',
-                    conversationId: conversation.conversationId!,
-                    authorId: currentUser.id,
-                  );
-                  // Add a MessageSentEvent to the ChatBloc
-                  BlocProvider.of<chat_bloc.ChatBloc>(context).add(chat_bloc.MessageSentEvent(newMessage));
-                },
-                user: User(
-                  id: currentUser.id,
-                  firstName: currentUser.firstName,
-                  lastName: currentUser.lastName,
-                  imageUrl: currentUser.photo,
-                ),
-              );
-            } else {
-              // If the state is not one of the above, return the Chat widget without updating the messages
-              return Chat(
-                scrollController: _scrollController,
-                messages: conversation.toChatMessages(),
-                showUserAvatars: true,
-                showUserNames: true,
-                onSendPressed: (message) {
-                  // Create a new ChatMessage object
-                  final newMessage = ChatMessage(
-                    message: message.text,
-                    read: false,
-                    isReceived: false,
-                    type: 'text',
-                    conversationId: conversation.conversationId!,
-                    authorId: currentUser.id,
-                  );
-                  // Add a MessageSentEvent to the ChatBloc
-                  BlocProvider.of<chat_bloc.ChatBloc>(context).add(chat_bloc.MessageSentEvent(newMessage));
-                },
-                user: User(
-                  id: currentUser.id,
-                  firstName: currentUser.firstName,
-                  lastName: currentUser.lastName,
-                  imageUrl: currentUser.photo,
-                ),
-              );
+        child: BlocListener<chat_bloc.ChatBloc, chat_bloc.ChatState>(
+          listener: (context, state) {
+            if (state is chat_bloc.SocketMessageReceived) {
+              setState(() {});
             }
           },
+          child: Chat(
+            scrollController: _scrollController,
+            messages: _chatBloc.chatData.conversations[widget.conversation.conversationId]!.toChatMessages(),
+            showUserAvatars: true,
+            showUserNames: true,
+            onSendPressed: (message) {
+              // Create a new ChatMessage object
+              final newMessage = ChatMessage(
+                message: message.text,
+                read: false,
+                isReceived: false,
+                type: 'text',
+                conversationId: widget.conversation.conversationId!,
+                authorId: currentUser.id,
+              );
+              // Add a MessageSentEvent to the ChatBloc
+              BlocProvider.of<chat_bloc.ChatBloc>(context)
+                  .add(chat_bloc.MessageSentEvent(newMessage));
+            },
+            user: User(
+              id: currentUser.id,
+              firstName: currentUser.firstName,
+              lastName: currentUser.lastName,
+              imageUrl: currentUser.photo,
+            ),
+          ),
         ),
       ),
     );
