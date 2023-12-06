@@ -6,7 +6,7 @@ ThemeData lightMode = ThemeData(
     background: Colors.grey.shade200,
     onBackground: Colors.black,
     primary: Colors.lightGreen.shade100,
-    onPrimary: Colors.green.shade900,
+    onPrimary: Colors.blueGrey.shade900,
     primaryContainer: Colors.grey.shade400,
     secondaryContainer: Colors.grey.shade700,
     outline: Colors.white,
@@ -29,7 +29,7 @@ ThemeData darkMode = ThemeData(
   colorScheme: ColorScheme.dark(
     background: Colors.black,
     onBackground: Colors.white,
-    primary: Colors.black,
+    primary: Colors.blueGrey.shade900,
     onPrimary: Colors.lightGreen.shade100,
     primaryContainer: Colors.grey.shade900,
     secondaryContainer: Colors.grey.shade400,

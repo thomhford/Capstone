@@ -34,9 +34,11 @@ class _ConversationPageState extends State<ConversationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final currentUser = context.select((AppBloc bloc) => bloc.state.user);
     final recipient = widget.conversation.getRecipientChatUser(currentUser.id);
     return Scaffold(
+      backgroundColor: theme.colorScheme.background,
       appBar: ClickableAppBar(
         title: '${recipient.firstName} ${recipient.lastName}',
         subtitle: recipient.email,
@@ -58,8 +60,6 @@ class _ConversationPageState extends State<ConversationPage> {
           child: Chat(
             scrollController: _scrollController,
             messages: _chatBloc.chatData.conversations[widget.conversation.conversationId]!.toChatMessages(),
-            showUserAvatars: true,
-            showUserNames: true,
             onSendPressed: (message) {
               // Create a new ChatMessage object
               final newMessage = ChatMessage(
@@ -80,6 +80,18 @@ class _ConversationPageState extends State<ConversationPage> {
               lastName: currentUser.lastName,
               imageUrl: currentUser.photo,
             ),
+            theme: DefaultChatTheme(
+              backgroundColor: theme.colorScheme.background,
+              inputBackgroundColor: theme.colorScheme.primary,
+              inputTextColor: theme.colorScheme.onPrimary,
+              primaryColor: theme.colorScheme.primaryContainer,
+              secondaryColor: theme.colorScheme.onPrimary,
+              sendButtonIcon: Icon(
+                Icons.send,
+                color: theme.colorScheme.onPrimary,
+              ),
+              inputBorderRadius: BorderRadius.circular(20),
+            )
           ),
         ),
       ),
