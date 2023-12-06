@@ -123,10 +123,10 @@ io.on('connection',
                 const user1Socket = await getUserSocket(user1Id);
                 const user2Socket = await getUserSocket(user2Id);
                 if (user1Socket) {
-                    socket.to(user1Socket.socketId).emit('conversation created', conversation);
+                    io.to(user1Socket.socketId).emit('conversation created', conversation);
                 }
                 if (user2Socket) {
-                    socket.to(user2Socket.socketId).emit('conversation created', conversation);
+                    io.to(user2Socket.socketId).emit('conversation created', conversation);
                 }
                 socket.emit('conversation created', conversation);
             } catch (error) {
@@ -141,6 +141,7 @@ io.on('connection',
          * Stores the message in the database and emits 'message received' event to all users in the conversation.
          */
         socket.on('message sent', async ({senderId, conversationId, message, type, fileId}) => {
+            console.log('message sent', senderId, conversationId, message, type, fileId);
             try {
                 // Store the message in the database
                 const savedMessage = await sendMessage({senderId, conversationId, text: message, type, fileId});
@@ -152,12 +153,17 @@ io.on('connection',
 
                     // If the conversation exists, emit a 'message received' event to all users in the conversation
                     if (conversation) {
-                        for (const user of conversation.Users) {
-                            const userSocketId = await getUserSocket(user.uid);
-                            if (userSocketId) {
-                                socket.to(userSocketId.socketId).emit('new message', savedMessage);
-                            }
+                        const user1Socket = await getUserSocket(conversation.user1Id);
+                        const user2Socket = await getUserSocket(conversation.user2Id);
+                        if (user1Socket) {
+                            console.log('emitting to user1', user1Socket.socketId);
+                            io.to(user1Socket.socketId).emit('new message', savedMessage);
                         }
+                        if (user2Socket) {
+                            console.log('emitting to user2', user2Socket.socketId);
+                            io.to(user2Socket.socketId).emit('new message', savedMessage);
+                        }
+                        // socket.emit('new message', savedMessage);
                     }
                     else {
                         // If the conversation does not exist, throw and error to be emitted to the client
@@ -199,12 +205,23 @@ io.on('connection',
                     // Emit a 'message received' event to all users in the conversation
                     const conversation = await getConversation(message.conversationId);
                     if (conversation) {
-                        for (const user of conversation.Users) {
-                            const userSocket = await getUserSocket(user.uid);
-                            if (userSocket) {
-                                socket.to(userSocket.socketId).emit('message received', messageId);
-                            }
+
+                        let data = {
+                            messageId: messageId,
+                            conversationId: conversation.conversation_id
                         }
+
+                        const user1Socket = await getUserSocket(conversation.user1Id);
+                        const user2Socket = await getUserSocket(conversation.user2Id);
+                        if (user1Socket) {
+                            console.log('emitting to user1', user1Socket.socketId);
+                            io.to(user1Socket.socketId).emit('message received', data);
+                        }
+                        if (user2Socket) {
+                            console.log('emitting to user2', user2Socket.socketId);
+                            io.to(user2Socket.socketId).emit('message received', data);
+                        }
+                        // socket.emit('message received', returnData);
                     }
                     else {
                         // If the conversation does not exist, throw and error to be emitted to the client
@@ -242,15 +259,23 @@ io.on('connection',
 
                 // If the conversation exists, emit a 'message received' event to all users in the conversation
                 if (conversation) {
-                    for (const user of conversation.Users) {
-                        const userSocket = await getUserSocket(user.uid);
-                        if (userSocket) {
-                            socket.to(userSocket.socketId).emit('new message', message);
-                        } else {
-                            // If the user is not connected, add the message to their queue
-                            await queueMessage(message);
-                        }
+                    const user1Socket = await getUserSocket(conversation.user1Id);
+                    const user2Socket = await getUserSocket(conversation.user2Id);
+                    if (user1Socket) {
+                        console.log('emitting to user1', user1Socket.socketId);
+                        io.to(user1Socket.socketId).emit('new message', message);
+                    } else {
+                        // If the user is not connected, add the message to their queue
+                        await queueMessage(message);
                     }
+                    if (user2Socket) {
+                        console.log('emitting to user2', user2Socket.socketId);
+                        io.to(user2Socket.socketId).emit('new message', message);
+                    } else {
+                        // If the user is not connected, add the message to their queue
+                        await queueMessage(message);
+                    }
+                    socket.emit('new message', message);
                 }
                 else {
                     // If the conversation does not exist, throw and error to be emitted to the client
@@ -279,11 +304,16 @@ io.on('connection',
                     message.read = true;
                     await message.save();
 
+                    let data = {
+                        messageId: messageId,
+                        conversationId: conversation.conversation_id
+                    }
+
                     // Emit a 'read' event to all users in the conversation
                     for (const userId of [conversation.user1Id, conversation.user2Id]) {
                         const userSocket = await getUserSocket(userId);
                         if (userSocket) {
-                            socket.to(userSocket.socketId).emit('message read receipt', messageId, conversation.conversation_id);
+                            io.to(userSocket.socketId).emit('message read receipt', data);
                         }
                     }
                 }
@@ -314,7 +344,7 @@ io.on('connection',
             try {
                 const recipientSocket = await getUserSocket(recipientId);
                 if (recipientSocket) {
-                    socket.to(recipientSocket.socketId).emit('user typing receipt', senderId);
+                    io.to(recipientSocket.socketId).emit('user typing receipt', { senderId: senderId });
                 }
                 else {
                     // If the recipient is not connected, emit an error event to the client
@@ -335,7 +365,7 @@ io.on('connection',
             try {
                 const recipientSocket = await getUserSocket(recipientId);
                 if (recipientSocket) {
-                    socket.to(recipientSocket.socketId).emit('user stop typing receipt', senderId);
+                    io.to(recipientSocket.socketId).emit('user stop typing receipt', { senderId: senderId });
                 }
                 else {
                     // If the recipient is not connected, emit an error event to the client
@@ -361,10 +391,14 @@ io.on('connection',
                 if (message) {
                     const conversation = await getConversation(message.conversationId);
                     if (conversation) {
-                        for (const user of conversation.Users) {
-                            const userSocket =  await getUserSocket(user.uid);
+                        let data = {
+                            messageId: messageId,
+                            conversationId: conversation.conversation_id
+                        }
+                        for (const userId of [conversation.user1Id, conversation.user2Id]) {
+                            const userSocket =  await getUserSocket(userId);
                             if (userSocket) {
-                                socket.to(userSocket.socketId).emit('message deleted', messageId, conversation.conversation_id);
+                                io.to(userSocket.socketId).emit('message deleted', data);
                             }
                         }
                     }
@@ -394,7 +428,7 @@ io.on('connection',
                     for (const userId of [conversation.user1Id, conversation.user2Id]) {
                         const userSocket = await getUserSocket(userId);
                         if (userSocket) {
-                            socket.to(userSocket.socketId).emit('conversation deleted', conversationId);
+                            io.to(userSocket.socketId).emit('conversation deleted', { conversationId: conversationId });
                         }
                     }
                 }

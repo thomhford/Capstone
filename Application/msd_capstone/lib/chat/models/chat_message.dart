@@ -29,7 +29,7 @@ class ChatMessage {
       messageId: json['message_id'],
       message: json['message'],
       read: json['read'],
-      isReceived: json['is_received'],
+      isReceived: json['isReceived'],
       type: json['type'],
       conversationId: json['conversationId'],
       createdAt: DateTime.parse(json['createdAt']),

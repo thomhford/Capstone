@@ -23,8 +23,8 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
     User.hasMany(Conversation, { as: 'User2Conversations', foreignKey: 'user2Id', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     Conversation.belongsTo(User, { as: 'User1', foreignKey: 'user1Id', targetKey: 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     Conversation.belongsTo(User, { as: 'User2', foreignKey: 'user2Id', targetKey: 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-    User.belongsToMany(Conversation, { through: 'UserConversations', as: 'Conversations' });
-    Conversation.belongsToMany(User, { through: 'UserConversations', as: 'Users' });
+    User.belongsToMany(Conversation, { through: 'UserConversations', as: 'Users' });
+    Conversation.belongsToMany(User, { through: 'UserConversations', as: 'Conversations' });
 
     // User to Message associations
     User.hasMany(Message, { as: 'SentMessages', foreignKey: 'authorId', sourceKey : 'uid', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
@@ -57,14 +57,15 @@ export function initializeModelsAndAssociations(sequelize: Sequelize) {
         Message,
         Post,
         Conversation,
-        UserSocket
+        UserSocket,
+        UserConversation
     }
 }
 
 // Initialize models and associations with the default database instance for export where needed
 const { User, File, Message,
-    Post, Conversation, UserSocket } = initializeModelsAndAssociations(sequelizeDefaultInstance);
-export { User, File, Message, Post, Conversation, UserSocket };
+    Post, Conversation, UserSocket, UserConversation } = initializeModelsAndAssociations(sequelizeDefaultInstance);
+export { User, File, Message, Post, Conversation, UserSocket, UserConversation };
 
 // Export the function for custom initialization (e.g., for testing)
 export default initializeModelsAndAssociations;

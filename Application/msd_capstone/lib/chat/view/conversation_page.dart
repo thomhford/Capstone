@@ -38,7 +38,8 @@ class ConversationPage extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<chat_bloc.ChatBloc, chat_bloc.ChatState>(
           builder: (context, state) {
-            if ( state is chat_bloc.SocketMessageSent ) {
+            if ( state is chat_bloc.SocketMessageSent
+              || state is chat_bloc.SocketMessageReceived) {
               // When a new message is received, update the messages in the Chat widget
               return Chat(
                 scrollController: _scrollController,

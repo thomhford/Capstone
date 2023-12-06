@@ -100,6 +100,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // When the server emits this event, it sends the ID of the message and the ID of the conversation that was received as data.
       // The callback function adds a MessageReceivedEvent with this ID to the ChatBloc.
       socket.on('message received', (data) {
+        print('Message received: $data');
         int messageId = data['messageId'];
         int conversationId = data['conversationId'];
         add(MessageReceivedEvent(messageId, conversationId));

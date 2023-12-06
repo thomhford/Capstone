@@ -271,7 +271,7 @@ export const getConversations = async (userId: number) => {
  */
 export const getConversation = async (conversationId: number) => {
     try {
-        const conversation =  await Conversation.findOne({
+        return await Conversation.findOne({
             where: {conversation_id: conversationId},
             include: [
                 { model: User, as: 'User1' },
@@ -279,11 +279,6 @@ export const getConversation = async (conversationId: number) => {
                 'Messages'
             ]
         });
-        if (conversation) {
-            conversation.Users = await conversation.getUsers();
-            return conversation;
-        }
-        return null;
     } catch (error) {
         console.error('Get Conversation Error:', error,);
         eventEmitter.emit('error', { error: 'Error retrieving conversation', details: error });
