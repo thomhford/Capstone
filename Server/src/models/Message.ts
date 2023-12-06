@@ -10,14 +10,15 @@ interface MessageAttributes {
     isReceived?: boolean; // Not needed at message creation, will be set to false by default
     type: string;
     conversationId: number;
+    authorId: string;
     status?: 'sent' | 'queued' | 'delivered';
 }
 
 export interface MessageInstance extends Model<MessageAttributes>, MessageAttributes {
     // Instance methods for testing associations
     getAttachments: () => Promise<FileInstance[]>;
-    getSender: () => Promise<UserInstance>;
-    setSender: (user: UserInstance, p: { transaction: Transaction }) => void;
+    getAuthor: () => Promise<UserInstance>;
+    setAuthor: (user: UserInstance, p: { transaction: Transaction }) => void;
 }
 
 export const createMessageModel = (sequelize: Sequelize) => sequelize.define<MessageInstance>('Message', {
@@ -48,6 +49,10 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
     },
     conversationId: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    authorId: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
     status: {

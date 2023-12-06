@@ -23,13 +23,14 @@ export const registerUser = async (userId: string): Promise<boolean> => {
         fs.mkdirSync(userFolder, { recursive: true });
 
         const firebaseUser = await admin.auth().getUser(userId);
-        const { displayName, email } = firebaseUser;
+        const { displayName, email, photoURL } = firebaseUser;
 
         await User.create({
             firstName: displayName!.split(' ')[0],
             lastName: displayName!.split(' ')[1],
             email: email!,
             uid: userId,
+            photoUrl: photoURL
         });
 
         console.log('User registered successfully');

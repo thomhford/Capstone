@@ -8,6 +8,7 @@ interface UserAttributes {
     lastName: string;
     email: string;
     uid: string;
+    photoUrl?: string;
 }
 
 export interface UserInstance extends Model<UserAttributes>, UserAttributes {
@@ -15,6 +16,7 @@ export interface UserInstance extends Model<UserAttributes>, UserAttributes {
     getPosts: () => Promise<PostInstance[]>;
     getSentMessages: () => Promise<MessageInstance[]>;
     getReceivedMessages: () => Promise<MessageInstance[]>;
+    updatedAt: Date;
 }
 
 export const createUserModel = (sequelize: Sequelize) => {
@@ -39,6 +41,10 @@ export const createUserModel = (sequelize: Sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
+        },
+        photoUrl: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
         timestamps: true,

@@ -10,6 +10,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.status.isFailure) {
@@ -31,7 +32,7 @@ class LoginForm extends StatelessWidget {
               Icon(
                 Icons.account_circle,
                 size: 100,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: theme.colorScheme.onPrimary,
               ),
               const SizedBox(height: 20),
               Text(
@@ -39,7 +40,7 @@ class LoginForm extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: theme.colorScheme.onPrimary,
                 ),
               ),
               const SizedBox(height: 40),
@@ -86,7 +87,7 @@ class _ContinueWith extends StatelessWidget {
             child: Text(
               'Or continue with',
               style:
-                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                  TextStyle(color: Theme.of(context).colorScheme.onPrimary),
             ),
           ),
           Expanded(
@@ -104,6 +105,7 @@ class _ContinueWith extends StatelessWidget {
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
@@ -124,25 +126,22 @@ class _EmailInput extends StatelessWidget {
                 errorText:
                     state.email.displayError != null ? 'Invalid Email' : null,
                 enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                  borderSide: BorderSide(color: theme.colorScheme.outline),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant),
+                    color: theme.colorScheme.outlineVariant,
+                  ),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                  borderSide: BorderSide(color: theme.colorScheme.error),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                  borderSide: BorderSide(color: theme.colorScheme.error),
                 ),
-                fillColor: Theme.of(context).colorScheme.primary,
+                fillColor: theme.colorScheme.primary,
                 filled: true,
-                hintStyle:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                hintStyle: TextStyle(color: theme.colorScheme.onPrimary),
               ),
             ),
           ),
@@ -161,6 +160,7 @@ class _PasswordInputState extends State<_PasswordInput> {
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
@@ -174,7 +174,7 @@ class _PasswordInputState extends State<_PasswordInput> {
                   context.read<LoginCubit>().passwordChanged(password),
               obscureText: _obscureText,
               textInputAction: TextInputAction.done,
-              cursorColor: Theme.of(context).colorScheme.outlineVariant,
+              cursorColor: theme.colorScheme.outlineVariant,
               decoration: InputDecoration(
                 hintText: 'Password',
                 helperText: '',
@@ -184,7 +184,7 @@ class _PasswordInputState extends State<_PasswordInput> {
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscureText ? Icons.visibility : Icons.visibility_off,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                   ),
                   onPressed: () {
                     setState(() {
@@ -194,24 +194,24 @@ class _PasswordInputState extends State<_PasswordInput> {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.outline),
+                      BorderSide(color: theme.colorScheme.outline),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant),
+                      color: theme.colorScheme.outlineVariant),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error),
+                      BorderSide(color: theme.colorScheme.error),
                 ),
-                fillColor: Theme.of(context).colorScheme.primary,
+                fillColor: theme.colorScheme.primary,
                 filled: true,
                 hintStyle:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                    TextStyle(color: theme.colorScheme.onPrimary),
               ),
             ),
           ),
@@ -230,7 +230,7 @@ class _ForgotPassword extends StatelessWidget {
       onPressed: () => context.read<LoginCubit>().sendPasswordResetEmail(),
       child: Text(
         'Forgot Password?',
-        style: TextStyle(color: theme.primaryColor),
+        style: TextStyle(color: theme.colorScheme.onPrimary),
       ),
     );
   }
@@ -254,15 +254,17 @@ class _LoginButton extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 25),
                   decoration: BoxDecoration(
                     color: state.isValid
-                        ? theme.colorScheme.secondary
-                        : theme.colorScheme.secondary.withOpacity(0.5),
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.primary.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
                     child: Text(
                       'LOGIN',
                       style: TextStyle(
-                        color: theme.colorScheme.onSecondary,
+                        color: state.isValid
+                            ? theme.colorScheme.onPrimary
+                            : theme.colorScheme.onPrimary.withOpacity(0.2),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -286,15 +288,15 @@ class _GoogleLoginButton extends StatelessWidget {
         key: const Key('loginForm_googleLogin_raisedButton'),
         label: Text(
           'SIGN IN WITH GOOGLE',
-          style: TextStyle(color: theme.colorScheme.onSecondary),
+          style: TextStyle(color: theme.colorScheme.onPrimary),
         ),
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          backgroundColor: theme.colorScheme.secondary,
+          backgroundColor: theme.colorScheme.primary,
         ),
-        icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
+        icon: Icon(FontAwesomeIcons.google, color: theme.colorScheme.onPrimary),
         onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
       ),
     );
@@ -310,7 +312,7 @@ class _SignUpButton extends StatelessWidget {
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
       child: Text(
         'CREATE ACCOUNT',
-        style: TextStyle(color: theme.primaryColor),
+        style: TextStyle(color: theme.colorScheme.onPrimary),
       ),
     );
   }

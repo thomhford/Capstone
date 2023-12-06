@@ -29,7 +29,7 @@ class UploadPageState extends State<UploadPage> {
     _fetchMedia();
     if (widget.filePath != null) {
       _file = File(widget.filePath!);
-      if (_file!.path.endsWith('.mp4')) {
+      if (_isVideoFile(_file!)) {
         _videoPlayerController = VideoPlayerController.file(_file!)
           ..initialize().then(
             (_) {
@@ -60,9 +60,22 @@ class UploadPageState extends State<UploadPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        title: const Text('File Upload'),
+        elevation: 0.0,
+        backgroundColor: theme.colorScheme.background,
+        title: Text(
+            'File Upload',
+            style: TextStyle(
+              color: theme.colorScheme.onBackground,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Quicksand',
+            ),
+          ),
+        centerTitle: false,
         actions: [
           TextButton(
             onPressed: _file != null ? () {
@@ -76,8 +89,10 @@ class UploadPageState extends State<UploadPage> {
             child: Text(
               'Next',
               style: TextStyle(
-                color: _file != null ? Colors.white : Colors.grey,
+                color: _file != null ? theme.colorScheme.onBackground : Colors.grey,
                 fontSize: 16,
+                fontWeight: _file != null ? FontWeight.bold : FontWeight.normal,
+                fontFamily: 'Quicksand',
               ),
             ),
           ),
@@ -160,7 +175,6 @@ class UploadPageState extends State<UploadPage> {
   }
 
   bool _isVideoFile(File file) {
-    // Here we check the extension of the file to determine if it's a video.
     String extension = file.path.split('.').last.toLowerCase();
     return extension == 'mp4' || extension == 'mov' || extension == 'avi';
   }

@@ -1,9 +1,8 @@
 // controllers/conversationController.ts
-import {File as Attachment, Message, Conversation, User} from '../models';
+import {Conversation, File as Attachment, Message, User} from '../models';
 import sequelize from "../config/db";
-import { Op } from "sequelize";
-import { eventEmitter } from '../config/events';
-import {ConversationInstance} from "../models/Conversation";
+import {Op} from "sequelize";
+import {eventEmitter} from '../config/events';
 
 /**
  * Parameters for the sendMessage function.
@@ -57,13 +56,14 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
                 message: text,
                 type,
                 conversationId,
+                authorId: senderId,
                 status: 'sent'
             }, {transaction: t});
 
             // Associate the message with the sender
             const sender = await User.findOne({ where: { uid: senderId } });
             if (sender) {
-                message.setSender(sender, { transaction: t });
+                message.setAuthor(sender, { transaction: t });
             }
 
             // If type indicates an attachment and fileId is provided, associate the file with the message
@@ -90,8 +90,69 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
         });
 
     } catch (error) {
-        console.error(error);
+        console.error('Send Message Error', error);
         eventEmitter.emit('error', { error: 'Error sending message', details: error });
+    }
+};
+
+/**
+ * Function to create a new conversation between two users.
+ *
+ * This function does the following:
+ * 1. Creates a new Conversation instance in the database with the provided details.
+ * 2. Returns the created conversation.
+ *
+ * @param {string} user1Id - The ID of the first user.
+ * @param {string} user2Id - The ID of the second user.
+ *
+ * @returns {Promise<ConversationInstance>} The created conversation.
+ *
+ * @throws Will throw an error if there's an issue creating the conversation.
+ */
+export const createConversation = async (user1Id: string, user2Id: string) => {
+    try {
+        // Check if a conversation between the two users already exists
+        const existingConversation = await Conversation.findOne({
+            where: {
+                [Op.or]: [
+                    { user1Id: user1Id, user2Id: user2Id },
+                    { user1Id: user2Id, user2Id: user1Id }
+                ]
+            }
+        });
+
+        // If a conversation already exists, throw error
+        if (existingConversation) {
+            console.log('A conversation between these two users already exists.');
+            throw Error('A conversation between these two users already exists.');
+        }
+
+        // If a conversation doesn't exist, create one and return it
+        console.log('Creating conversation between', user1Id, 'and', user2Id);
+        const newConversation = await Conversation.create({
+            user1Id,
+            user2Id
+        });
+
+        return await Conversation.findOne({
+            where: {conversation_id: newConversation.conversation_id},
+            include: [
+                {
+                    model: User,
+                    as: 'User1',
+                    attributes: ['uid', 'firstName', 'lastName', 'email', 'photoUrl', 'updatedAt']
+                },
+                {
+                    model: User,
+                    as: 'User2',
+                    attributes: ['uid', 'firstName', 'lastName', 'email', 'photoUrl', 'updatedAt']
+                },
+            ],
+        });
+
+    } catch (error) {
+        console.error('Create Conversation Error:', error);
+        eventEmitter.emit('error', { error: 'Error creating conversation', details: error });
     }
 };
 
@@ -108,10 +169,15 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
  * @throws Will throw an error if there's an issue fetching the message or updating its status.
  */
 export const queueMessage = async (messageId: number) => {
-    const message = await Message.findOne({ where: { message_id: messageId } });
-    if (message) {
-        message.status = 'queued';
-        await message.save();
+    try {
+        const message = await Message.findOne({where: {message_id: messageId}});
+        if (message) {
+            message.status = 'queued';
+            await message.save();
+        }
+    } catch (error) {
+        console.error('Queue Message Error:', error);
+        eventEmitter.emit('error', { error: 'Error queuing message', details: error });
     }
 };
 
@@ -119,7 +185,7 @@ export const queueMessage = async (messageId: number) => {
  * Function to deliver queued messages for a user.
  *
  * This function does the following:
- * 1. Fetches all messages with the status 'queued' that belong to conversations involving the user.
+ * 1. Fetches all messages with the status 'sent' that belong to conversations involving the user.
  * 2. For each fetched message, it updates the status of the message to 'delivered'.
  * 3. Saves the updated message in the database.
  * 4. Returns the updated messages.
@@ -131,23 +197,28 @@ export const queueMessage = async (messageId: number) => {
  * @throws Will throw an error if there's an issue fetching the messages, updating their status, or saving the messages.
  */
 export const deliverQueuedMessages = async (userId: string) => {
-    const messages = await Message.findAll({
-        where: {
-            status: 'queued',
-            '$Conversation.user1Id$': userId,
-            '$Conversation.user2Id$': userId
-        },
-        include: [{
-            model: Conversation,
-            as: 'Conversation',
-            attributes: ['user1Id', 'user2Id']
-        }]
-    });
-    for (const message of messages) {
-        message.status = 'delivered';
-        await message.save();
+    try {
+        const messages = await Message.findAll({
+            where: {
+                status: 'queued',
+                '$Conversation.user1Id$': userId,
+                '$Conversation.user2Id$': userId
+            },
+            include: [{
+                model: Conversation,
+                as: 'Conversation',
+                attributes: ['user1Id', 'user2Id']
+            }]
+        });
+        for (const message of messages) {
+            message.status = 'delivered';
+            await message.save();
+        }
+        return messages;
+    } catch (error) {
+        console.error('Deliver Queued Messages Error:', error);
+        eventEmitter.emit('error', { error: 'Error delivering queued messages', details: error });
     }
-    return messages;
 };
 
 /**
@@ -179,7 +250,7 @@ export const getConversations = async (userId: number) => {
             include: ['User1', 'User2', 'Messages']
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Conversations Error:', error);
         eventEmitter.emit('error', { error: 'Error retrieving conversations', details: error });
     }
 };
@@ -202,15 +273,45 @@ export const getConversation = async (conversationId: number) => {
     try {
         return await Conversation.findOne({
             where: {conversation_id: conversationId},
-            include: ['User1', 'User2', 'Messages', {
-                model: User,
-                as: 'Users',
-                through: {attributes: []} // This will exclude the attributes of the join table
-            }]
+            include: [
+                { model: User, as: 'User1' },
+                { model: User, as: 'User2' },
+                'Messages'
+            ]
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Conversation Error:', error,);
         eventEmitter.emit('error', { error: 'Error retrieving conversation', details: error });
+    }
+};
+
+/**
+ * Function to retrieve a list of users that can be part of a new conversation.
+ * This excludes the current user.
+ *
+ * This function does the following:
+ * 1. Fetches all users from the database.
+ * 2. Excludes the current user.
+ * 3. Returns the fetched users.
+ *
+ * @param {string} userId - The ID of the current user.
+ *
+ * @returns {Promise<UserInstance[]>} An array of the fetched users.
+ *
+ * @throws Will throw an error if there's an issue fetching the users from the database.
+ */
+export const getAvailableUsers = async (userId: string) => {
+    try {
+        return await User.findAll({
+            where: {
+                uid: {
+                    [Op.ne]: userId
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Get Available Users Error:', error);
+        eventEmitter.emit('error', { error: 'Error retrieving available users', details: error });
     }
 };
 
@@ -234,7 +335,7 @@ export const getMessage = async (messageId: number) => {
             where: {message_id: messageId}
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Message Error:', error);
         eventEmitter.emit('error', { error: 'Error retrieving message', details: error });
     }
 };
@@ -253,7 +354,7 @@ export const deleteMessage = async (messageId: number) => {
             return message;
         }
     } catch (error) {
-        console.error(error);
+        console.error('Delete Message Error:', error);
         eventEmitter.emit('error', { error: 'Error deleting message', details: error });
     }
 };
@@ -267,7 +368,7 @@ export const getMessages = async (conversationId: number) => {
             include: ['Sender', 'Attachments']
         });
     } catch (error) {
-        console.error(error);
+        console.error('Get Messages Error:', error);
         eventEmitter.emit('error', { error: 'Error retrieving messages', details: error });
     }
 };
@@ -297,7 +398,7 @@ export const deleteConversation = async (conversationId: number) => {
             }
         });
     } catch (error) {
-        console.error(error);
+        console.error('Delete Conversation Error:', error);
         eventEmitter.emit('error', { error: 'Error deleting conversation', details: error });
     }
 };

@@ -2,6 +2,7 @@
 
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { UserInstance } from "./User";
+import { MessageInstance } from "./Message";
 
 interface ConversationAttributes {
     conversation_id?: number;
@@ -12,6 +13,11 @@ interface ConversationAttributes {
 
 export interface ConversationInstance extends Model<ConversationAttributes>, ConversationAttributes {
     Users: UserInstance[];
+    Messages: MessageInstance[];
+    createdAt: Date;
+    getUsers: () => Promise<UserInstance[]>;
+    User1: UserInstance;
+    User2: UserInstance;
 }
 
 export const createConversationModel = (sequelize: Sequelize) => sequelize.define<ConversationInstance>('Conversation', {

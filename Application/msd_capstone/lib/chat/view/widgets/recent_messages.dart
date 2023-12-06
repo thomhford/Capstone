@@ -1,9 +1,10 @@
 // recent_messages.dart
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:msd_capstone/chat/services/chat_service.dart';
+import 'package:msd_capstone/widgets/widgets.dart';
+import '../../../app/bloc/app_bloc.dart';
 import '../../models/models.dart';
 import '../conversation_page.dart';
 
@@ -19,23 +20,30 @@ class RecentMessages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Conversation> filteredConversations = conversations.where((conversation) {
-      final String query = searchQuery.toLowerCase();
-      return conversation.messages.any((message) {
-        final String messageText = message.message.toLowerCase();
-        final String userName = conversation.users[message.senderId]!.name.toLowerCase();
-        return messageText.contains(query) || userName.contains(query);
-      });
-    }).toList();
+    final theme = Theme.of(context);
+    final currentUser = context.select((AppBloc bloc) => bloc.state.user);
+    final List<Conversation> filteredConversations = searchQuery.isEmpty
+        ? conversations
+        : conversations.where((conversation) {
+            final String query = searchQuery.toLowerCase();
+            return conversation.messages.values.any((message) {
+              final recipient =
+                  conversation.getRecipientChatUser(currentUser.id);
+              final String messageText = message.message.toLowerCase();
+              final String userName =
+                  '${recipient.firstName} ${recipient.lastName}'.toLowerCase();
+              return messageText.contains(query) || userName.contains(query);
+            });
+          }).toList();
 
     if (filteredConversations.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 25),
+      return Padding(
+        padding: const EdgeInsets.only(top: 25),
         child: Center(
           child: Text(
             'No conversations found',
             style: TextStyle(
-              color: Colors.white70,
+              color: theme.colorScheme.primary,
               fontSize: 20,
               fontFamily: 'Quicksand',
             ),
@@ -46,10 +54,26 @@ class RecentMessages extends StatelessWidget {
 
     return Column(
       children: filteredConversations.map((conversation) {
-        final ChatMessage recentMessage = conversation.messages.reduce((value, element) {
-          return value.timestamp.isAfter(element.timestamp) ? value : element;
-        });
-        final ChatUser recipient = conversation.users[recentMessage.recipientId]!;
+        final ChatMessage recentMessage =
+            conversation.messages.values.isNotEmpty
+                ? conversation.messages.values.reduce((value, element) {
+                    return value.createdAt!.isAfter(element.createdAt!)
+                        ? value
+                        : element;
+                  })
+                : ChatMessage(
+                    message: 'No messages here yet',
+                    read: false,
+                    isReceived: false,
+                    type: 'text',
+                    conversationId: conversation.conversationId!,
+                    createdAt: DateTime.now(),
+                    authorId: '',
+                  );
+
+        final ChatUser recipient =
+            conversation.getRecipientChatUser(currentUser.id);
+
         return Padding(
           padding: const EdgeInsets.only(left: 20, right: 10, top: 25),
           child: GestureDetector(
@@ -65,10 +89,10 @@ class RecentMessages extends StatelessWidget {
             },
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage:
-                  CachedNetworkImageProvider(recipient.imageUrl),
+                Avatar(
+                  photo: recipient.photoUrl,
+                  name: '${recipient.firstName} ${recipient.lastName}',
+                  avatarSize: 30,
                 ),
                 const SizedBox(
                   width: 15,
@@ -81,9 +105,9 @@ class RecentMessages extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: Text(
-                            recipient.name,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            '${recipient.firstName} ${recipient.lastName}',
+                            style: TextStyle(
+                              color: theme.colorScheme.primary,
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Quicksand',
@@ -91,19 +115,21 @@ class RecentMessages extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              formatTimestamp(recentMessage.timestamp),
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontFamily: 'Quicksand',
-                              ),
-                            ),
-                          ),
-                        ),
+                        recentMessage.messageId != -1
+                            ? SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    formatTimestamp(recentMessage.createdAt!),
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      fontFamily: 'Quicksand',
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                     const SizedBox(
@@ -113,8 +139,8 @@ class RecentMessages extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         recentMessage.message,
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
                           fontFamily: 'Quicksand',
                         ),
                         overflow: TextOverflow.fade,

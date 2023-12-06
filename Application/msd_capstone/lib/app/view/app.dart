@@ -1,8 +1,10 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msd_capstone/app/app.dart';
+import 'package:msd_capstone/chat/bloc/chat_bloc.dart';
 import 'package:msd_capstone/theme.dart';
 
 import '../../nav_bar/bloc/navigation_bloc.dart';
@@ -28,6 +30,12 @@ class App extends StatelessWidget {
           ),
           BlocProvider<NavigationBloc>(
             create: (_) => NavigationBloc(),
+          ),
+          BlocProvider<ChatBloc>(
+            create: (_) => ChatBloc(
+              currentUserId: _authenticationRepository.currentUser.id,
+              firebaseAuth: FirebaseAuth.instance,
+            ),
           ),
         ],
         child: const AppView(),

@@ -15,7 +15,8 @@ if (!dbDatabase || !dbUsername || !dbPassword) {
 // Create connection to database
 const sequelize = new Sequelize(dbDatabase, dbUsername, dbPassword, {
     host: 'localhost',
-    dialect: 'mysql'
+    dialect: 'mysql',
+    logging: false,
 });
 
 sequelize.authenticate()

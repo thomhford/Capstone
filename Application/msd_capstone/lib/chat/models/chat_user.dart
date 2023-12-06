@@ -3,43 +3,62 @@
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatUser {
+  final String firstName;
+  final String lastName;
+  final String email;
   final String id;
-  final String name;
-  final String imageUrl;
+  final String? photoUrl;
+  final DateTime updatedAt;
 
   ChatUser({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
     required this.id,
-    required this.name,
-    required this.imageUrl,
+    this.photoUrl,
+    required this.updatedAt,
   });
 
-  static ChatUser fromMap(Map<String, dynamic> map) {
+  factory ChatUser.fromJson(Map<String, dynamic> json) {
     return ChatUser(
-      id: map['id'],
-      name: map['name'],
-      imageUrl: map['imageUrl'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      email: json['email'],
+      id: json['uid'],
+      photoUrl: json['photoUrl'],
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'uid': id,
+      'photoUrl': photoUrl,
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
+
+  factory ChatUser.fromMap(Map<String, dynamic> map) {
+    return ChatUser(
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      email: map['email'],
+      id: map['uid'],
+      photoUrl: map['photoUrl'],
+      updatedAt: DateTime.parse(map['updatedAt']),
     );
   }
 
   types.User toChatUser() {
-    // Split the name into first and last
-    final nameSplit = name.split(' ');
-    // Check if the name has more than one part
-    if (nameSplit.length == 2) {
-      // Return a ChatUser with both first and last name
-      return types.User(
-        id: id,
-        firstName: nameSplit[0],
-        lastName: nameSplit[1],
-        imageUrl: imageUrl,
-      );
-    } else {
-      // If it doesn't, return a ChatUser with first name only
-      return types.User(
-        id: id,
-        firstName: nameSplit[0],
-        imageUrl: imageUrl,
-      );
-    }
+    return types.User(
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
+      imageUrl: photoUrl,
+      updatedAt: updatedAt.millisecondsSinceEpoch,
+    );
   }
 }

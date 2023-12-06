@@ -4,66 +4,92 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import './chat_user.dart';
 
 class ChatMessage {
-  final String senderId;
-  final String recipientId;
+  final int? messageId; // set by the server
   final String message;
   final bool read;
   final bool isReceived;
   final String type;
-  final DateTime timestamp;
+  final int conversationId;
+  final DateTime? createdAt; // set by the server
+  final String authorId;
 
   ChatMessage({
-    required this.senderId,
-    required this.recipientId,
+    this.messageId, // set by the server
     required this.message,
     required this.read,
     required this.isReceived,
     required this.type,
-    required this.timestamp,
+    required this.conversationId,
+    this.createdAt, // set by the server
+    required this.authorId,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
     return ChatMessage(
-      senderId: json['sender_id'],
-      recipientId: json['recipient_id'],
+      messageId: json['message_id'],
       message: json['message'],
-      read: json['is_read'],
-      isReceived: json['is_received'],
+      read: json['read'],
+      isReceived: json['isReceived'],
       type: json['type'],
-      timestamp: DateTime.parse(json['timestamp']),
+      conversationId: json['conversationId'],
+      createdAt: DateTime.parse(json['createdAt']),
+      authorId: json['authorId'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'sender_id': senderId,
-      'recipient_id': recipientId,
       'message': message,
-      'is_read': read,
+      'read': read,
       'is_received': isReceived,
       'type': type,
-      'timestamp': timestamp.toIso8601String(),
+      'conversationId': conversationId,
+      'senderId': authorId,
     };
   }
 
   static ChatMessage fromMap(Map<String, dynamic> map) {
     return ChatMessage(
-      senderId: map['sender_id'],
-      recipientId: map['recipient_id'],
+      messageId: map['message_id'],
       message: map['message'],
-      read: map['is_read'],
-      isReceived: map['is_received'],
+      read: map['read'],
+      isReceived: map['isReceived'],
       type: map['type'],
-      timestamp: DateTime.parse(map['timestamp']),
+      conversationId: map['conversationId'],
+      createdAt: DateTime.parse(map['createdAt']),
+      authorId: map['authorId'],
+    );
+  }
+
+  ChatMessage copyWith({
+    int? messageId,
+    String? message,
+    bool? read,
+    bool? isReceived,
+    String? type,
+    int? conversationId,
+    String? status,
+    DateTime? createdAt,
+    String? authorId,
+  }) {
+    return ChatMessage(
+      messageId: messageId ?? this.messageId,
+      message: message ?? this.message,
+      read: read ?? this.read,
+      isReceived: isReceived ?? this.isReceived,
+      type: type ?? this.type,
+      conversationId: conversationId ?? this.conversationId,
+      createdAt: createdAt ?? this.createdAt,
+      authorId: authorId ?? this.authorId,
     );
   }
 
   types.Message toChatMessage(Map<String, ChatUser> users) {
     return types.TextMessage(
-      author: users[senderId]!.toChatUser(),
-      id: '', // Generate or use an existing unique message ID
+      author: users[authorId]!.toChatUser(),
+      id: messageId.toString(),
       text: message,
-      createdAt: timestamp.millisecondsSinceEpoch,
+      createdAt: createdAt!.millisecondsSinceEpoch,
     );
   }
 }
