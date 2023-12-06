@@ -4,26 +4,24 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import './chat_user.dart';
 
 class ChatMessage {
-  final int messageId;
+  final int? messageId; // set by the server
   final String message;
   final bool read;
   final bool isReceived;
   final String type;
   final int conversationId;
-  final DateTime createdAt;
+  final DateTime? createdAt; // set by the server
   final String authorId;
-  final String recipientId;
 
   ChatMessage({
-    required this.messageId,
+    this.messageId, // set by the server
     required this.message,
     required this.read,
     required this.isReceived,
     required this.type,
     required this.conversationId,
-    required this.createdAt,
+    this.createdAt, // set by the server
     required this.authorId,
-    required this.recipientId,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -35,22 +33,18 @@ class ChatMessage {
       type: json['type'],
       conversationId: json['conversationId'],
       createdAt: DateTime.parse(json['createdAt']),
-      authorId: json['senderId'],
-      recipientId: json['receiverId'],
+      authorId: json['authorId'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'message_id': messageId,
       'message': message,
       'read': read,
       'is_received': isReceived,
       'type': type,
       'conversationId': conversationId,
-      'createdAt': createdAt.toIso8601String(),
       'senderId': authorId,
-      'receiverId': recipientId,
     };
   }
 
@@ -59,12 +53,11 @@ class ChatMessage {
       messageId: map['message_id'],
       message: map['message'],
       read: map['read'],
-      isReceived: map['is_received'],
+      isReceived: map['isReceived'],
       type: map['type'],
       conversationId: map['conversationId'],
       createdAt: DateTime.parse(map['createdAt']),
-      authorId: map['senderId'],
-      recipientId: map['receiverId'],
+      authorId: map['authorId'],
     );
   }
 
@@ -78,7 +71,6 @@ class ChatMessage {
     String? status,
     DateTime? createdAt,
     String? authorId,
-    String? recipientId,
   }) {
     return ChatMessage(
       messageId: messageId ?? this.messageId,
@@ -89,7 +81,6 @@ class ChatMessage {
       conversationId: conversationId ?? this.conversationId,
       createdAt: createdAt ?? this.createdAt,
       authorId: authorId ?? this.authorId,
-      recipientId: recipientId ?? this.recipientId,
     );
   }
 
@@ -98,7 +89,7 @@ class ChatMessage {
       author: users[authorId]!.toChatUser(),
       id: messageId.toString(),
       text: message,
-      createdAt: createdAt.millisecondsSinceEpoch,
+      createdAt: createdAt!.millisecondsSinceEpoch,
     );
   }
 }

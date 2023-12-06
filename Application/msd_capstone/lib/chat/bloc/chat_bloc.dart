@@ -65,6 +65,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // The callback function maps each item in the data to a Conversation object, creates a list of these objects,
       // and adds a ConversationsReceivedEvent with this list to the ChatBloc.
       socket.on('conversations list', (data) {
+        print('Conversations received: $data');
         List<Conversation> conversations = data.map<Conversation>((item) => Conversation.fromMap(item)).toList();
         add(ConversationsReceivedEvent(conversations));
       });
@@ -266,7 +267,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onNewMessageEvent(NewMessageEvent event, Emitter<ChatState> emit) async {
     if (chatData.conversations.containsKey(event.message.conversationId)) {
       chatData.conversations[event.message.conversationId]!.messages[event
-          .message.messageId] = event.message;
+          .message.messageId!] = event.message;
       emit(SocketNewMessage(event.message));
       emit(ConversationsUpdated());
       socket.emit('message delivered', event.message.messageId);

@@ -95,24 +95,30 @@ class _SearchPageState extends State<SearchPage> {
                       } else if (snapshot.hasError) {
                         // If there's an error
                         return Center(
-                          child: Text(
-                            'Error: Cannot connect to server.',
-                            style: TextStyle(
-                              color: theme.colorScheme.onBackground,
-                              fontSize: 20,
-                              fontFamily: 'Quicksand',
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: Text(
+                              'Error: Cannot connect to server.',
+                              style: TextStyle(
+                                color: theme.colorScheme.onBackground,
+                                fontSize: 20,
+                                fontFamily: 'Quicksand',
+                              ),
                             ),
                           ),
                         );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         // If there's no data
                         return Center(
-                          child: Text(
-                            'No files available.',
-                            style: TextStyle(
-                              color: theme.colorScheme.onBackground,
-                              fontSize: 20,
-                              fontFamily: 'Quicksand',
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: Text(
+                              'No files available.',
+                              style: TextStyle(
+                                color: theme.colorScheme.onBackground,
+                                fontSize: 20,
+                                fontFamily: 'Quicksand',
+                              ),
                             ),
                           ),
                         );
@@ -130,12 +136,14 @@ class _SearchPageState extends State<SearchPage> {
                           return Padding(
                             padding: const EdgeInsets.only(top: 25),
                             child: Center(
-                              child: Text(
-                                'No posts found',
-                                style: TextStyle(
-                                  color: theme.colorScheme.onBackground,
-                                  fontSize: 20,
-                                  fontFamily: 'Quicksand',
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  'No posts found',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onBackground,
+                                    fontSize: 20,
+                                    fontFamily: 'Quicksand',
+                                  ),
                                 ),
                               ),
                             ),

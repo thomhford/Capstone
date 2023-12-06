@@ -3,9 +3,6 @@ import {Conversation, File as Attachment, Message, User} from '../models';
 import sequelize from "../config/db";
 import {Op} from "sequelize";
 import {eventEmitter} from '../config/events';
-import {UserInstance} from "../models/User";
-import {MessageInstance} from "../models/Message";
-import {ConversationInstance} from "../models/Conversation";
 
 /**
  * Parameters for the sendMessage function.
@@ -59,13 +56,14 @@ export const sendMessage = async ({ senderId, conversationId, text, type, fileId
                 message: text,
                 type,
                 conversationId,
+                authorId: senderId,
                 status: 'sent'
             }, {transaction: t});
 
             // Associate the message with the sender
             const sender = await User.findOne({ where: { uid: senderId } });
             if (sender) {
-                message.setSender(sender, { transaction: t });
+                message.setAuthor(sender, { transaction: t });
             }
 
             // If type indicates an attachment and fileId is provided, associate the file with the message
@@ -273,14 +271,19 @@ export const getConversations = async (userId: number) => {
  */
 export const getConversation = async (conversationId: number) => {
     try {
-        return await Conversation.findOne({
+        const conversation =  await Conversation.findOne({
             where: {conversation_id: conversationId},
-            include: ['User1', 'User2', 'Messages', {
-                model: User,
-                as: 'Users',
-                through: {attributes: []}
-            }]
+            include: [
+                { model: User, as: 'User1' },
+                { model: User, as: 'User2' },
+                'Messages'
+            ]
         });
+        if (conversation) {
+            conversation.Users = await conversation.getUsers();
+            return conversation;
+        }
+        return null;
     } catch (error) {
         console.error('Get Conversation Error:', error,);
         eventEmitter.emit('error', { error: 'Error retrieving conversation', details: error });

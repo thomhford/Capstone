@@ -24,10 +24,9 @@ class Conversation {
     if (json['Messages'] != null) {
       for (var item in (json['Messages'])) {
         var message = ChatMessage.fromJson(item);
-        messages[message.messageId] = message;
+        messages[message.messageId!] = message;
       }
     }
-    // TODO: Conversations are stored with string values for users rather than user objects
     return Conversation(
       conversationId: json['conversation_id'],
       user1: ChatUser.fromJson(json['User1']),
@@ -40,7 +39,6 @@ class Conversation {
   Map<String, dynamic> toJson() {
     return {
       'conversation_id': conversationId,
-      // TODO: Conversations are stored with string values for users rather than user objects
       'User1': user1.toJson(),
       'User2': user2.toJson(),
       'Messages': messages.values.map((message) => message.toJson()).toList(),
@@ -53,10 +51,9 @@ class Conversation {
     if (map['Messages'] != null) {
       for (var item in (map['Messages'])) {
         var message = ChatMessage.fromMap(item);
-        messages[message.messageId] = message;
+        messages[message.messageId!] = message;
       }
     }
-    // TODO: Conversations are stored with string values for users rather than user objects
     return Conversation(
       conversationId: map['conversation_id'],
       user1: ChatUser.fromMap(map['User1']),
@@ -80,7 +77,7 @@ class Conversation {
         id: message.messageId.toString(),
         author: message.authorId == user1.id ? user1.toChatUser() : user2.toChatUser(),
         text: message.message,
-        createdAt: message.createdAt.millisecondsSinceEpoch,
+        createdAt: message.createdAt!.millisecondsSinceEpoch,
       );
     }).toList();
   }

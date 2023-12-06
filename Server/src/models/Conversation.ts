@@ -15,6 +15,7 @@ export interface ConversationInstance extends Model<ConversationAttributes>, Con
     Users: UserInstance[];
     Messages: MessageInstance[];
     createdAt: Date;
+    getUsers: () => Promise<UserInstance[]>;
 }
 
 export const createConversationModel = (sequelize: Sequelize) => sequelize.define<ConversationInstance>('Conversation', {

@@ -16,7 +16,6 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Post>> posts;
   final ScrollController _scrollController = ScrollController();
 
-
   @override
   void initState() {
     super.initState();
@@ -69,7 +68,19 @@ class _HomePageState extends State<HomePage> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
-                'Failed to load posts: ${snapshot.error}',
+                'Error: Cannot connect to server.',
+                style: TextStyle(
+                  color: theme.colorScheme.onBackground,
+                  fontSize: 20,
+                  fontFamily: 'Quicksand',
+                ),
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            // If there's no data
+            return Center(
+              child: Text(
+                'No files available.',
                 style: TextStyle(
                   color: theme.colorScheme.onBackground,
                   fontSize: 20,

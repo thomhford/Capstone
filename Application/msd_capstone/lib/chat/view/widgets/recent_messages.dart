@@ -57,20 +57,18 @@ class RecentMessages extends StatelessWidget {
         final ChatMessage recentMessage =
             conversation.messages.values.isNotEmpty
                 ? conversation.messages.values.reduce((value, element) {
-                    return value.createdAt.isAfter(element.createdAt)
+                    return value.createdAt!.isAfter(element.createdAt!)
                         ? value
                         : element;
                   })
                 : ChatMessage(
-                    messageId: -1,
                     message: 'No messages here yet',
                     read: false,
                     isReceived: false,
                     type: 'text',
-                    conversationId: -1,
+                    conversationId: conversation.conversationId!,
                     createdAt: DateTime.now(),
                     authorId: '',
-                    recipientId: '',
                   );
 
         final ChatUser recipient =
@@ -123,7 +121,7 @@ class RecentMessages extends StatelessWidget {
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
-                                    formatTimestamp(recentMessage.createdAt),
+                                    formatTimestamp(recentMessage.createdAt!),
                                     style: TextStyle(
                                       color: theme.colorScheme.primary,
                                       fontFamily: 'Quicksand',
