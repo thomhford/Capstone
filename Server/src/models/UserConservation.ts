@@ -21,5 +21,4 @@ export const createUserConversationModel = (sequelize: Sequelize) => sequelize.d
 }, {
     timestamps: true,
     paranoid: true,
-    indexes: [{ fields: ['userId', 'conversationId'] }]
 });

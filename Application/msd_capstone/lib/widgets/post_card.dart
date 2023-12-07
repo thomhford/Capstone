@@ -78,8 +78,8 @@ class PostCard extends StatelessWidget {
               )
                   : null,
             ),
-            const Divider(
-              color: Colors.black,
+            Divider(
+              color: theme.colorScheme.onBackground,
               height: 10,
               thickness: 1,
             ),

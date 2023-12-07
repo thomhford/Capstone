@@ -133,11 +133,11 @@ class _PostCreationPageState extends State<PostCreationPage> {
                   child: TextField(
                     controller: titleController,
                     focusNode: titleFocusNode,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: 'Title',
                       labelStyle: TextStyle(
-                        color: Colors.white,
+                        color: theme.colorScheme.onBackground,
                         fontFamily: 'Quicksand',
                         fontSize: 20,
                       ),
@@ -154,7 +154,7 @@ class _PostCreationPageState extends State<PostCreationPage> {
                   ),
               ],
             ),
-            const Divider(color: Colors.white),
+            Divider(color: theme.colorScheme.onBackground),
             const SizedBox(height: 16),
             _displaySelectedMedia(),
             const SizedBox(height: 16),
@@ -164,11 +164,11 @@ class _PostCreationPageState extends State<PostCreationPage> {
                   child: TextField(
                     controller: contentController,
                     focusNode: contentFocusNode,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: 'Content',
                       labelStyle: TextStyle(
-                        color: Colors.white,
+                        color: theme.colorScheme.onBackground,
                         fontFamily: 'Quicksand',
                         fontSize: 20,
                       ),
@@ -185,7 +185,7 @@ class _PostCreationPageState extends State<PostCreationPage> {
                   ),
               ],
             ),
-            const Divider(color: Colors.white),
+            Divider(color: theme.colorScheme.onBackground),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _uploadPost,

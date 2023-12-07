@@ -85,30 +85,40 @@ class _UserListPageState extends State<UserListPage> {
                       setState(() {});
                     }
                   },
-                  child: BlocBuilder<ChatBloc, ChatState>(
-                    builder: (context, state) {
-                      final users = _chatBloc.chatData.users.values.toList();
-                      if (users.isEmpty) {
-                        return Center(
-                          child: Text(
-                            "No users found",
-                            style: TextStyle(
-                              color: theme.colorScheme.onBackground,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Quicksand',
-                            ),
+                  child: () {
+                    final users = _chatBloc.chatData.users.values.toList();
+                    if (users.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No users found",
+                          style: TextStyle(
+                            color: theme.colorScheme.onBackground,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Quicksand',
                           ),
-                        );
-                      }
-                      return UserList(
+                        ),
+                      );
+                    }
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
+                          bottomLeft: Radius.circular(40),
+                          bottomRight: Radius.circular(40),
+                        ),
+                        color: theme.colorScheme.secondaryContainer,
+                      ),
+                      child: UserList(
                         users: users,
                         searchQuery: _searchQuery,
                         theme: theme,
                         chatBloc: _chatBloc,
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }(),
                 ),
               ),
             ),

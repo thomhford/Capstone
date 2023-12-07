@@ -12,6 +12,7 @@ ThemeData lightMode = ThemeData(
     outline: Colors.white,
     outlineVariant: Colors.grey.shade400,
     surface: Colors.black,
+    secondary: Colors.lightGreen.shade100,
   ),
   navigationBarTheme: NavigationBarThemeData(
     labelTextStyle: MaterialStateProperty.all(
@@ -35,6 +36,7 @@ ThemeData darkMode = ThemeData(
     secondaryContainer: Colors.grey.shade400,
     outline: Colors.grey.shade600,
     outlineVariant: Colors.white,
+    secondary: Colors.lightGreen.shade100,
   ),
   navigationBarTheme: NavigationBarThemeData(
     labelTextStyle: MaterialStateProperty.all(

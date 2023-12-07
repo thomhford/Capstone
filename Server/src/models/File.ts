@@ -67,6 +67,5 @@ export const createFileModel = (sequelize: Sequelize) => {
         }
     }, {
         timestamps: true,
-        indexes: [{ fields: ['upload_date'] }]
     })
 }

@@ -57,49 +57,49 @@ class _ChatsPageState extends State<ChatsPage> {
     final theme = Theme.of(context);
     final List<Conversation> conversations =
         _chatBloc.chatData.conversations.values.toList();
-    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
-      return Scaffold(
-        appBar: ClickableAppBar(
-          title: 'Messages',
-          onTap: () {
-            scrollController.animateTo(
-              0.0,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeOut,
-            );
-          },
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const UserListPage(),
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.create,
-                color: theme.colorScheme.onBackground,
-              ),
+    return Scaffold(
+      appBar: ClickableAppBar(
+        title: 'Messages',
+        onTap: () {
+          scrollController.animateTo(
+            0.0,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.easeOut,
+          );
+        },
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserListPage(),
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.create,
+              color: theme.colorScheme.onBackground,
             ),
-          ],
-        ),
-        backgroundColor: theme.colorScheme.background,
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SearchWidget(
-                  searchFocusNode: searchFocusNode,
-                  searchController: searchController,
-                  updateSearchQuery: updateSearchQuery,
-                  clearSearch: clearSearch,
-                  theme: theme),
-              const SizedBox(
-                height: 10,
-              ),
-              Scrollbar(
+          ),
+        ],
+      ),
+      backgroundColor: theme.colorScheme.background,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SearchWidget(
+                searchFocusNode: searchFocusNode,
+                searchController: searchController,
+                updateSearchQuery: updateSearchQuery,
+                clearSearch: clearSearch,
+                theme: theme),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: Scrollbar(
                 controller: scrollController,
                 child: BlocListener<ChatBloc, ChatState>(
                   listener: (context, state) {
@@ -107,36 +107,39 @@ class _ChatsPageState extends State<ChatsPage> {
                       setState(() {});
                     }
                   },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
-                        bottomLeft: Radius.circular(40),
-                        bottomRight: Radius.circular(40),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
+                          bottomLeft: Radius.circular(40),
+                          bottomRight: Radius.circular(40),
+                        ),
+                        color: theme.colorScheme.secondaryContainer,
                       ),
-                      color: theme.colorScheme.secondaryContainer,
-                    ),
-                    child: Column(
-                      children: [
-                        RecentMessages(
-                          conversations: conversations,
-                          searchQuery: _searchQuery,
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                      ],
+                      child: Column(
+                        children: [
+                          RecentMessages(
+                            conversations: conversations,
+                            searchQuery: _searchQuery,
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 }
 

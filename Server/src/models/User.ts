@@ -49,6 +49,5 @@ export const createUserModel = (sequelize: Sequelize) => {
     }, {
         timestamps: true,
         paranoid: true,
-        indexes: [{ fields: ['uid'] }]
     });
 };

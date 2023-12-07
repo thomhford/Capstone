@@ -63,5 +63,4 @@ export const createMessageModel = (sequelize: Sequelize) => sequelize.define<Mes
 }, {
     timestamps: true,
     paranoid: true,
-    indexes: [{ fields: ['conversationId'] }]
 });

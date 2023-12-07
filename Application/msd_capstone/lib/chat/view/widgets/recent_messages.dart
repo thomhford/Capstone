@@ -36,6 +36,8 @@ class RecentMessages extends StatelessWidget {
             });
           }).toList();
 
+    filteredConversations.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
     if (filteredConversations.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 25),
